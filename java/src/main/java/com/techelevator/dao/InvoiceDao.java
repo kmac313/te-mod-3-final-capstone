@@ -1,4 +1,4 @@
 package com.techelevator.dao;
 
-public interface OrderDao {
+public interface InvoiceDao {
 }

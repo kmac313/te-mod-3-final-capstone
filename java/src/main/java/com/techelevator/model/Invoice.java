@@ -2,25 +2,25 @@ package com.techelevator.model;
 
 import java.math.BigDecimal;
 
-public class Order {
-    private int order_id;
+public class Invoice {
+    private int invoiceId;
     private BigDecimal total;
     private boolean isDelivery;
     private int customerId;
 
-    public Order(int order_id, BigDecimal total, boolean isDelivery, int customerId) {
-        this.order_id = order_id;
+    public Invoice(int invoiceId, BigDecimal total, boolean isDelivery, int customerId) {
+        this.invoiceId = invoiceId;
         this.total = total;
         this.isDelivery = isDelivery;
         this.customerId = customerId;
     }
 
-    public int getOrder_id() {
-        return order_id;
+    public int getInvoiceId() {
+        return invoiceId;
     }
 
-    public void setOrder_id(int order_id) {
-        this.order_id = order_id;
+    public void setInvoiceId(int invoiceId) {
+        this.invoiceId = invoiceId;
     }
 
     public BigDecimal getTotal() {

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 public class Drink extends Product{
     private int drinkId;
+    private int productId;
     private int orderId;
     private String drinkSize;
 

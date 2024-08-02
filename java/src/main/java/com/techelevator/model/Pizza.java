@@ -1,9 +1,10 @@
 package com.techelevator.model;
 
 import java.math.BigDecimal;
-
+//TODO: Consider extending to a SpecialtyPizza model
 public class Pizza extends Product{
     private int pizzaId;
+    private int productId;
     private int orderId;
     private String sizeId;
     private String crust;

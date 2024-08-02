@@ -10,6 +10,7 @@ public class Customer {
     private String stateAbbreviation;
     private int phoneNumber;
     private String email;
+    private String username;
 
     public Customer(int customerId, String firstName, String lastName, String streetAddress,
                     String city, int zipcode, String stateAbbreviation, int phoneNumber, String email) {

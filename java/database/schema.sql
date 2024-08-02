@@ -1,17 +1,22 @@
 --BEGIN TRANSACTION;
 
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS product CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS customer CASCADE;
-DROP TABLE IF EXISTS orders CASCADE;
+DROP TABLE IF EXISTS invoice CASCADE;
 DROP TABLE IF EXISTS specialty_pizza CASCADE;
 DROP TABLE IF EXISTS pizza CASCADE;
 DROP TABLE IF EXISTS drink;
-DROP TABLE IF EXISTS pizza_topping CASCADE;
-DROP TABLE IF EXISTS topping CASCADE;
+DROP TABLE IF EXISTS pizza_product CASCADE;
 DROP TABLE IF EXISTS pizza_size CASCADE;
 DROP TABLE IF EXISTS drink_size CASCADE;
 
-
+CREATE TABLE product (
+	product_id SERIAL,
+	price numeric(4,2),
+	description varchar(50),
+	CONSTRAINT PK_product_id PRIMARY KEY (product_id)
+);
 
 CREATE TABLE users (
 	user_id SERIAL,
@@ -29,16 +34,17 @@ CREATE TABLE customer(
 	zip_code numeric(5,0),
 	state_abbreviation char(2),
 	phone_number numeric(10,0) NOT NULL,
-	email varchar(50) NOT NULL,	
+	email varchar(50) NOT NULL,
+	username varchar(50) NOT NULL,
 	CONSTRAINT PK_customer_id  PRIMARY KEY (customer_id)
 );
 
-CREATE TABLE orders (
-	order_id SERIAL,
+CREATE TABLE invoice (
+	invoice_id SERIAL,
 	customer_id int NOT NULL, 
 	total numeric(5,2) NOT NULL,
 	is_delivery boolean NOT NULL,
-	CONSTRAINT PK_order_id PRIMARY KEY (order_id)
+	CONSTRAINT PK_invoice_id PRIMARY KEY (invoice_id)
 );
 CREATE TABLE specialty_pizza (
 	specialty_pizza_id SERIAL,
@@ -55,7 +61,8 @@ CREATE TABLE specialty_pizza (
 
 CREATE TABLE pizza (
 	pizza_id SERIAL,
-	order_id int NOT NULL,
+	invoice_id int NOT NULL,
+	product_id int NOT NULL,
 	size_id varchar(2) NOT NULL,
 	pizza_name varchar(20),
 	crust varchar(20) NOT NULL, 
@@ -68,17 +75,13 @@ CREATE TABLE pizza (
 CREATE TABLE drink(
 	drink_id SERIAL, 
 	drink_size_id int NOT NULL,
+	invoice_id int NOT NULL,
+	product_id int NOT NULL,
 	flavor varchar(50) NOT NULL,
 	price numeric (3,2) NOT NULL, 
 	CONSTRAINT PK_drink_id PRIMARY KEY (drink_id)
 );
 
-
-CREATE TABLE topping(
-	topping_name varchar(50) NOT NULL,
-	additional_price numeric(3,2), 
-	CONSTRAINT PK_topping_name PRIMARY KEY (topping_name)
-);
 CREATE TABLE pizza_size (
 	pizza_size_id varchar(2),
 	pizza_size_description varchar (20) NOT NULL, 
@@ -93,24 +96,31 @@ CREATE TABLE drink_size(
 	CONSTRAINT PK_drink_size_id PRIMARY KEY (drink_size_id)
 );
 
-CREATE TABLE pizza_topping (
+CREATE TABLE pizza_product (
 	pizza_id int NOT NULL,
-	topping_name varchar(50) NOT NULL,
-	CONSTRAINT FK_pizza_topping_pizza FOREIGN KEY (pizza_id) REFERENCES pizza(pizza_id),
-	CONSTRAINT FK_pizza_topping_topping FOREIGN KEY (topping_name) REFERENCES topping(topping_name)
+	product_id int NOT NULL,
+	CONSTRAINT FK_pizza_product_pizza_id FOREIGN KEY (pizza_id) REFERENCES pizza(pizza_id),
+	CONSTRAINT FK_pizza_product_product_id FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
 ALTER TABLE pizza 
-	ADD CONSTRAINT FK_pizza_order FOREIGN KEY (order_id) REFERENCES orders(order_id),
-	ADD CONSTRAINT FK_pizza_size FOREIGN KEY (size_id) REFERENCES pizza_size(pizza_size_id)
+	ADD CONSTRAINT FK_pizza_invoice FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id),
+	ADD CONSTRAINT FK_pizza_size FOREIGN KEY (size_id) REFERENCES pizza_size(pizza_size_id),
+	ADD CONSTRAINT FK_product_pizza FOREIGN KEY (product_id) REFERENCES product(product_id)
 	
 ;
-AlTER TABLE orders 
-	ADD CONSTRAINT FK_orders_customer FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+AlTER TABLE invoice 
+	ADD CONSTRAINT FK_invoice_customer FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
 ;
 
 ALTER TABLE drink 
-	ADD CONSTRAINT FK_drink_size FOREIGN KEY (drink_size_id) REFERENCES drink_size(drink_size_id)
+	ADD CONSTRAINT FK_drink_size FOREIGN KEY (drink_size_id) REFERENCES drink_size(drink_size_id),
+	ADD CONSTRAINT FK_drink_invoice FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id),
+	ADD CONSTRAINT FK_product_drink FOREIGN KEY (product_id) REFERENCES product(product_id)
+;
+
+ALTER TABLE customer
+	ADD CONSTRAINT FK_customer_user_username FOREIGN KEY (username) REFERENCES users(username)
 ;
 
 --ROLLBACK TRANSACTION;
