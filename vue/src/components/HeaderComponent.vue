@@ -1,59 +1,167 @@
 <template>
+  <div>
     <div class="header">
-        <img src="src\assets\Super_Pizza_Mascot_Logo-removebg-preview.png" alt="Pizza" style="width:15%;">
-    <nav>
-        <router-link v-bind:to="{ name: 'home' }">Home</router-link>&nbsp;|&nbsp;
-        <router-link v-bind:to="{ name: 'login' }">About</router-link>&nbsp;|&nbsp;
-        <router-link v-bind:to="{ name: 'login' }">Login</router-link>&nbsp;|&nbsp;
-        <router-link v-bind:to="{ name: 'login' }">Cart</router-link>&nbsp;|&nbsp;
+      <div class="header-logo">
+        <img
+          src="src\assets\Super_Pizza_Mascot_Logo-removebg-preview.png"
+          alt="Pizza"
+          style="width: 55%"
+        />
+      </div>
 
-        <div class="drop">
-        <select class="dropdown">   
-            <option value="1" >  <router-link v-bind:to="{ name: 'home' }">Menu</router-link>&nbsp;|&nbsp; </option>
-            <option value="2"><router-link v-bind:to="{ name: 'home' }">Custom Pizza</router-link>&nbsp;|&nbsp;</option>
-            <option value="3"><router-link v-bind:to="{ name: 'home' }">Specialty Pizza</router-link>&nbsp;|&nbsp;</option>
-            <option value="4"><router-link v-bind:to="{ name: 'home' }">Drink</router-link>&nbsp;|&nbsp;</option>
-        </select>
-        </div>
+      <nav>
+        <router-link v-bind:to="{ name: 'home' }">Home</router-link>
 
-    </nav>
-<h1>Pizza Header</h1>
-</div>
+        <button class="menu-btn" v-on:click.prevent="toggleMenu">
+          MENU <v-icon name="bi-chevron-down" />
+        </button>
+      </nav>
+      <div>
+        <router-link
+          v-bind:to="{ name: 'login' }"
+          v-if="$store.state.token != ''"
+          >Login</router-link
+        >
+        <router-link
+          class="router-link-active"
+          v-bind:to="{ name: 'logout' }"
+          v-if="$store.state.token == ''"
+          >Logout</router-link
+        >
+      </div>
+    </div>
+    <ul class="header-nav-links hidden" id="header-nav-links">
+      <router-link v-bind:to="{ name: 'home' }">
+        <li>CUSTOM PIZZA</li>
+      </router-link>
+      <router-link v-bind:to="{ name: 'home' }">
+        <li>SPECIALTY PIZZA</li>
+      </router-link>
+      <router-link v-bind:to="{ name: 'home' }">
+        <li>DRINKS</li>
+      </router-link>
+    </ul>
+  </div>
 </template>
 
-
 <script>
+import { BiChevronDown } from "oh-vue-icons/icons";
+export default {
+  components: {
+    "v-icon": BiChevronDown,
+  },
+  methods: {
+    toggleMenu() {
+      const menuItems = document.getElementById("header-nav-links");
 
+      menuItems.classList.contains("hidden")
+        ? menuItems.classList.remove("hidden")
+        : menuItems.classList.add("hidden");
+      return;
+    },
+  },
+};
 </script>
 
-
 <style>
-
 .header {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    justify-items: start;
+  position: relative;
+  background-color: #fff;
+  display: grid;
+  grid-template-columns: 1fr 6fr 1fr;
+  align-items: center;
+  justify-items: start;
+  font-size: 1.2em;
+  border-bottom: #e0e0e0 solid 1px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  padding: 0px;
+  margin: 0px;
+  width: 100vw;
+  z-index: 99999999;
+}
+
+.header-logo {
+  text-align: center;
+}
+
+nav {
+  text-transform: uppercase;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.router-link-active {
+  color: black;
+  text-decoration: none;
+}
+
+.router-link-active:visited {
+  color: black;
+}
+
+.menu-btn {
+  cursor: pointer;
+  padding: 0.3em 0.6em;
+  text-transform: uppercase;
+  background-color: #e61d25;
+  border: none;
+  color: white;
+  font-size: 0.95em;
+  border-radius: 8px;
+}
+
+.header-nav-links {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 5em;
+  left: 14em;
+  list-style: none;
+  background-color: white;
+  padding: 0px 10px;
+  border: #e6e6e6 solid 1px;
+  z-index: 0;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.header-nav-links .router-link-active {
+  border-bottom: #a9a9a9 solid 1px;
+  padding: 10px 8px 10px 8px;
+  width: 100%
+}
+
+.header-nav-links .router-link-active:nth-child(3) {
+  border-bottom: none;
+}
+
+
+.header-nav-links li:hover,
+.header-nav-links .router-link-active:hover {
+  background-color: #e61d25;
+  color: #fff;
 }
 
 .drop {
-    appearance: none;
-    position: relative;
-    display: inline-block;
+  appearance: none;
+  position: relative;
+  display: inline-block;
 }
 
 .dropdown {
-    appearance: none;
-  width: 100%;
+  appearance: none;
+  width: 50%;
   font-size: 1.15rem;
-  padding: 0.300em 2em 0.300em 0.5em;
+  padding: 0.3em 0.1em;
   background-color: #fff;
-  border: 1px solid #caced1;
+  border: none;
   border-radius: 0.25rem;
   color: #000;
   cursor: pointer;
 }
-
-
-
 </style>

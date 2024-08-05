@@ -2,8 +2,6 @@
   <div id="capstone-app">
     <div id="nav">
       <HeaderComponent />
-      <router-link v-bind:to="{ name: 'home' }">Home</router-link>&nbsp;|&nbsp;
-      <router-link v-bind:to="{ name: 'logout' }" v-if="$store.state.token != ''">Logout</router-link>
     </div>
     <router-view />
     <div id="footer">
@@ -23,3 +21,16 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+* {
+  font-family: "Nunito", sans-serif;
+}
+
+body {
+  padding: 0px;
+  margin: 0px;
+}
+</style>
