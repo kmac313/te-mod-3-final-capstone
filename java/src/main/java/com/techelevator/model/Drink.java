@@ -4,17 +4,17 @@ import java.math.BigDecimal;
 
 public class Drink extends Product{
     private int drinkId;
-    private int productId;
-    private int orderId;
-    private String drinkSize;
+    private int drinkSizeId;
+    private int invoiceId;
+    private String flavor;
 
-
-    public Drink(int drinkId, int orderId, String drinkSize, BigDecimal price,
-                 int productId, String description) {
+    public Drink(int productId, BigDecimal price, String description, int drinkId,
+                 int drinkSizeId, int invoiceId, String flavor) {
         super(productId, price, description);
         this.drinkId = drinkId;
-        this.orderId = orderId;
-        this.drinkSize = drinkSize;
+        this.drinkSizeId = drinkSizeId;
+        this.invoiceId = invoiceId;
+        this.flavor = flavor;
     }
 
     public int getDrinkId() {
@@ -25,19 +25,28 @@ public class Drink extends Product{
         this.drinkId = drinkId;
     }
 
-    public int getOrderId() {
-        return orderId;
+    public int getDrinkSizeId() {
+        return drinkSizeId;
     }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
+    public void setDrinkSizeId(int drinkSizeId) {
+        this.drinkSizeId = drinkSizeId;
     }
 
-    public String getDrinkSize() {
-        return drinkSize;
+    public int getInvoiceId() {
+        return invoiceId;
     }
 
-    public void setDrinkSize(String drinkSize) {
-        this.drinkSize = drinkSize;
+    public void setInvoiceId(int invoiceId) {
+        this.invoiceId = invoiceId;
     }
+
+    public String getFlavor() {
+        return flavor;
+    }
+
+    public void setFlavor(String flavor) {
+        this.flavor = flavor;
+    }
+
 }

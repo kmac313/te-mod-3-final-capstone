@@ -12,9 +12,8 @@ public interface CustomerDao {
     Customer getCustomerById(int id);
     Customer getCustomerByEmail(String email);
     Customer createCustomer(Customer customer);
-    Customer updateCustomer(Customer updatedCustomer);
+    Customer updateCustomer(Customer customer);
     void deleteCustomerById(int id);
     void deleteCustomerByUsername(String username);
-
     public Customer mapRowSet(SqlRowSet rowSet);
 }
