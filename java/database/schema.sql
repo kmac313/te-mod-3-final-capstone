@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS drink;
 DROP TABLE IF EXISTS pizza_product CASCADE;
 DROP TABLE IF EXISTS pizza_size CASCADE;
 DROP TABLE IF EXISTS drink_size CASCADE;
+DROP TABLE IF EXISTS product_category CASCADE;
 
 CREATE TABLE product (
 	product_id SERIAL,
@@ -36,7 +37,7 @@ CREATE TABLE customer(
 	state_abbreviation char(2),
 	phone_number numeric(10,0) NOT NULL,
 	email varchar(50) NOT NULL,
-	username varchar(50) --NOT NULL--,
+	username varchar(50), --NOT NULL--
 	CONSTRAINT PK_customer_id  PRIMARY KEY (customer_id)
 );
 
@@ -126,9 +127,9 @@ ALTER TABLE drink
 	ADD CONSTRAINT FK_product_drink FOREIGN KEY (product_id) REFERENCES product(product_id)
 ;
 
-ALTER TABLE customer
-	ADD CONSTRAINT FK_customer_user_username FOREIGN KEY (username) REFERENCES users(username)
-;
+--ALTER TABLE customer
+--	ADD CONSTRAINT FK_customer_user_username FOREIGN KEY (username) REFERENCES users(username)
+--;
 ALTER TABLE product
 	ADD CONSTRAINT FK_product_category_id FOREIGN KEY (product_category_id) REFERENCES product_category(product_category_id)
 ;

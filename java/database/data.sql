@@ -51,3 +51,5 @@ VALUES
 
 
 --COMMIT TRANSACTION;
+
+SELECT * FROM customer
