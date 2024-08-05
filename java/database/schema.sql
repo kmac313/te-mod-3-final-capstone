@@ -36,7 +36,7 @@ CREATE TABLE customer(
 	state_abbreviation char(2),
 	phone_number numeric(10,0) NOT NULL,
 	email varchar(50) NOT NULL,
-	username varchar(50) NOT NULL,
+	username varchar(50) --NOT NULL--,
 	CONSTRAINT PK_customer_id  PRIMARY KEY (customer_id)
 );
 
