@@ -1,5 +1,6 @@
 package com.techelevator;
 
+import com.techelevator.dao.JdbcCustomerDao;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

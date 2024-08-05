@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS drink_size CASCADE;
 
 CREATE TABLE product (
 	product_id SERIAL,
+	product_category_id int NOT NULL, 
 	price numeric(4,2),
 	description varchar(50),
 	CONSTRAINT PK_product_id PRIMARY KEY (product_id)
@@ -103,6 +104,12 @@ CREATE TABLE pizza_product (
 	CONSTRAINT FK_pizza_product_product_id FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
+CREATE TABLE product_category (
+	product_category_id SERIAL,
+	product_category_description varchar (50) NOT NULL,
+	CONSTRAINT PK_product_catgory_id PRIMARY KEY (product_category_id)
+);
+
 ALTER TABLE pizza 
 	ADD CONSTRAINT FK_pizza_invoice FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id),
 	ADD CONSTRAINT FK_pizza_size FOREIGN KEY (size_id) REFERENCES pizza_size(pizza_size_id),
@@ -121,6 +128,9 @@ ALTER TABLE drink
 
 ALTER TABLE customer
 	ADD CONSTRAINT FK_customer_user_username FOREIGN KEY (username) REFERENCES users(username)
+;
+ALTER TABLE product
+	ADD CONSTRAINT FK_product_category_id FOREIGN KEY (product_category_id) REFERENCES product_category(product_category_id)
 ;
 
 --ROLLBACK TRANSACTION;

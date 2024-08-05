@@ -8,12 +8,12 @@ public class Customer {
     private String City;
     private int zipcode;
     private String stateAbbreviation;
-    private int phoneNumber;
+    private String phoneNumber;
     private String email;
     private String username;
 
     public Customer(int customerId, String firstName, String lastName, String streetAddress,
-                    String city, int zipcode, String stateAbbreviation, int phoneNumber, String email) {
+                    String city, int zipcode, String stateAbbreviation, String phoneNumber, String email, String username) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -23,6 +23,7 @@ public class Customer {
         this.stateAbbreviation = stateAbbreviation;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.username = username;
     }
 
     public int getCustomerId() {
@@ -81,7 +82,7 @@ public class Customer {
         this.stateAbbreviation = stateAbbreviation;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 

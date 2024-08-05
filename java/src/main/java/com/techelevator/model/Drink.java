@@ -8,6 +8,7 @@ public class Drink extends Product{
     private int orderId;
     private String drinkSize;
 
+
     public Drink(int drinkId, int orderId, String drinkSize, BigDecimal price,
                  int productId, String description) {
         super(productId, price, description);
