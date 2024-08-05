@@ -62,42 +62,68 @@ public class JdbcDrinkDao implements DrinkDao{
 
     @Override
     public Drink createDrink(Drink drink) {
-        int newProductId = 0;
+        int createdProductId = 0;
         int createdDrinkId = 0;
-        String productSql = "";
-        String drinkSql = "";
+        String productSql = "INSERT INTO product (product_id, price, description) " +
+                "VALUES (?, ?, ?)";
+        String drinkSql = "INSERT INTO drink (drink_id, drink_size_id, invoice_id, product_id, flavor) " +
+                "VALUES (?, ?, ?, ?, ?) RETURNING drink_id";
         //TODO: Finish sql statements and logic
         try {
-            newProductId = db.queryForObject(productSql, int.class, );
+            createdProductId = db.queryForObject(productSql, int.class,
+                    drink.getProductId(), drink.getPrice(), drink.getDescription());
+            createdDrinkId = db.queryForObject(drinkSql, int.class,
+                    drink.getDrinkId(), drink.getDrinkSizeId(), drink.getInvoiceId(), drink.getProductId(), drink.getFlavor());
         } catch (DataIntegrityViolationException eie) {
             System.out.println("An error happened getting the drink by ID");
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         }
-
         return getDrinkByDrinkId(createdDrinkId);
     }
 
     @Override
     public Drink updateDrink(Drink drink) {
-        return null;
+        String updateProductSql = "UPDATE product SET price = ?, description = ? WHERE product_id = ?";
+        String updateDrinkSql = "UPDATE drink SET drink_id = ? , drink_size_id = ? , invoice_id = ? , product_id = ? , flavor = ? " +
+                "WHERE product_id = ?";
+        try {
+            int numProductRowsAffected = db.queryForObject(updateProductSql, int.class) ;
+            int numDrinkRowsAffected = db.queryForObject(updateDrinkSql, int.class);
+            if(numDrinkRowsAffected == 0 || numProductRowsAffected == 0){
+                throw new DaoException("No products found. Check Product IDs");
+            }
+        }catch (DataIntegrityViolationException eie) {
+            System.out.println("An error happened getting the drink by ID");
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
+        return getDrinkByDrinkId(drink.getDrinkId());
+
     }
 
     @Override
     public void deleteDrinkById(int id) {
-
+        String sql = "DELETE FROM drink WHERE drink_id  = ?";
+        try {
+            db.update(sql, id);
+        } catch (DataIntegrityViolationException eie) {
+            System.out.println("An error happened getting the drink by ID");
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
     }
 
     @Override
     public Drink mapRowSet(SqlRowSet rowSet) {
         Drink mappedDrink = new Drink(
-                rowSet.getInt("product_id"),
-                rowSet.getBigDecimal("price"),
-                rowSet.getString("description"),
-                rowSet.getInt("drink_id"),
-                rowSet.getInt("drink_size_id"),
-                rowSet.getInt("invoice_id"),
-                rowSet.getString("flavor")
+                rowSet.getInt("p.product_id"),
+                rowSet.getBigDecimal("p.price"),
+                rowSet.getString("p.description"),
+                rowSet.getInt("d.drink_id"),
+                rowSet.getInt("d.drink_size_id"),
+                rowSet.getInt("d.invoice_id"),
+                rowSet.getString("d.flavor")
                 );
         return mappedDrink;
     }

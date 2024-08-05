@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,6 +89,8 @@ public class JdbcCustomerDao implements CustomerDao{
             System.out.println("An error happened adding the customer to DB");
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
+        } catch (NullPointerException np){
+            System.out.println("Null Pointer Exception");
         }
 
         return getCustomerById(newCustomerId);

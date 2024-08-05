@@ -4,21 +4,21 @@ import java.math.BigDecimal;
 //TODO: Consider extending to a SpecialtyPizza model
 public class Pizza extends Product{
     private int pizzaId;
-    private int productId;
-    private int orderId;
+    private int invoiceId;
     private String sizeId;
+    private String pizzaName;
     private String crust;
     private String sauce;
     private BigDecimal total;
     private String additionalInstructions;
 
-    public Pizza(int pizzaId, int orderId, String sizeId, String crust,
-                 String sauce, BigDecimal total, String additionalInstructions,
-                 int productId, BigDecimal price, String description) {
+    public Pizza(int productId, BigDecimal price, String description, int pizzaId, int invoiceId, String sizeId,
+                 String pizzaName, String crust, String sauce, BigDecimal total, String additionalInstructions) {
         super(productId, price, description);
         this.pizzaId = pizzaId;
-        this.orderId = orderId;
+        this.invoiceId = invoiceId;
         this.sizeId = sizeId;
+        this.pizzaName = pizzaName;
         this.crust = crust;
         this.sauce = sauce;
         this.total = total;
@@ -33,12 +33,12 @@ public class Pizza extends Product{
         this.pizzaId = pizzaId;
     }
 
-    public int getOrderId() {
-        return orderId;
+    public int getInvoiceId() {
+        return invoiceId;
     }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
+    public void setInvoiceId(int invoiceId) {
+        this.invoiceId = invoiceId;
     }
 
     public String getSizeId() {
@@ -47,6 +47,14 @@ public class Pizza extends Product{
 
     public void setSizeId(String sizeId) {
         this.sizeId = sizeId;
+    }
+
+    public String getPizzaName() {
+        return pizzaName;
+    }
+
+    public void setPizzaName(String pizzaName) {
+        this.pizzaName = pizzaName;
     }
 
     public String getCrust() {

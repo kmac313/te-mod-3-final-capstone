@@ -8,7 +8,7 @@ public class Invoice {
     private boolean isDelivery;
     private int customerId;
 
-    public Invoice(int invoiceId, BigDecimal total, boolean isDelivery, int customerId) {
+    public Invoice(int invoiceId, int customerId, BigDecimal total, Boolean isDelivery ) {
         this.invoiceId = invoiceId;
         this.total = total;
         this.isDelivery = isDelivery;

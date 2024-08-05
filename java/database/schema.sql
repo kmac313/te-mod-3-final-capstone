@@ -79,8 +79,7 @@ CREATE TABLE drink(
 	drink_size_id int NOT NULL,
 	invoice_id int NOT NULL,
 	product_id int NOT NULL,
-	flavor varchar(50) NOT NULL,
-	price numeric (3,2) NOT NULL, 
+	flavor varchar(50) NOT NULL, 
 	CONSTRAINT PK_drink_id PRIMARY KEY (drink_id)
 );
 
@@ -112,18 +111,18 @@ CREATE TABLE product_category (
 );
 
 ALTER TABLE pizza 
-	ADD CONSTRAINT FK_pizza_invoice FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id),
+	ADD CONSTRAINT FK_pizza_invoice FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id) ON DELETE CASCADE,
 	ADD CONSTRAINT FK_pizza_size FOREIGN KEY (size_id) REFERENCES pizza_size(pizza_size_id),
 	ADD CONSTRAINT FK_product_pizza FOREIGN KEY (product_id) REFERENCES product(product_id)
 	
 ;
 AlTER TABLE invoice 
-	ADD CONSTRAINT FK_invoice_customer FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+	ADD CONSTRAINT FK_invoice_customer FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE
 ;
 
 ALTER TABLE drink 
 	ADD CONSTRAINT FK_drink_size FOREIGN KEY (drink_size_id) REFERENCES drink_size(drink_size_id),
-	ADD CONSTRAINT FK_drink_invoice FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id),
+	ADD CONSTRAINT FK_drink_invoice FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id) ON DELETE CASCADE,
 	ADD CONSTRAINT FK_product_drink FOREIGN KEY (product_id) REFERENCES product(product_id)
 ;
 

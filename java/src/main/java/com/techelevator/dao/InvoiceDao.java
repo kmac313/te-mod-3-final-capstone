@@ -10,7 +10,6 @@ public interface InvoiceDao {
     Invoice getInvoiceById(int id);
     List<Invoice> getInvoicesByCustomerId(int id);
     Invoice createInvoice(Invoice invoice);
-    Invoice updateInvoice(Invoice invoice);
     void deleteInvoiceById(int id);
     void deleteInvoicesByCustomerId(int id);
     public Invoice mapRowSet(SqlRowSet rowSet);
