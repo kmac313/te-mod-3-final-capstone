@@ -91,6 +91,29 @@ export function createStore(currentToken, currentUser) {
           }
         ],
 
+        drinks: [
+          {name: "Coca-Cola",
+            price: "2.00",
+            id: 1
+          },
+
+          {name: "Sprite",
+            price: "2.00",
+            id: 2
+          },
+
+          {name: "Pepsi",
+            price: "2.00",
+            id: 3
+          },
+
+          {name: "Minute Maid",
+            price: "2.00",
+            id: 4
+          },
+
+        ],
+
         cart: [
           
         ]
