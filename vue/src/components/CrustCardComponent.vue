@@ -4,7 +4,7 @@
         <p class="topping-card-description">
           {{ crust.name}}
         </p>
-        <input type="checkbox" class="topping-checkbox" :id="1" :value="1" />
+        <input type="checkbox" class="topping-checkbox" :id="'crust-' + crust.id" :value="1" />
       </div>
   </div>
 </template>

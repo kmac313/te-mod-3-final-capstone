@@ -5,7 +5,7 @@
             {{ topping.name }} &nbsp;
             ${{ topping.price }}
           </p>
-          <input type="checkbox" class="topping-checkbox" :id="1" :value="1" />
+          <input type="checkbox" class="topping-checkbox" :id="'topping-' + topping.id" :value="1" v-on:click="$emit('add-topping')"/>
         </div>
     </div>
 </template>
@@ -17,7 +17,9 @@ export default {
         topping: {
             type: Object,
             required: true
-        }
+        },
+        handleClick: Function
+        
     }
 }
 </script>

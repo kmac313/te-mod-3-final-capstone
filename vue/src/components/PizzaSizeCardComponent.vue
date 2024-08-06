@@ -1,6 +1,6 @@
 <template>
   <div class="pizza-size-card-container">
-    <div class="pizza-size-card" :style="pizzaStyle"></div>
+    <div class="pizza-size-card"></div>
     <div class="pizza-size-card-details">
       <div class="pizza-size-card-text-container">
         <h2 class="pizza-size-card-text">{{ size }} Pizza</h2>

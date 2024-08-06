@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="custom-pizza-view-container">
 <h1>Custom Pizza</h1>
 <div class="pizza-size-cards">
 <PizzaSizeCardComponent v-bind:price="size.small.price" v-bind:size="size.small.size">PizzaSizeCard</PizzaSizeCardComponent>
@@ -8,7 +8,7 @@
 </div>
 
 <h2>Toppings</h2>
-<ToppingCardComponent v-on:click.prevent="addTopping(topping)" v-for="(topping, index) in topping" v-bind:key="index" v-bind:topping="topping"></ToppingCardComponent>
+<ToppingCardComponent v-for="(topping, index) in topping" v-bind:key="index" v-bind:topping="topping" @add-topping="addTopping(topping)" ></ToppingCardComponent>
 <h2>Crust</h2>
 <CrustCardComponent v-for="(crust, index) in crust" v-bind:key="index" v-bind:crust="crust"></CrustCardComponent>
 <h2>Sauce</h2>
@@ -62,14 +62,23 @@ export default {
         SauceCardComponent
     },
     
-    method: {
+    methods: {
         addTopping(topping) {
-            // this.customPizza.topping.push(topping)
-            console.log(topping)
+            const toppingElem = document.getElementById(`topping-${topping.id}`);
+            
+            if(toppingElem.checked) {
+                this.customPizza.topping.push(topping)
+            } else if (!toppingElem.checked) {
+                this.customPizza.topping = this.customPizza.topping.filter(t => t.name.toLowerCase() !== topping.name.toLowerCase())
+            }
+
+            console.log(this.customPizza)
         },
 
         removeTopping(topping) {
-            this.customPizza.topping = this.customPizza.topping.filter(t => t !== topping)
+            const toppingElem = document.getElementById(`topping-${topping.id}`);
+            
+            
         }
     }
 };
@@ -79,7 +88,9 @@ export default {
 
 
 <style>
-
+.custom-pizza-view-container {
+    padding: 20px 50px;
+}
 .pizza-size-cards {
     display: flex;
     justify-content: space-between;
