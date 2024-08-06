@@ -9,7 +9,7 @@
         </p>
       </div>
 
-      <button class="add-to-cart-btn" v-on:click="this.$router.replace('drink/custom')" >
+      <button class="add-to-cart-btn" v-on:click="this.$router.replace('pizza/custom')" >
           Add to Cart
       </button>
     </div>
