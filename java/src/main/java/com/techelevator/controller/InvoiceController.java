@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +24,8 @@ public class InvoiceController {
 
     //TODO get invoices from specified range, all if range not specified. GET
     @RequestMapping(path = "/invoices", method = RequestMethod.GET)
-    public ResponseEntity<List<Invoice>> getInvoices(@RequestParam(defaultValue = "0") String from,
-                                                     @RequestParam(defaultValue = "9999999999999999999999") String to) {
+    public ResponseEntity<List<Invoice>> getInvoices(@RequestParam(defaultValue = "1971-01-01") String from,
+                                                     @RequestParam(defaultValue = "9999-12-31") String to) {
         List<Invoice> invoices = null;
         invoices = invoiceDao.getInvoicesFromDateRange(from, to);
 //        System.out.println(from + " - " + to);
@@ -46,9 +48,10 @@ public class InvoiceController {
         isDelivery = (Boolean)placedOrder.get("is_delivery");
         address = (String)placedOrder.get("address");
 
-//        System.out.println(products + "\n" + creditCard + "\n" + isDelivery + "\n" + address);
-//        System.out.println(products.get(0) instanceof Product);
-        return new ResponseEntity<Invoice>(createdInvoice, HttpStatus.CREATED);
+        System.out.println(products + "\n" + creditCard + "\n" + isDelivery + "\n" + address);
+        System.out.println(products.get(0) instanceof Product);
+        return new ResponseEntity<Invoice>(new Invoice(0,0,BigDecimal.ZERO,true, false,
+                new Timestamp(2024)), HttpStatus.CREATED);
     }
 
     //TODO update/modify existing Invoice, PUT

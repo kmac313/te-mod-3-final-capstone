@@ -3,6 +3,7 @@ package com.techelevator.dao;
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Invoice;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.InvalidResultSetAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,7 +22,8 @@ public class JdbcInvoiceDao implements InvoiceDao{
 
     @Override
     public List<Invoice> getInvoices() {
-        String sql = "SELECT invoice_id, customer_id, total, is_delivery FROM invoice ORDER BY invoice_id";
+        String sql = "SELECT invoice_id, customer_id, total, is_delivery, is_complete, timestamp " +
+                "FROM invoice ORDER BY invoice_id";
         List<Invoice> allInvoices = new ArrayList<>();
 
         try {
@@ -39,7 +41,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
 
     @Override
     public Invoice getInvoiceById(int id) {
-        String sql = "SELECT invoice_id, customer_id, total, is_delivery FROM invoice" +
+        String sql = "SELECT invoice_id, customer_id, total, is_delivery, is_complete, timestamp FROM invoice" +
                 "WHERE invoice_id = ?";
         Invoice invoice = null;
         try{
@@ -57,7 +59,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
 
     @Override
     public List<Invoice> getInvoicesByCustomerId(int id) {
-        String sql = "SELECT invoice_id, customer_id, total, is_delivery FROM invoice" +
+        String sql = "SELECT invoice_id, customer_id, total, is_delivery, is_complete, timestamp FROM invoice" +
                 "WHERE customer_id = ?" +
                 " ORDER BY invoice_id";
         List<Invoice> customerInvoices = new ArrayList<>();
@@ -76,14 +78,22 @@ public class JdbcInvoiceDao implements InvoiceDao{
 
     @Override
     public List<Invoice> getInvoicesFromDateRange(String from,  String to) {
-        List<Invoice> invoicesRange = null;
-        //TODO: Fix sql statement "PreparedStatementCallback; bad SQL grammar
-        // [SELECT invoice_id, customer_id, total, is_delivery, is_complete, timestamp WHERE timestamp BETWEEN ? AND ?];
-        // nested exception is org.postgresql.util.PSQLException: ERROR: column \"invoice_id\" does not exist\n  Position: 8"
-        String sql = "SELECT invoice_id, customer_id, total, is_delivery, is_complete, timestamp " +
-                "WHERE timestamp BETWEEN ? AND ?";
+        List<Invoice> invoicesRange = new ArrayList<>();
+        String sql = "SELECT invoice_id, customer_id, total, is_delivery, is_complete, timestamp FROM invoice " +
+                "WHERE timestamp BETWEEN make_date(?,?,?) AND make_date(?,?,?) ";
+        List<Integer> fromInts = new ArrayList<>();
+        List<Integer> toInts = new ArrayList<>();
+        for (String s: from.split("-")){
+            fromInts.add(Integer.parseInt(s));
+        }
+        for (String s: to.split("-")){
+            toInts.add(Integer.parseInt(s));
+        }
         try {
-            SqlRowSet results = db.queryForRowSet(sql, from, to);
+            SqlRowSet results = db.queryForRowSet(sql,
+                    fromInts.get(0),fromInts.get(1),fromInts.get(2),
+                    toInts.get(0), toInts.get(1), toInts.get(2));
+
             while(results.next()) {
                 invoicesRange.add(mapRowSet(results));
             }
