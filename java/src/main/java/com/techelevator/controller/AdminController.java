@@ -2,7 +2,6 @@ package com.techelevator.controller;
 
 import com.techelevator.dao.CustomerDao;
 import com.techelevator.model.Customer;
-import com.techelevator.model.LoginResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,10 +13,10 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-public class Test_Controller {
+public class AdminController {
     private CustomerDao customerDao;
 
-    public Test_Controller(CustomerDao customerDao) {
+    public AdminController(CustomerDao customerDao) {
         this.customerDao = customerDao;
     }
 
@@ -26,4 +25,5 @@ public class Test_Controller {
         List<Customer> allCustomers = customerDao.getCustomers();
         return new ResponseEntity<>(allCustomers, HttpStatus.OK);
     }
+
 }

@@ -6,10 +6,8 @@ DROP TABLE IF EXISTS customer CASCADE;
 DROP TABLE IF EXISTS invoice CASCADE;
 DROP TABLE IF EXISTS specialty_pizza CASCADE;
 DROP TABLE IF EXISTS pizza CASCADE;
-DROP TABLE IF EXISTS drink;
 DROP TABLE IF EXISTS pizza_product CASCADE;
-DROP TABLE IF EXISTS pizza_size CASCADE;
-DROP TABLE IF EXISTS drink_size CASCADE;
+DROP TABLE IF EXISTS invoice_product CASCADE;
 DROP TABLE IF EXISTS product_category CASCADE;
 
 CREATE TABLE product (
@@ -17,6 +15,7 @@ CREATE TABLE product (
 	product_category_id int NOT NULL, 
 	price numeric(4,2),
 	description varchar(50),
+	quantity int NOT NULL DEFAULT 10, 
 	CONSTRAINT PK_product_id PRIMARY KEY (product_id)
 );
 
@@ -46,7 +45,8 @@ CREATE TABLE invoice (
 	customer_id int NOT NULL, 
 	total numeric(5,2) NOT NULL,
 	is_delivery boolean NOT NULL,
-	--is_complete boolean NOT NULL,
+	is_complete boolean NOT NULL,
+	timestamp timestamp NOT NULL, 
 	CONSTRAINT PK_invoice_id PRIMARY KEY (invoice_id)
 );
 CREATE TABLE specialty_pizza (
@@ -56,47 +56,22 @@ CREATE TABLE specialty_pizza (
 	sauce varchar(20) NOT NULL,
 	premium numeric (4,2)
 	
-	-- SELECT ... SUM(sp.premium, ps.base_price) AS price FROM specialty_pizza sp
-	-- JOIN pizza_size ps ON sp.specialty_pizza_id = ps.specialty_pizza_id
-	-- WHERE sp.specialty_pizza_id = ?
-	
 );
 
 CREATE TABLE pizza (
 	pizza_id SERIAL,
 	invoice_id int NOT NULL,
-	product_id int NOT NULL, -- remove? 
-	size_id varchar(2) NOT NULL, --if pizza_size is deleted (as a part of refactoring into product table), rmeove this also.
 	pizza_name varchar(20),
-	crust varchar(20) NOT NULL, 
-	sauce varchar(20) NOT NULL,
-	price numeric (4,2) NOT NULL, --leave, change name, UPDATE to SUM(*join product table using pizza_product to get price*)
+	total numeric (4,2) NOT NULL, --UPDATE to SUM(*join product table using pizza_product to get price*)
 	additional_instruction varchar(200), 
 	CONSTRAINT PK_pizza_id PRIMARY KEY (pizza_id)
 );
 
-CREATE TABLE drink( 
-	drink_id SERIAL, 
-	drink_size_id int NOT NULL, --delete? this table tcould basically be product table
+CREATE TABLE invoice_product(
 	invoice_id int NOT NULL,
-	product_id int NOT NULL,
-	flavor varchar(50) NOT NULL, --delete? this is basically "description" on product table
-	CONSTRAINT PK_drink_id PRIMARY KEY (drink_id)
+	product_id int NOT NULL 
 );
 
-CREATE TABLE pizza_size ( --could be refactored into pizza table (by removing diameter)
-	pizza_size_id varchar(2),
-	pizza_size_description varchar (20) NOT NULL, -- move to product table
-	diameter numeric(2,0),
-	base_price numeric (4,2), --move to product table
-	CONSTRAINT PK_pizza_size_id PRIMARY KEY (pizza_size_id)
-);
-CREATE TABLE drink_size( --could be deleted and migrated into product table?
-	drink_size_id SERIAL,
-	drink_size_description varchar (10) NOT NULL, 
-	drink_size_price numeric(4,2), 
-	CONSTRAINT PK_drink_size_id PRIMARY KEY (drink_size_id)
-);
 
 CREATE TABLE pizza_product (
 	pizza_id int NOT NULL,
@@ -112,19 +87,12 @@ CREATE TABLE product_category (
 );
 
 ALTER TABLE pizza 
-	ADD CONSTRAINT FK_pizza_invoice FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id) ON DELETE CASCADE,
-	ADD CONSTRAINT FK_pizza_size FOREIGN KEY (size_id) REFERENCES pizza_size(pizza_size_id),
-	ADD CONSTRAINT FK_product_pizza FOREIGN KEY (product_id) REFERENCES product(product_id)
+	ADD CONSTRAINT FK_pizza_invoice FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id) ON DELETE CASCADE
 	
 ;
+
 AlTER TABLE invoice 
 	ADD CONSTRAINT FK_invoice_customer FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE
-;
-
-ALTER TABLE drink 
-	ADD CONSTRAINT FK_drink_size FOREIGN KEY (drink_size_id) REFERENCES drink_size(drink_size_id),
-	ADD CONSTRAINT FK_drink_invoice FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id) ON DELETE CASCADE,
-	ADD CONSTRAINT FK_product_drink FOREIGN KEY (product_id) REFERENCES product(product_id)
 ;
 
 --ALTER TABLE customer
