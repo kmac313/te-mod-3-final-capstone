@@ -18,7 +18,7 @@
           MENU <img src="../assets/down-arrow.png" />
         </div>
       </nav>
-      <div>
+      <div class="login-div">
         <p
           v-on:click.prevent="logOut"
           v-if="$store.state.token != ''"
@@ -31,18 +31,16 @@
           v-if="$store.state.token == ''"
           >Login</router-link
         >
+
+        <img class="cart" src="../assets/cart.png" alt="cart" />
       </div>
     </div>
     <ul class="header-nav-links hidden" id="header-nav-links">
       
-        <li @click.prevent="changePath('pizza')">CUSTOM PIZZA</li>
-      
-      
-        <li @click.prevent="changePath('pizza')">SPECIALTY PIZZA</li>
-      
+        <li @click.prevent="changePath('pizza')">PIZZAS</li>      
       
         <!-- Change path to /drink -->
-        <li @click.prevent="changePath('pizza')">DRINKS</li>
+        <li @click.prevent="changePath('drink')">DRINKS</li>
       
     </ul>
     <toast v-if="showToast" />
@@ -74,7 +72,7 @@ export default {
       this.showToast = true;
       setTimeout(() => {
           this.showToast = false;
-          this.$router.push("/logout");
+          this.$router.replace("/logout");
             }, 1500);
 
             
@@ -83,7 +81,7 @@ export default {
     changePath(path) {
       const menuItems = document.getElementById("header-nav-links");
       menuItems.classList.remove('show')
-      this.$router.push(path)
+      this.$router.replace(path)
     }
   },
 };
@@ -174,7 +172,7 @@ nav {
   cursor: pointer;
 }
 
-.header-nav-links li:nth-child(3) {
+.header-nav-links li:nth-child(2) {
   border-bottom: none;
 }
 
@@ -213,6 +211,18 @@ nav {
 
 .logout-btn {
   cursor: pointer;
+}
+
+.cart {
+  width: 30px;
+  cursor: pointer;
+}
+
+.login-div {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
 }
 
 

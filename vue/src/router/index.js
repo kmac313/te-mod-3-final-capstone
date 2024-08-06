@@ -7,6 +7,8 @@ import LoginView from '../views/LoginView.vue';
 import LogoutView from '../views/LogoutView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import Pizza from '../views/Pizza.vue';
+import CustomPizza from '../views/CustomPizza.vue';
+import Drink from '../views/Drink.vue';
 
 /**
  * The Vue Router is used to "direct" the browser to render a specific view component
@@ -60,9 +62,29 @@ const routes = [
     meta: {
       requiresAuth: false
     }
-  }
+  },
+
+    // /customPizza
+
+    {
+      path: "/pizza/custom",
+      name: "custom",
+      component: CustomPizza,
+      meta: {
+        requiresAuth: false
+      }
+    },
 
     // /drinks
+
+    {
+      path: "/drink",
+      name: "drink",
+      component: Drink,
+      meta: {
+        requiresAuth: false
+      }
+    }
 
   // CHECKOUT
 

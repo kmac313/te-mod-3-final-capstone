@@ -46,6 +46,51 @@ export function createStore(currentToken, currentUser) {
             sauce: "Alfredo"
           },
         ],
+
+        toppings: [
+
+          {
+            name: "Pepperoni",
+            price: "1.00",
+            id: 1,
+          },
+
+          {
+            name: "Bacon",
+            price: "1.00",
+            id: 2,
+          },
+
+          {
+            name: "Sausage",
+            price: "1.00",
+            id: 3,
+          },
+
+          {
+            name: "Veggies",
+            price: "1.00",
+            id: 4,
+          },
+
+        ],
+
+        crust: [
+          {name: "Regular",
+            id: 1
+          }
+        ],
+
+        sauce : [
+          {name: "Marinara",
+            id: 1
+          },
+
+          {name: "Cheese",
+            id: 1
+          }
+        ],
+
         cart: [
           
         ]
