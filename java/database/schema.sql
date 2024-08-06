@@ -14,7 +14,7 @@ CREATE TABLE product (
 	product_id SERIAL,
 	product_category_id int NOT NULL, 
 	price numeric(4,2),
-	description varchar(50),
+	description varchar(500),
 	quantity int NOT NULL DEFAULT 10, 
 	CONSTRAINT PK_product_id PRIMARY KEY (product_id)
 );
