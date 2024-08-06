@@ -9,7 +9,7 @@ export function createStore(currentToken, currentUser) {
       inventory: {
         specialtyPizza: [
           {
-            name: "Hawian",
+            name: "Hawaiian",
             price: "32.00",
             crust: "regular",
             sauce: "Alfredo",
@@ -22,25 +22,25 @@ export function createStore(currentToken, currentUser) {
             sauce: "Alfredo"
           },
           {
-            name: "Hawian",
+            name: "Double Pepperoni",
             price: "32.00",
             crust: "regular",
             sauce: "Alfredo"
           },
           {
-            name: "Hawian",
+            name: "Chicken Parmesan",
             price: "32.00",
             crust: "regular",
             sauce: "Alfredo"
           },
           {
-            name: "Hawian",
+            name: "Stuffed Crust",
             price: "32.00",
             crust: "regular",
             sauce: "Alfredo"
           },
           {
-            name: "Hawian",
+            name: "Garlic Bread",
             price: "32.00",
             crust: "regular",
             sauce: "Alfredo"
