@@ -1,13 +1,19 @@
 <template>
   <div class="home">
-    <h1>
-      Welcome to the Pizza Shop
-    </h1>
-    <p>Pizza Content</p>
+    <HeroComponent ></HeroComponent>
+    <FeaturedComponent></FeaturedComponent>
   </div>
 </template>
 
 <script>
+import HeroComponent from '../components/HeroComponent.vue';
+import FeaturedComponent from '../components/FeaturedComponent.vue';
+
 export default {
+
+  components: {
+    HeroComponent,
+    FeaturedComponent
+  }
 };
 </script>
