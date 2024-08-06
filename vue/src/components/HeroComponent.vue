@@ -1,9 +1,12 @@
 <template>
     <div class="hero-container">
         <div class="hero-header">
+            <!-- Hero title -->
             <h1 class="hero-header">Tasty Pizza!</h1>
             <h2 class="hero-subheader">Get 2 pizzas for the price of 1.</h2>
         </div>
+
+        <!-- Hero btns -->
         <div class="hero-buttons">
             <button class="custom-pizza-btn">
                 Custom Pizza

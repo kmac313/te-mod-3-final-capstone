@@ -1,12 +1,15 @@
 <template>
   <div id="capstone-app">
+    <!-- Header -->
     <div id="nav">
       <HeaderComponent />
     </div>
+    <!-- Body -->
     <div>
       <router-view />
     </div>
     
+    <!-- Footer -->
     <div id="footer">
       <FooterComponent />
     </div>

@@ -1,0 +1,48 @@
+<template>
+  <div class="pizza-view-container">
+    <div class="pizza-view-components">
+        <h2>Make your own pizza</h2>
+        <PizzaComponent v-bind:pizza="customPizza" />
+    </div>
+    
+    <h2>Specialty Pizzas</h2>
+    <div v-for="(pizza, index) in allPizzas" v-bind:key="{ index }" class="pizza-view-components">
+      <PizzaComponent v-bind:pizza="pizza" />
+    </div>
+  </div>
+</template>
+
+<script>
+import PizzaComponent from '../components/PizzaComponent.vue';
+
+export default {
+    data() {
+        return {
+            customPizza: {
+            name: "Hawian",
+            price: "32.00",
+            crust: "regular",
+            sauce: "Alfredo"
+            },
+            allPizzas: this.$store.state.inventory.specialtyPizza,
+        }
+    },
+    components: {
+        PizzaComponent
+    }
+};
+</script>
+
+<style>
+    .pizza-view-container {
+        display: flex;
+        flex-direction: column;
+        column-gap: 30px;
+        align-items: start;
+        padding: 40px 40px;
+    }
+
+    .pizza-view-components {
+        width: 75%;
+    }
+</style>

@@ -12,6 +12,19 @@ export function createStore(currentToken, currentUser) {
             name: "Hawian",
             price: "32.00",
             crust: "regular",
+            sauce: "Alfredo",
+            toppings: [],
+          },
+          {
+            name: "Buffalo Chicken",
+            price: "32.00",
+            crust: "regular",
+            sauce: "Alfredo"
+          },
+          {
+            name: "Hawian",
+            price: "32.00",
+            crust: "regular",
             sauce: "Alfredo"
           },
           {
@@ -26,6 +39,15 @@ export function createStore(currentToken, currentUser) {
             crust: "regular",
             sauce: "Alfredo"
           },
+          {
+            name: "Hawian",
+            price: "32.00",
+            crust: "regular",
+            sauce: "Alfredo"
+          },
+        ],
+        cart: [
+          
         ]
       },
     },

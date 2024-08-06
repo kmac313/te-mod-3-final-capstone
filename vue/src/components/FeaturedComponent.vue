@@ -3,7 +3,7 @@
         <h1>Featured!</h1>
         <div class="featured-pizzas-list-container">
             <div v-for="(pizza, index) in allPizzas" v-bind:key={index} >
-                <FeaturedPizzaCard v-bind:pizza="pizza" />
+                <FeaturedPizzaCard v-bind:pizza="pizza" v-if="index < 3" />
             </div>
         </div>
         
