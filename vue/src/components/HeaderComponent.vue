@@ -19,10 +19,11 @@
         </div>
       </nav>
       <div>
-        <router-link
-          v-bind:to="{ name: 'logout' }"
+        <p
+          v-on:click.prevent="logOut"
           v-if="$store.state.token != ''"
-          >Logout</router-link
+          class="logout-btn"
+          >Logout</p
         >
         <router-link
           class="router-link-active"
@@ -33,22 +34,32 @@
       </div>
     </div>
     <ul class="header-nav-links hidden" id="header-nav-links">
-      <router-link v-bind:to="{ name: 'home' }">
-        <li>CUSTOM PIZZA</li>
-      </router-link>
-      <router-link v-bind:to="{ name: 'home' }">
-        <li>SPECIALTY PIZZA</li>
-      </router-link>
-      <router-link v-bind:to="{ name: 'home' }">
-        <li>DRINKS</li>
-      </router-link>
+      
+        <li @click.prevent="changePath('pizza')">CUSTOM PIZZA</li>
+      
+      
+        <li @click.prevent="changePath('pizza')">SPECIALTY PIZZA</li>
+      
+      
+        <!-- Change path to /drink -->
+        <li @click.prevent="changePath('pizza')">DRINKS</li>
+      
     </ul>
+    <toast v-if="showToast" />
   </div>
 </template>
 
 <script>
+import Toast from './Toast.vue';
 
 export default {
+  components: { Toast },
+
+  data() {
+    return {
+      showToast: false
+    }
+  },
   
   methods: {
     toggleMenu() {
@@ -59,6 +70,21 @@ export default {
         : menuItems.classList.add("show");
       return;
     },
+    logOut() {
+      this.showToast = true;
+      setTimeout(() => {
+          this.showToast = false;
+          this.$router.push("/logout");
+            }, 1500);
+
+            
+    },
+
+    changePath(path) {
+      const menuItems = document.getElementById("header-nav-links");
+      menuItems.classList.remove('show')
+      this.$router.push(path)
+    }
   },
 };
 </script>
@@ -91,12 +117,12 @@ nav {
   align-items: center;
 }
 
-.router-link-active {
+.header-nav-links li {
   color: black;
   text-decoration: none;
 }
 
-.router-link-active:visited {
+.header-nav-links li {
   color: black;
 }
 
@@ -129,7 +155,7 @@ nav {
   border: #e6e6e6 solid 1px;
   z-index: 5;
   visibility: hidden;
-  transition: opacity 0.8s ease, transform 0.3s ease; 
+  transition: opacity 0.8s ease, transform 0.4s ease; 
   transform: translateY(-100px);
 }
 .show {
@@ -141,19 +167,19 @@ nav {
   transform: translateY(0); 
 }
 
-.header-nav-links .router-link-active {
+.header-nav-links li {
   border-bottom: #a9a9a9 solid 1px;
   padding: 10px 8px 10px 8px;
-  width: 100%
+  width: 100%;
+  cursor: pointer;
 }
 
-.header-nav-links .router-link-active:nth-child(3) {
+.header-nav-links li:nth-child(3) {
   border-bottom: none;
 }
 
 
-.header-nav-links li:hover,
-.header-nav-links .router-link-active:hover {
+.header-nav-links li:hover {
   background-color: #e61d25;
   color: #fff;
 }
@@ -183,6 +209,10 @@ nav {
 
 .home-nav-btn:hover, .menu-btn:hover {
     border-bottom: 3px solid #e61d25; 
+}
+
+.logout-btn {
+  cursor: pointer;
 }
 
 

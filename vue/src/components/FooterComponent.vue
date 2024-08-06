@@ -72,6 +72,8 @@
         cursor: pointer;
     }
 
+
+
     footer .subscribe-btn {
         background-color: #e61d25;
         color: white;

@@ -34,7 +34,8 @@ export default {
         username: "",
         password: ""
       },
-      invalidCredentials: false
+      invalidCredentials: false,
+      showToast: false
     };
   },
   methods: {
@@ -46,6 +47,8 @@ export default {
             this.$store.commit("SET_AUTH_TOKEN", response.data.token);
             this.$store.commit("SET_USER", response.data.user);
             this.$router.push("/");
+            
+            
           }
         })
         .catch(error => {
