@@ -46,6 +46,7 @@ CREATE TABLE invoice (
 	customer_id int NOT NULL, 
 	total numeric(5,2) NOT NULL,
 	is_delivery boolean NOT NULL,
+	--is_complete boolean NOT NULL,
 	CONSTRAINT PK_invoice_id PRIMARY KEY (invoice_id)
 );
 CREATE TABLE specialty_pizza (
@@ -64,33 +65,33 @@ CREATE TABLE specialty_pizza (
 CREATE TABLE pizza (
 	pizza_id SERIAL,
 	invoice_id int NOT NULL,
-	product_id int NOT NULL,
-	size_id varchar(2) NOT NULL,
+	product_id int NOT NULL, -- remove? 
+	size_id varchar(2) NOT NULL, --if pizza_size is deleted (as a part of refactoring into product table), rmeove this also.
 	pizza_name varchar(20),
 	crust varchar(20) NOT NULL, 
 	sauce varchar(20) NOT NULL,
-	price numeric (4,2) NOT NULL,
+	price numeric (4,2) NOT NULL, --leave, change name, UPDATE to SUM(*join product table using pizza_product to get price*)
 	additional_instruction varchar(200), 
 	CONSTRAINT PK_pizza_id PRIMARY KEY (pizza_id)
 );
 
-CREATE TABLE drink(
+CREATE TABLE drink( 
 	drink_id SERIAL, 
-	drink_size_id int NOT NULL,
+	drink_size_id int NOT NULL, --delete? this table tcould basically be product table
 	invoice_id int NOT NULL,
 	product_id int NOT NULL,
-	flavor varchar(50) NOT NULL, 
+	flavor varchar(50) NOT NULL, --delete? this is basically "description" on product table
 	CONSTRAINT PK_drink_id PRIMARY KEY (drink_id)
 );
 
-CREATE TABLE pizza_size (
+CREATE TABLE pizza_size ( --could be refactored into pizza table (by removing diameter)
 	pizza_size_id varchar(2),
-	pizza_size_description varchar (20) NOT NULL, 
+	pizza_size_description varchar (20) NOT NULL, -- move to product table
 	diameter numeric(2,0),
-	base_price numeric (4,2), 
+	base_price numeric (4,2), --move to product table
 	CONSTRAINT PK_pizza_size_id PRIMARY KEY (pizza_size_id)
 );
-CREATE TABLE drink_size(
+CREATE TABLE drink_size( --could be deleted and migrated into product table?
 	drink_size_id SERIAL,
 	drink_size_description varchar (10) NOT NULL, 
 	drink_size_price numeric(4,2), 
