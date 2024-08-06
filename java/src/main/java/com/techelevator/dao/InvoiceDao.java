@@ -9,6 +9,7 @@ public interface InvoiceDao {
     List<Invoice> getInvoices();
     Invoice getInvoiceById(int id);
     List<Invoice> getInvoicesByCustomerId(int id);
+    List<Invoice> getInvoicesFromDateRange(String from, String to);
     Invoice createInvoice(Invoice invoice);
     void deleteInvoiceById(int id);
     void deleteInvoicesByCustomerId(int id);

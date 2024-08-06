@@ -29,17 +29,19 @@ INSERT INTO product (description, price, product_category_id) --ADD CRUSTS
 	('Stuffed', 2.00,  (SELECT product_category_id FROM product_category WHERE product_category_description = 'Crust')),
 	('Pretzel Crust', 0,  (SELECT product_category_id FROM product_category WHERE product_category_description = 'Crust'))
 	;
-INSERT INTO product (product_category_id, price, description, quantity) VALUES --ADD SAUCES
-(1, 0.00, 'Tomato Sauce - A classic sauce made from tomatoes, often used in pasta dishes and pizzas.', 10),
-(1, 0.00, 'Barbecue Sauce - A tangy and sweet sauce used for grilling and barbecuing meats, also popular on pizzas.', 10),
-(1, 0.00, 'Pesto Sauce - A green sauce made from basil, garlic, pine nuts, Parmesan cheese, and olive oil, sometimes used on pizzas.', 10),
-(1, 0.00, 'Alfredo Sauce - A creamy white sauce made from butter, heavy cream, and Parmesan cheese, occasionally used on pizzas.', 10),
-(1, 0.00, 'Garlic Sauce - A creamy sauce made from garlic, often used as a base for pizzas.', 10),
-(1, 0.00, 'Buffalo Sauce - A spicy and tangy sauce made from hot sauce and butter, sometimes used on pizzas.', 10),
-(1, 0.00, 'Ranch Sauce - A creamy sauce made from buttermilk, garlic, and herbs, sometimes used as a pizza topping.', 10),
-(1, 0.00, 'Marinara Sauce - A simple tomato sauce with garlic and herbs, commonly used on pizzas.', 10),
-(1, 0.00, 'White Sauce - A creamy sauce made from milk, butter, and flour, used as a base for white pizzas.', 10),
-(1, 0.00, 'Chipotle Sauce - A smoky and spicy sauce made from chipotle peppers, sometimes used on pizzas.', 10);
+INSERT INTO product (product_category_id, price, description, quantity) --ADD SAUCES
+	VALUES
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Sauce'), 0.00, 'Tomato Sauce - A classic sauce made from tomatoes, often used in pasta dishes and pizzas.', 10),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Sauce'), 0.00, 'Barbecue Sauce - A tangy and sweet sauce used for grilling and barbecuing meats, also popular on pizzas.', 10),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Sauce'), 0.00, 'Pesto Sauce - A green sauce made from basil, garlic, pine nuts, Parmesan cheese, and olive oil, sometimes used on pizzas.', 10),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Sauce'), 0.00, 'Alfredo Sauce - A creamy white sauce made from butter, heavy cream, and Parmesan cheese, occasionally used on pizzas.', 10),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Sauce'), 0.00, 'Garlic Sauce - A creamy sauce made from garlic, often used as a base for pizzas.', 10),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Sauce'), 0.00, 'Buffalo Sauce - A spicy and tangy sauce made from hot sauce and butter, sometimes used on pizzas.', 10),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Sauce'), 0.00, 'Ranch Sauce - A creamy sauce made from buttermilk, garlic, and herbs, sometimes used as a pizza topping.', 10),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Sauce'), 0.00, 'Marinara Sauce - A simple tomato sauce with garlic and herbs, commonly used on pizzas.', 10),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Sauce'), 0.00, 'White Sauce - A creamy sauce made from milk, butter, and flour, used as a base for white pizzas.', 10),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Sauce'), 0.00, 'Chipotle Sauce - A smoky and spicy sauce made from chipotle peppers, sometimes used on pizzas.', 10)
+;
 
 INSERT INTO customer(first_name,last_name,street_address,city,zip_code,state_abbreviation,phone_number,email,username)
 VALUES
@@ -52,5 +54,40 @@ VALUES
   ('Urielle','Dodson','Ap #152-1135 Vitae Rd.','Grand Rapids','36238','MI','8758145014','praesent.luctus.curabitur@yahoo.com','rhoncus.'),
   ('Troy','Jensen','Ap #517-703 Nec, Street','Akron','98045','OH','6529485741','facilisis@outlook.edu','et'),
   ('Yuli','Espinoza','Ap #333-353 Nulla. Ave','Salem','38762','OR','8275065667','nam.porttitor.scelerisque@outlook.edu','libero.'),
-  ('Barclay','Guy','263-1235 Eros. Avenue','New Haven','67758','CT','3617524327','sed.pharetra@hotmail.ca','Ut');
+  ('Barclay','Guy','263-1235 Eros. Avenue','New Haven','67758','CT','3617524327','sed.pharetra@hotmail.ca','Ut')
+;
+
+INSERT INTO invoice (customer_id, total, is_delivery, is_complete, timestamp) 
+	VALUES
+		(1, 150.75, true, false, '2022-01-15 10:30:00'),
+		(2, 200.50, false, true, '2022-02-20 11:45:00'),
+		(3, 75.00, true, true, '2022-03-25 14:20:00'),
+		(4, 120.00, false, false, '2022-04-10 09:15:00'),
+		(5, 300.25, true, true, '2022-05-05 16:00:00'),
+		(6, 50.00, false, true, '2022-06-12 12:30:00'),
+		(7, 180.00, true, false, '2022-07-18 13:45:00'),
+		(8, 220.75, false, true, '2022-08-22 15:00:00'),
+		(9, 90.50, true, true, '2022-09-30 17:30:00'),
+		(10, 110.00, false, false, '2022-10-10 08:45:00'),
+		(1, 130.75, true, true, '2022-11-15 10:30:00'),
+		(2, 210.50, false, false, '2022-12-20 11:45:00'),
+		(3, 85.00, true, true, '2023-01-25 14:20:00'),
+		(4, 140.00, false, false, '2023-02-10 09:15:00'),
+		(5, 310.25, true, true, '2023-03-05 16:00:00'),
+		(6, 60.00, false, true, '2023-04-12 12:30:00'),
+		(7, 190.00, true, false, '2023-05-18 13:45:00'),
+		(8, 230.75, false, true, '2023-06-22 15:00:00'),
+		(9, 100.50, true, true, '2023-07-30 17:30:00'),
+		(10, 120.00, false, false, '2023-08-10 08:45:00'),
+		(1, 140.75, true, true, '2023-09-15 10:30:00'),
+		(2, 220.50, false, false, '2023-10-20 11:45:00'),
+		(3, 95.00, true, true, '2023-11-25 14:20:00'),
+		(4, 160.00, false, false, '2023-12-10 09:15:00'),
+		(5, 320.25, true, true, '2023-12-25 16:00:00'),
+		(6, 70.00, false, true, '2024-01-12 12:30:00'),
+		(7, 200.00, true, false, '2024-02-18 13:45:00'),
+		(8, 240.75, false, true, '2024-03-22 15:00:00'),
+		(9, 110.50, true, true, '2024-04-30 17:30:00'),
+		(10, 130.00, false, false, '2024-05-10 08:45:00')
+;
 	

@@ -75,6 +75,27 @@ public class JdbcInvoiceDao implements InvoiceDao{
     }
 
     @Override
+    public List<Invoice> getInvoicesFromDateRange(String from,  String to) {
+        List<Invoice> invoicesRange = null;
+        //TODO: Fix sql statement "PreparedStatementCallback; bad SQL grammar
+        // [SELECT invoice_id, customer_id, total, is_delivery, is_complete, timestamp WHERE timestamp BETWEEN ? AND ?];
+        // nested exception is org.postgresql.util.PSQLException: ERROR: column \"invoice_id\" does not exist\n  Position: 8"
+        String sql = "SELECT invoice_id, customer_id, total, is_delivery, is_complete, timestamp " +
+                "WHERE timestamp BETWEEN ? AND ?";
+        try {
+            SqlRowSet results = db.queryForRowSet(sql, from, to);
+            while(results.next()) {
+                invoicesRange.add(mapRowSet(results));
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
+        }
+        return invoicesRange;
+    }
+
+    @Override
     public Invoice createInvoice(Invoice invoice) {
         String sql = "INSERT INTO invoice (customer_id, total, is_delivery) " +
                 "VALUES (?, ?, ?) RETURNING invoice_id";
@@ -124,7 +145,9 @@ public class JdbcInvoiceDao implements InvoiceDao{
                 rowSet.getInt("invoice_id"),
                 rowSet.getInt("customer_id"),
                 rowSet.getBigDecimal("total"),
-                rowSet.getBoolean("is_delivery")
+                rowSet.getBoolean("is_delivery"),
+                rowSet.getBoolean("is_complete"),
+                rowSet.getTimestamp("timestamp")
         );
     }
 }
