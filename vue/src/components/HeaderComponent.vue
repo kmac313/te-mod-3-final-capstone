@@ -10,23 +10,25 @@
       </div>
 
       <nav>
-        <router-link v-bind:to="{ name: 'home' }">Home</router-link>
-
-        <button class="menu-btn" v-on:click.prevent="toggleMenu">
-          MENU <v-icon name="bi-chevron-down" />
-        </button>
+        <div class="home-nav-btn">
+            <router-link v-bind:to="{ name: 'home' }">Home</router-link>
+        </div>
+        
+        <div class="menu-btn" v-on:click.prevent="toggleMenu">
+          MENU <img src="../assets/down-arrow.png" />
+        </div>
       </nav>
       <div>
         <router-link
-          v-bind:to="{ name: 'login' }"
+          v-bind:to="{ name: 'logout' }"
           v-if="$store.state.token != ''"
-          >Login</router-link
+          >Logout</router-link
         >
         <router-link
           class="router-link-active"
-          v-bind:to="{ name: 'logout' }"
+          v-bind:to="{ name: 'login' }"
           v-if="$store.state.token == ''"
-          >Logout</router-link
+          >Login</router-link
         >
       </div>
     </div>
@@ -45,25 +47,23 @@
 </template>
 
 <script>
-import { BiChevronDown } from "oh-vue-icons/icons";
+
 export default {
-  components: {
-    "v-icon": BiChevronDown,
-  },
+  
   methods: {
     toggleMenu() {
       const menuItems = document.getElementById("header-nav-links");
 
-      menuItems.classList.contains("hidden")
-        ? menuItems.classList.remove("hidden")
-        : menuItems.classList.add("hidden");
+      menuItems.classList.contains("show")
+        ? menuItems.classList.remove("show")
+        : menuItems.classList.add("show");
       return;
     },
   },
 };
 </script>
 
-<style>
+<style scoped>
 .header {
   position: relative;
   background-color: #fff;
@@ -104,11 +104,15 @@ nav {
   cursor: pointer;
   padding: 0.3em 0.6em;
   text-transform: uppercase;
-  background-color: #e61d25;
   border: none;
-  color: white;
+  background-color: white;
   font-size: 0.95em;
-  border-radius: 8px;
+  display: flex;
+  gap: 5px;
+}
+
+.menu-btn img {
+    width: 20px;
 }
 
 .header-nav-links {
@@ -123,11 +127,18 @@ nav {
   background-color: white;
   padding: 0px 10px;
   border: #e6e6e6 solid 1px;
-  z-index: 0;
+  z-index: 5;
+  visibility: hidden;
+  transition: opacity 0.8s ease, transform 0.3s ease; 
+  transform: translateY(-100px);
+}
+.show {
+  visibility: visible;
 }
 
-.hidden {
-  visibility: hidden;
+.header-nav-links.show { 
+  opacity: 1; 
+  transform: translateY(0); 
 }
 
 .header-nav-links .router-link-active {
@@ -164,4 +175,15 @@ nav {
   color: #000;
   cursor: pointer;
 }
+
+.home-nav-btn, .menu-btn {
+    border-bottom: 3px solid transparent; 
+    transition: border-color 0.8s ease-in-out; 
+}
+
+.home-nav-btn:hover, .menu-btn:hover {
+    border-bottom: 3px solid #e61d25; 
+}
+
+
 </style>

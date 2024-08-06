@@ -41,12 +41,13 @@
 
 <script></script>
 
-<style>
+<style scoped>
     footer {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr;
         border-bottom: #e0e0e0 solid 1px;
         box-shadow: 0 -4px 2px 0px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
     }
 
 
@@ -91,5 +92,10 @@
         border-radius: 5px;
         width: 50%;
         margin-bottom: 10px;
+    }
+
+    .router-link-active, .router-link-active:visited, .router-link-active:active {
+        text-decoration: none;
+        color: black;
     }
 </style>

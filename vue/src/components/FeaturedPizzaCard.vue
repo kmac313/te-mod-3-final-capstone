@@ -1,49 +1,83 @@
 <template>
-    <div class="pizza-card">
-    </div>
+  <div class="pizza-card-container">
+    <div class="pizza-card" :style="pizzaStyle"></div>
     <div class="featured-pizza-card-details">
-        <h2 class="featured-pizza-card-text">Featured Pizza
-            <p class="featured-pizza-card-description">Our featured pizza is the best pizza you will ever eat!</p>
-        </h2>
-        <img class="arrow-image" src="../assets/arrow.png" alt="Pizza" style="width: 3%" />
+      <div class="featured-pizza-card-text-container">
+        <h2 class="featured-pizza-card-text">{{ pizza.name }} Pizza</h2>
+        <p class="featured-pizza-card-description">
+          Our {{ pizza.name }} pizza is the best pizza you will ever eat!
+        </p>
+      </div>
+
+      <img
+        class="arrow-image"
+        src="../assets/arrow.png"
+        alt="Pizza"
+        style="width: 8%"
+      />
     </div>
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'FeaturedPizzaCard',
-    // Your component's JavaScript logic goes here
+  name: "FeaturedPizzaCard",
+  props: {
+    pizza: Object,
+  },
+  methods: {},
+  computed: {
+    pizzaStyle() {
+        return {
+            // Images must be placed inside of public folder
+            backgroundImage: `url('./${this.pizza.name}.jpg')`
+        };
+    }
 }
+  // Your component's JavaScript logic goes here
+};
 </script>
 
 <style scoped>
-
 .pizza-card {
-    position: relative;
-    background-image: url('../assets/pizzaimage.jpg');
-    height : 200px;
-    background-size: cover;
-    background-position: center;
-    width: 25%;
-    }
+  position: relative;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 9px 9px 0px 0px;
+  background-image: url('../assets/Hawian.jpg');
+  padding: 0px 30px;
+}
 
 .featured-pizza-card-details {
-    display: flex;
-    align-items: center;
-    }
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
-    .featured-pizza-card-details .featured-pizza-card-text {
-        margin-left: 20px;
-        font-size: 1.5em;
-        color: #333;
-        width: 20%;
-        font-size: large;
-    }
+.featured-pizza-card-details img {
+    cursor: pointer;
+}
 
-    .featured-pizza-card-details .featured-pizza-card-description {
-        font-size: 1em;
-        color: #333;
-        font-size: medium;
-    }
-    
+.featured-pizza-card-details .featured-pizza-card-text {
+  font-size: 1.8em;
+  color: #333;
+  font-size: large;
+}
+
+.featured-pizza-card-details .featured-pizza-card-description {
+  font-size: 1em;
+  color: #333;
+  font-size: medium;
+}
+
+.pizza-card-container {
+  border: #d8d8d8 solid 1px;
+  border-radius: 10px;
+}
+
+.featured-pizza-card-text-container {
+    width: 70%;
+    padding: 0px 10px;
+}
 </style>

@@ -5,8 +5,31 @@ export function createStore(currentToken, currentUser) {
   let store = _createStore({
     state: {
       token: currentToken || '',
-      user: currentUser || {}
+      user: currentUser || {},
+      inventory: {
+        specialtyPizza: [
+          {
+            name: "Hawian",
+            price: "32.00",
+            crust: "regular",
+            sauce: "Alfredo"
+          },
+          {
+            name: "Hawian",
+            price: "32.00",
+            crust: "regular",
+            sauce: "Alfredo"
+          },
+          {
+            name: "Hawian",
+            price: "32.00",
+            crust: "regular",
+            sauce: "Alfredo"
+          },
+        ]
+      },
     },
+    
     mutations: {
       SET_AUTH_TOKEN(state, token) {
         state.token = token;
