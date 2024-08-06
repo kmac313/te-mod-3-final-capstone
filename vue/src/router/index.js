@@ -84,6 +84,15 @@ const routes = [
       meta: {
         requiresAuth: false
       }
+    },
+
+    {
+      path: "/drink/custom",
+      name: "custom",
+      component: CustomPizza,
+      meta: {
+        requiresAuth: false
+      }
     }
 
   // CHECKOUT
