@@ -32,7 +32,9 @@
           >Login</router-link
         >
 
+       
         <img class="cart" src="../assets/cart.png" alt="cart" @click="showCart = !showCart" />
+        
       </div>
     </div>
     <ul class="header-nav-links hidden" id="header-nav-links">
@@ -44,7 +46,7 @@
       
     </ul>
     <toast v-if="showToast" :message="'You have logged out'" />
-    <CartComponent v-if="showCart" />
+    <CartComponent v-if="showCart" @close-cart="closeCart()"/>
   </div>
 </template>
 
@@ -80,11 +82,15 @@ export default {
             
     },
 
+    closeCart() {
+      this.showCart = false;
+    },
+
     changePath(path) {
       const menuItems = document.getElementById("header-nav-links");
       menuItems.classList.remove('show')
       this.$router.replace(path)
-    }
+    },
   },
 };
 </script>
@@ -226,6 +232,5 @@ nav {
   align-items: center;
   gap: 20px;
 }
-
 
 </style>

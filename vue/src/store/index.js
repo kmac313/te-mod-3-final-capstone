@@ -63,6 +63,13 @@ export function createStore(currentToken, currentUser) {
       currentOrder: [
         
       ],
+
+      isDelivery: {
+        orderType: '',
+        address: "123 Main Street",
+        eta: "15-20 minutes"
+      },
+      
       cart: {
           pizza: [
 
@@ -73,7 +80,7 @@ export function createStore(currentToken, currentUser) {
 
         },
         invoice: {
-          creditcard: "123456789235", 
+          creditcard: "", 
           isDelivery: true,
           address: "123 Main Street",
           
@@ -125,7 +132,11 @@ export function createStore(currentToken, currentUser) {
       },
       ADD_DRINK(state, drink) {
         state.inventory.drinks.push(drink)
-      }
+      },
+      UPDATE_ORDER_TYPE(state, orderType) {
+        state.isDelivery.orderType = orderType
+        state.invoice.isDelivery = orderType === 'delivery' ? true : false
+      },
     },
   });
   return store;
