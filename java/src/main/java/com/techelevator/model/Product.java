@@ -9,7 +9,7 @@ public class Product {
     private BigDecimal price;
     private String description;
     private int quantity;
-
+    public Product() {}
     public Product(int productId, int productCategoryId, String productCategoryDescription,
                    BigDecimal price, String description, int quantity) {
         this.productId = productId;

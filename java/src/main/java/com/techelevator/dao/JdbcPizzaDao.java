@@ -67,16 +67,16 @@ public class JdbcPizzaDao implements PizzaDao{
 
     @Override
     public Pizza createPizza(Pizza pizza) {
-        String sql = "INSERT INTO pizza (invoice_id, product_id, pizza_name, price, additional_instructions) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING pizza_id";
+        String sql = "INSERT INTO pizza (invoice_id, pizza_name, price, additional_instructions) " +
+                "VALUES (?, ?, ?, ?) RETURNING pizza_id";
         int createdPizzaId = 0;
 
         try {
             createdPizzaId = db.queryForObject(sql, int.class,
-                    pizza.getInvoiceId(), pizza.getProductId(),  pizza.getPizzaName(), pizza.getPrice(),
+                    pizza.getInvoiceId(),  pizza.getPizzaName(),
                     pizza.getAdditionalInstructions());
         } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the drink by ID");
+            System.out.println("An error happened getting the pizza by ID");
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         }
@@ -86,11 +86,12 @@ public class JdbcPizzaDao implements PizzaDao{
     @Override
     public Pizza updatePizza(Pizza pizza) {
         String sql = "UPDATE pizza " +
-                "SET product_id, size_id, pizza_name, crust, sauce, price, additional_instructions" +
+                "SET invoice_id = ?, pizza_name = ?, total = ?, additional_instructions = ? " +
                 "WHERE pizza_id = ?";
         int numRowsAffected = 0;
         try {
-            numRowsAffected = db.update(sql, pizza.getProductId(),pizza.getPrice(), pizza.getAdditionalInstructions());
+            numRowsAffected = db.update(sql, pizza.getInvoiceId(), pizza.getPizzaName(),
+                    pizza.getTotal(), pizza.getAdditionalInstructions(), pizza.getPizzaId());
             if (numRowsAffected == 0){
                 throw new DaoException("No matching Pizza found, check Pizza ID");
             }
@@ -136,10 +137,6 @@ public class JdbcPizzaDao implements PizzaDao{
     @Override
     public Pizza mapRowSet(SqlRowSet rowSet) {
         return new Pizza(
-                rowSet.getInt("p.product_id"),
-                rowSet.getInt("p.product_category_id"),
-                rowSet.getString("product_category_description"),
-                rowSet.getBigDecimal("p.price"),
                 rowSet.getString("p.description"),
                 rowSet.getInt("pi.pizza_id"),
                 rowSet.getInt("pi.invoice_id"),

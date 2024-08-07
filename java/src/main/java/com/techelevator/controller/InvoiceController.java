@@ -1,9 +1,14 @@
 package com.techelevator.controller;
 
 import com.techelevator.dao.InvoiceDao;
+import com.techelevator.dao.JdbcInvoiceDao;
+import com.techelevator.dao.PizzaDao;
+import com.techelevator.dao.ProductDao;
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Invoice;
+import com.techelevator.model.Pizza;
 import com.techelevator.model.Product;
+import org.apache.tomcat.jni.Time;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,14 +20,17 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 @RestController
 @CrossOrigin
 public class InvoiceController {
     private InvoiceDao invoiceDao;
+    private ProductDao productDao;
+    private PizzaDao pizzaDao;
 
-    public InvoiceController(InvoiceDao invoiceDao) {
+    public InvoiceController(InvoiceDao invoiceDao, ProductDao productDao, PizzaDao pizzaDao) {
         this.invoiceDao = invoiceDao;
+        this.productDao = productDao;
+        this.pizzaDao = pizzaDao;
     }
 
     @RequestMapping(path = "/invoices", method = RequestMethod.GET)
@@ -47,8 +55,21 @@ public class InvoiceController {
         String creditCard = "";
         Boolean isDelivery = false;
         String address = "";
-        List<Integer> products = new ArrayList<>();
-        List<List<Integer>> pizzas = new ArrayList<>();
+        List<Product> products = new ArrayList<>();
+        List<List<Integer>> pizzasIntegerList = new ArrayList<>();
+        List<Pizza> pizzas = new ArrayList<>();
+        BigDecimal total = BigDecimal.ZERO;
+
+        creditCard = (String)placedOrder.get("credit_card");
+        isDelivery = (Boolean)placedOrder.get("is_delivery");
+        address = (String)placedOrder.get("address");
+
+        Invoice invoice = new Invoice();
+        invoice.setTotal(BigDecimal.ZERO);
+        invoice.setCustomerId(0);
+        invoice.setDelivery(isDelivery);
+        invoice.setComplete(false);
+        createdInvoice = invoiceDao.createInvoice(invoice);
 
         /* Object Structure for the invoice
         {
@@ -72,26 +93,37 @@ public class InvoiceController {
             switch (entry.getKey().toString()){
                 case "other":
                     other = (List<Integer>) entry.getValue();
+                    for (int productId : other) {
+                        BigDecimal productPrice = productDao.getProductById(productId).getPrice();
+                        createdInvoice.setTotal(createdInvoice.getTotal().add(productPrice));
+                        products.add(productDao.getProductById(productId));
+                    }
                 break;
 
                 case "pizza":
                     for (List<Integer> pizza : (List<List<Integer>>)entry.getValue()){
-                        pizzas.add(pizza);
-                }
-                    System.out.println(pizzas);
-            }
-        }
-        for (int product_id : other) {
-            products.add(product_id);
-        }
-        System.out.println(products);
-//        for (int pizza : items.get("pizza")) {
-//
-//        }
-        creditCard = (String)placedOrder.get("credit_card");
-        isDelivery = (Boolean)placedOrder.get("is_delivery");
-        address = (String)placedOrder.get("address");
+                        pizzasIntegerList.add(pizza);
 
+                        Pizza newPizza = new Pizza();
+                        newPizza.setPizzaName("");
+                        newPizza.setAdditionalInstructions("");
+                        newPizza.setInvoiceId(createdInvoice.getInvoiceId());
+                        for (int productId : pizza) {
+                            BigDecimal productPrice = productDao.getProductById(productId).getPrice();
+                            newPizza.setTotal(newPizza.getTotal().add(productPrice));
+                            createdInvoice.setTotal(createdInvoice.getTotal().add(productPrice));
+                            newPizza.addComponent(productDao.getProductById(productId));
+                            products.add(productDao.getProductById(productId));
+                        }
+                        pizzaDao.createPizza(newPizza);
+                    }
+                    break;
+            }
+            System.out.println(pizzasIntegerList);
+        }
+        //TODO: Add authentication to ALL controllers
+        //TODO: Add pricnciple users
+        //TODO: Alter DDL to link free floating tables(specialty and user tables)
         //TODO update/create pizza databases to reflect new order
         //TODO update/create pizza_product databases to reflect new order
         //TODO update/create invoice databases to reflect new order
@@ -99,8 +131,7 @@ public class InvoiceController {
 
        System.out.println(items + "\n" + creditCard + "\n" + isDelivery + "\n" + address);
 
-        return new ResponseEntity<Invoice>(new Invoice(0,0,BigDecimal.ZERO,false, false,
-                new Timestamp(2024)), HttpStatus.CREATED);
+        return new ResponseEntity<Invoice>(invoiceDao.updateInvoice(createdInvoice), HttpStatus.CREATED);
     }
 
     //TODO update/modify existing Invoice, PUT

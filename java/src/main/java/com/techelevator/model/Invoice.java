@@ -1,6 +1,10 @@
 package com.techelevator.model;
 
+import org.apache.tomcat.jni.Time;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 public class Invoice {
@@ -11,6 +15,7 @@ public class Invoice {
     private boolean isComplete;
     private Timestamp timestamp;
 
+    public Invoice() {}
     public Invoice(int invoiceId, int customerId, BigDecimal total, boolean isDelivery,
                    boolean isComplete, Timestamp timestamp) {
         this.invoiceId = invoiceId;

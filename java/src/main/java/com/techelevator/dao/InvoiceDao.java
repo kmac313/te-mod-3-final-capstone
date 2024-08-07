@@ -12,6 +12,8 @@ public interface InvoiceDao {
     List<Invoice> getInvoicesFromDateRange(String from, String to);
     Invoice createInvoice(Invoice invoice);
     Invoice updateInvoice(Invoice invoice);
+    //TODO: Implement an updateInvoiceProduct method
+
     void deleteInvoiceById(int id);
     void deleteInvoicesByCustomerId(int id);
     public Invoice mapRowSet(SqlRowSet rowSet);

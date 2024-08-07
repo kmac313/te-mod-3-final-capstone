@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 
-public class Pizza extends Product{
+public class Pizza {
     private int pizzaId;
     private int invoiceId;
     private String pizzaName;
@@ -12,10 +12,9 @@ public class Pizza extends Product{
     private String additionalInstructions;
     private List<Product> components;
 
-    public Pizza(int productId, int productCategoryId,String productCategoryDescription,  BigDecimal price,
-                 String description, int pizzaId, int invoiceId,String pizzaName,BigDecimal total,
+    public Pizza() {}
+    public Pizza(String description, int pizzaId, int invoiceId,String pizzaName,BigDecimal total,
                  String additionalInstructions, int quantity) {
-        super(productId,productCategoryId, productCategoryDescription, price, description, quantity);
         this.pizzaId = pizzaId;
         this.invoiceId = invoiceId;
         this.pizzaName = pizzaName;
