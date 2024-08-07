@@ -76,7 +76,7 @@ export function createStore(currentToken, currentUser) {
           creditcard: "123456789235", 
           isDelivery: true,
           address: "123 Main Street",
-          time: new Date()
+          
         }
     },
     

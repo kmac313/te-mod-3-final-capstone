@@ -27,9 +27,9 @@ export default {
         }
     },
     methods: {
-        async submitOrder() {
-            const {data} = invoiceService.sendOrder(this.invoice)
-            console.log(data)
+        submitOrder() {
+            invoiceService.sendOrder(this.invoice).then((data) => console.log(data))
+            
         }
         
     }
