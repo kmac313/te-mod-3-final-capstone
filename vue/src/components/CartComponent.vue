@@ -28,8 +28,8 @@ export default {
     },
     methods: {
         submitOrder() {
-            invoiceService.sendOrder(this.invoice).then((data) => console.log(data))
-            
+            const invoice = invoiceService.sendOrder(this.invoice).then((data) => {return data.data})
+            console.log(invoice)
         }
         
     }
