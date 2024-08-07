@@ -222,7 +222,7 @@ export default {
     align-items: center;
     padding: 0px 30px;
     background-color: #fff;
-    border: 1px solid #d6d6d6;
+    border: 1px solid #000;
     border-radius: 5px;
     height: 100px;
 }
@@ -234,6 +234,7 @@ export default {
     border-radius: 15px;
     padding: 15px 35px;
     cursor: pointer;
+    font-size: 1.3em;
 }
 
 .add-to-cart-section button:hover {
