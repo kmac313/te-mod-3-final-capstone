@@ -1,6 +1,7 @@
 package com.techelevator.model;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -10,11 +11,11 @@ public class Pizza {
     private String pizzaName;
     private BigDecimal total;
     private String additionalInstructions;
-    private List<Product> components;
+    private List<Product> components = new ArrayList<>();
 
     public Pizza() {}
-    public Pizza(String description, int pizzaId, int invoiceId,String pizzaName,BigDecimal total,
-                 String additionalInstructions, int quantity) {
+    public Pizza(int pizzaId, int invoiceId,String pizzaName,BigDecimal total,
+                 String additionalInstructions) {
         this.pizzaId = pizzaId;
         this.invoiceId = invoiceId;
         this.pizzaName = pizzaName;

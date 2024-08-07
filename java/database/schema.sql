@@ -46,16 +46,15 @@ CREATE TABLE invoice (
 	total numeric(5,2) NOT NULL,
 	is_delivery boolean NOT NULL,
 	is_complete boolean NOT NULL,
-	timestamp timestamp NOT NULL, 
+	timestamp timestamp DEFAULT current_timestamp, 
 	CONSTRAINT PK_invoice_id PRIMARY KEY (invoice_id)
 );
+
 CREATE TABLE specialty_pizza (
-	specialty_pizza_id SERIAL,
+	pizza_id SERIAL,
 	specialty_pizza_name varchar(50) NOT NULL,
-	crust varchar(20) NOT NULL, 
-	sauce varchar(20) NOT NULL,
-	premium numeric (4,2)
-	
+	premium numeric (4,2),
+	CONSTRAINT PK_specialty_pizza_id PRIMARY KEY (pizza_id)
 );
 
 CREATE TABLE pizza (
@@ -63,9 +62,10 @@ CREATE TABLE pizza (
 	invoice_id int NOT NULL,
 	pizza_name varchar(20),
 	total numeric (4,2) NOT NULL, --UPDATE to SUM(*join product table using pizza_product to get price*)
-	additional_instruction varchar(200), 
+	additional_instructions varchar(200), 
 	CONSTRAINT PK_pizza_id PRIMARY KEY (pizza_id)
 );
+ALTER SEQUENCE pizza_pizza_id_seq RESTART WITH 100;
 
 CREATE TABLE invoice_product(
 	invoice_id int NOT NULL,
@@ -77,7 +77,8 @@ CREATE TABLE pizza_product (
 	pizza_id int NOT NULL,
 	product_id int NOT NULL,
 	CONSTRAINT FK_pizza_product_pizza_id FOREIGN KEY (pizza_id) REFERENCES pizza(pizza_id),
-	CONSTRAINT FK_pizza_product_product_id FOREIGN KEY (product_id) REFERENCES product(product_id)
+	CONSTRAINT FK_pizza_product_product_id FOREIGN KEY (product_id) REFERENCES product(product_id),
+	CONSTRAINT FK_specialty_pizza_product_pizza_id FOREIGN KEY (pizza_id) REFERENCES specialty_pizza(pizza_id)
 );
 
 CREATE TABLE product_category (
@@ -95,11 +96,16 @@ AlTER TABLE invoice
 	ADD CONSTRAINT FK_invoice_customer FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE
 ;
 
---ALTER TABLE customer
---	ADD CONSTRAINT FK_customer_user_username FOREIGN KEY (username) REFERENCES users(username)
---;
 ALTER TABLE product
 	ADD CONSTRAINT FK_product_category_id FOREIGN KEY (product_category_id) REFERENCES product_category(product_category_id)
 ;
 
+ALTER TABLE invoice_product
+	ADD CONSTRAINT FK_invoice_id FOREIGN KEY (invoice_id) REFERENCES invoice (invoice_id),
+	ADD CONSTRAINT FK_product_id FOREIGN KEY (product_id) REFERENCES product (product_id)
+;
+
+ALTER TABLE customer
+	ADD CONSTRAINT FK_customer_user_username FOREIGN KEY (username) REFERENCES users(username)
+;
 --ROLLBACK TRANSACTION;

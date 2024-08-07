@@ -12,6 +12,7 @@ import org.apache.tomcat.jni.Time;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ZeroCopyHttpOutputMessage;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -61,12 +62,15 @@ public class InvoiceController {
         BigDecimal total = BigDecimal.ZERO;
 
         creditCard = (String)placedOrder.get("credit_card");
+        if (creditCard.length() != 16) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
         isDelivery = (Boolean)placedOrder.get("is_delivery");
         address = (String)placedOrder.get("address");
 
         Invoice invoice = new Invoice();
         invoice.setTotal(BigDecimal.ZERO);
-        invoice.setCustomerId(0);
+        invoice.setCustomerId(1);
         invoice.setDelivery(isDelivery);
         invoice.setComplete(false);
         createdInvoice = invoiceDao.createInvoice(invoice);
@@ -105,6 +109,7 @@ public class InvoiceController {
                         pizzasIntegerList.add(pizza);
 
                         Pizza newPizza = new Pizza();
+                        newPizza.setTotal(BigDecimal.ZERO);
                         newPizza.setPizzaName("");
                         newPizza.setAdditionalInstructions("");
                         newPizza.setInvoiceId(createdInvoice.getInvoiceId());
@@ -124,6 +129,7 @@ public class InvoiceController {
         //TODO: Add authentication to ALL controllers
         //TODO: Add pricnciple users
         //TODO: Alter DDL to link free floating tables(specialty and user tables)
+
         //TODO update/create pizza databases to reflect new order
         //TODO update/create pizza_product databases to reflect new order
         //TODO update/create invoice databases to reflect new order
@@ -134,8 +140,6 @@ public class InvoiceController {
         return new ResponseEntity<Invoice>(invoiceDao.updateInvoice(createdInvoice), HttpStatus.CREATED);
     }
 
-    //TODO update/modify existing Invoice, PUT
-    // TODO ResponseStatus.CREATED
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/invoices/{invoiceId}", method = RequestMethod.PUT)
     public ResponseEntity<Invoice>updateInvoice (@RequestBody Invoice invoice,  @PathVariable int invoiceId) {

@@ -107,12 +107,12 @@ public class JdbcInvoiceDao implements InvoiceDao{
 
     @Override
     public Invoice createInvoice(Invoice invoice) {
-        String sql = "INSERT INTO invoice (customer_id, total, is_delivery) " +
-                "VALUES (?, ?, ?) RETURNING invoice_id";
+        String sql = "INSERT INTO invoice (customer_id, total, is_delivery, is_complete) " +
+                "VALUES (?, ?, ?, ?) RETURNING invoice_id";
         int createdInvoiceId;
         try{
              createdInvoiceId = db.queryForObject(sql, int.class,
-                    invoice.getCustomerId(), invoice.getTotal(), invoice.isDelivery());
+                    invoice.getCustomerId(), invoice.getTotal(), invoice.isDelivery(), invoice.isComplete());
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         } catch (DataIntegrityViolationException e) {

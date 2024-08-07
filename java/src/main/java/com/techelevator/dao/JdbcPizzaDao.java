@@ -23,7 +23,7 @@ public class JdbcPizzaDao implements PizzaDao{
     @Override
     public List<Pizza> getPizzas() {
         String sql = "SELECT p.product_id, p.product_category_id, pc.product_category_description,p.price, " +
-                "p.description, pi.pizza_id, pi.invoice_id,pi.pizza_name, pi.total, pi.additional_instruction, p.quantity " +
+                "p.description, pi.pizza_id, pi.invoice_id,pi.pizza_name, pi.total, pi.additional_instructions, p.quantity " +
                 "FROM pizza pi " +
                 "JOIN pizza_product pp ON pi.pizza_id = pp.product_id  " +
                 "JOIN product p ON pp.product_id = p.product_id JOIN product_category pc ON p.product_category_id = pc.product_category_id  " +
@@ -45,12 +45,10 @@ public class JdbcPizzaDao implements PizzaDao{
 
     @Override
     public Pizza getPizzaById(int id) {
-        String sql ="SELECT p.productId, p.product_category_id, pc.product_category_description," +
-                " p.price, p.description, pi.pizzaId, pi.invoiceId," +
-                "pi.pizza_name, pi.total, pi.additionalInstructions, p.quantity FROM pizza pi " +
-                "JOIN product p ON pi.product_id = p.product_id" +
-                "JOIN product_category pc ON p.product_category_id = pc.product_category_id" +
-                " WHERE pi.pizza_id = ? ";
+        String sql ="SELECT " +
+                "pi.pizza_id, pi.invoice_id, " +
+                "pi.pizza_name, pi.total, pi.additional_instructions FROM pizza pi " +
+                "WHERE pi.pizza_id = ? ";
         Pizza pizza = null;
         try {
             SqlRowSet result = db.queryForRowSet(sql, id);
@@ -67,13 +65,13 @@ public class JdbcPizzaDao implements PizzaDao{
 
     @Override
     public Pizza createPizza(Pizza pizza) {
-        String sql = "INSERT INTO pizza (invoice_id, pizza_name, price, additional_instructions) " +
+        String sql = "INSERT INTO pizza (invoice_id, pizza_name, total, additional_instructions) " +
                 "VALUES (?, ?, ?, ?) RETURNING pizza_id";
         int createdPizzaId = 0;
 
         try {
             createdPizzaId = db.queryForObject(sql, int.class,
-                    pizza.getInvoiceId(),  pizza.getPizzaName(),
+                    pizza.getInvoiceId(), pizza.getPizzaName(), pizza.getTotal(),
                     pizza.getAdditionalInstructions());
         } catch (DataIntegrityViolationException eie) {
             System.out.println("An error happened getting the pizza by ID");
@@ -137,13 +135,11 @@ public class JdbcPizzaDao implements PizzaDao{
     @Override
     public Pizza mapRowSet(SqlRowSet rowSet) {
         return new Pizza(
-                rowSet.getString("p.description"),
-                rowSet.getInt("pi.pizza_id"),
-                rowSet.getInt("pi.invoice_id"),
-                rowSet.getString("pi.pizza_name"),
-                rowSet.getBigDecimal("pi.total"),
-                rowSet.getString("pi.additional_instructions"),
-                rowSet.getInt("p.quantity")
+                rowSet.getInt("pizza_id"),
+                rowSet.getInt("invoice_id"),
+                rowSet.getString("pizza_name"),
+                rowSet.getBigDecimal("total"),
+                rowSet.getString("additional_instructions")
                 );
 
 
