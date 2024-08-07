@@ -19,7 +19,7 @@ export default {
     data() {
         return {
             customPizza: {
-            name: "Hawian",
+            name: "Custom",
             price: "32.00",
             crust: "regular",
             sauce: "Alfredo"

@@ -8,10 +8,10 @@
 
         <!-- Hero btns -->
         <div class="hero-buttons">
-            <button class="custom-pizza-btn">
+            <button class="custom-pizza-btn" v-on:click="this.$router.replace('pizza/custom')">
                 Custom Pizza
             </button>
-            <button class="specialty-pizza-btn">
+            <button class="specialty-pizza-btn" v-on:click="this.$router.replace('pizza')">
                 Specialty Pizza
             </button>
         </div>

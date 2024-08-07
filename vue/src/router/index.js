@@ -84,7 +84,8 @@ const routes = [
       meta: {
         requiresAuth: false
       }
-    }
+    },
+
 
   // CHECKOUT
 
