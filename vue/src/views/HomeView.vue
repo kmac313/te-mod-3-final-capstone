@@ -15,6 +15,7 @@ export default {
     FeaturedComponent,
   },
   methods: {
+    // Move to App.vue
     addProducts() {
       productService.getProducts().then((data) => {
         const regularToppings = data.data["Regular Topping"];
@@ -22,6 +23,7 @@ export default {
         const sizes = data.data["Size"];
         const crusts = data.data["Crust"];
         const sauces = data.data["Sauce"];
+        const drinks = data.data["Drink"];
 
         for(let regTopping of regularToppings ) {
           this.$store.commit("ADD_TOPPING", regTopping);
@@ -39,20 +41,24 @@ export default {
           this.$store.commit("ADD_CRUST", crust);
         }
 
+
         for(let sauce of sauces ) {
           this.$store.commit("ADD_SAUCE", sauce);
         }
 
+        for(let drink of drinks ) {
+          this.$store.commit("ADD_DRINK", drink);
+        }
         
       })
-      // Remove after testing
-      .finally(() => {
-        console.log(this.$store.state.inventory);
-      });
+      
     },
   },
   beforeMount() {
-    this.addProducts();
+    if(this.$store.state.inventory.crust.length === 0) {
+      this.addProducts();
+    }
+    
   },
 };
 </script>

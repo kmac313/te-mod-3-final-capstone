@@ -1,15 +1,15 @@
 <template>
-  <div class="drink-card-container">
+  <div class="drink-card-container" :id="'drink-' + drink.productId">
     <div class="drink-card" :style="drinkStyle"></div>
     <div class="drink-card-details">
       <div class="drink-card-text-container">
-        <h2 class="drink-card-text">{{ drink.name }} Drink</h2>
+        <h2 class="drink-card-text">{{ drinkName }} Drink</h2>
         <p class="drink-card-description">
-          ${{ drink.price }} 
+          ${{ drink.price.toFixed(2) }} 
         </p>
       </div>
 
-      <button class="add-to-cart-btn" v-on:click="this.$router.replace('pizza/custom')" >
+      <button class="add-to-cart-btn" v-on:click="$emit('show-popup')" >
           Add to Cart
       </button>
     </div>
@@ -27,8 +27,14 @@ export default {
     drinkStyle() {
         return {
             // Images must be placed inside of public folder
-            backgroundImage: `url('./${this.drink.name}.jpg')`
+            backgroundImage: `url('./${this.drinkName}.jpg')`
         };
+    },
+
+    drinkName() {
+      const arr = this.drink.description.split("-")
+
+      return arr[0].trim()
     }
 }
   // Your component's JavaScript logic goes here

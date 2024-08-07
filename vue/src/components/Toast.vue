@@ -1,12 +1,14 @@
 <template>
   <div class="toast-container">
-    <p>You have logged out</p>
+    <p>{{message}}</p>
   </div>
 </template>
 
 <script>
 export default {
-
+  props: {
+    message: String
+  }
 }
 </script>
 

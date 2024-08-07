@@ -54,44 +54,30 @@ export function createStore(currentToken, currentUser) {
 
         crust: [],
 
-        sauce : [
-          {name: "Marinara",
-            id: 1
-          },
+        sauce : [],
 
-          {name: "Cheese",
-            id: 2
-          }
-        ],
-
-        drinks: [
-          {name: "Coca-Cola",
-            price: "2.00",
-            id: 1
-          },
-
-          {name: "Sprite",
-            price: "2.00",
-            id: 2
-          },
-
-          {name: "Pepsi",
-            price: "2.00",
-            id: 3
-          },
-
-          {name: "Minute Maid",
-            price: "2.00",
-            id: 4
-          },
-
-        ],
+        drinks: [],
 
         
       },
-      cart: [
-          
-      ]
+      currentOrder: [
+        
+      ],
+      cart: {
+          pizza: [
+
+          ],
+          other: [
+
+          ]
+
+        },
+        invoice: {
+          creditcard: "123456789235", 
+          isDelivery: true,
+          address: "123 Main Street",
+          time: new Date()
+        }
     },
     
     mutations: {
@@ -111,10 +97,16 @@ export function createStore(currentToken, currentUser) {
         state.user = {};
         axios.defaults.headers.common = {};
       },
-      ADD_TO_CART(state, item) {
-        let newId = state.cart.length
-        item.id = newId
-        state.cart.push(item)
+      ADD_TO_CURR_ORDER(state, item) {
+        const newId = state.currentOrder.length + 1;
+        item.currOrderId = newId;
+        state.currentOrder.push(item)
+      },
+      ADD_TO_PIZZA_CART(state, pizza) {
+        state.cart.pizza.push(pizza)
+      },
+      ADD_TO_OTHER_CART(state, item) {
+        state.cart.other.push(item)
       },
       ADD_TOPPING(state, topping) {
         state.inventory.toppings.push(topping)
@@ -130,6 +122,9 @@ export function createStore(currentToken, currentUser) {
       },
       ADD_SIZE(state, size) {
         state.inventory.size.push(size)
+      },
+      ADD_DRINK(state, drink) {
+        state.inventory.drinks.push(drink)
       }
     },
   });

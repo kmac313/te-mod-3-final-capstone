@@ -44,8 +44,9 @@
         <button :disabled="totalPrice == 0" @click="addToCart()">Add to Order</button>
         <p><span>Total Price:</span> ${{ totalPrice > 0 ? totalPrice : "" }}</p>
     </div>
-    
+    <toast v-if="showToast" :message="'Successfully added to cart!'" />
   </div>
+
 </template>
 
 <script>
@@ -53,12 +54,13 @@ import CrustCardComponent from "../components/CrustCardComponent.vue";
 import PizzaSizeCardComponent from "../components/PizzaSizeCardComponent.vue";
 import ToppingCardComponent from "../components/ToppingCardComponent.vue";
 import SauceCardComponent from "../components/SauceCardComponent.vue";
+import Toast from "../components/Toast.vue";
 
 export default {
   data() {
     return {
       customPizza: {
-        name: "",
+        description: "",
         price: 0.00,
         crust: {},
         sauce: {},
@@ -66,27 +68,12 @@ export default {
         topping: [],
       },
       allPizzas: this.$store.state.inventory.specialtyPizza,
-      size: {
-        small: {
-            id: 1,
-          price: 10.0,
-          size: "Small",
-        },
-        medium: {
-            id: 2,
-          price: 12.0,
-          size: "Medium",
-        },
-        large: {
-            id: 3,
-          price: 14.0,
-          size: "Large",
-        },
-      },
+      size: this.$store.state.inventory.size,
 
       topping: [...this.$store.state.inventory.toppings, ...this.$store.state.inventory.premiumToppings],
       crust: this.$store.state.inventory.crust,
       sauce: this.$store.state.inventory.sauce,
+      showToast: false
     };
   },
   components: {
@@ -94,6 +81,7 @@ export default {
     ToppingCardComponent,
     CrustCardComponent,
     SauceCardComponent,
+    Toast
   },
 
   methods: {
@@ -129,33 +117,36 @@ export default {
     },
 
     addSauce(sauce) {
-      const sauceElem = document.getElementById(`sauce-${sauce.id}`);
+      const sauceElem = document.getElementById(`sauce-${sauce.productId}`);
 
       if (sauceElem.checked) {
+        
         this.customPizza.sauce = sauce;
         const allOtherSauceOptions =
           document.getElementsByClassName("sauce-checkbox");
         for (let currSauce of allOtherSauceOptions) {
-          if (currSauce.id == "sauce-" + sauce.id) {
+          if (currSauce.id == "sauce-" + sauce.productId) {
             continue;
           }
 
           currSauce.checked = false;
         }
       } else if (!sauceElem.checked) {
-        this.customPizza.crust = "";
+        
+        this.customPizza.sauce = {};
       }
+      
     },
 
     addSize(size) {
-      const sizeElem = document.getElementById(`size-${size.id}`);
+      const sizeElem = document.getElementById(`size-${size.productId}`);
        
       if (!sizeElem.classList.contains("card-highlighted")) {
         this.customPizza.size = size;
         const allOtherSizeOptions =
           document.getElementsByClassName("pizza-size-card-container");
         for (let currSize of allOtherSizeOptions) {
-          if (currSize.id == "size-" + size.id) {
+          if (currSize.id == "size-" + size.productId) {
             currSize.classList.add("card-highlighted");
             continue;
           }
@@ -173,19 +164,39 @@ export default {
     addToCart() {
         // Type is string
         this.customPizza.price = this.totalPrice
+        this.customPizza.description = this.customPizza.description.length === 0 ? "Pizza" : this.customPizza.description;
+        // Add to current order in store
+        this.$store.commit("ADD_TO_CURR_ORDER", this.customPizza);
+        console.log(this.$store.state.currentOrder)
 
         // Add to cart in store
-        this.$store.commit("ADD_TO_CART", this.customPizza);
+        const toppingsIdList = [];
+        for(let topping of this.customPizza.topping) {
+          toppingsIdList.push(topping.productId)
+        }
+        const cartPizza = [
+          this.customPizza.size.productId,
+          this.customPizza.sauce.productId,
+          this.customPizza.crust.productId,
+          toppingsIdList
+        ]
+        this.$store.commit("ADD_TO_PIZZA_CART", cartPizza);
         console.log(this.$store.state.cart)
 
-        // Push to pizzas
+        // show toast
+        this.showToast = true;
+        setTimeout(() => {
+          this.showToast = false
+          // Push to pizzas
         this.$router.replace("/pizza")
+        }, 1500)
+        
     }
 
   },
   computed: {
     totalPrice(){
-        if(this.customPizza.crust.productId && this.customPizza.size.id && this.customPizza.sauce.id) {
+        if(this.customPizza.crust.productId && this.customPizza.size.productId && this.customPizza.sauce.productId) {
             let totalComputedPrice = this.customPizza.size.price;
             if(this.customPizza.topping.length > 0) {
                 for(let topping of this.customPizza.topping) {
@@ -211,7 +222,7 @@ export default {
   justify-content: space-between;
   gap: 20px;
   padding: 10px;
-  width: 50%;
+  width: 70%;
 }
 .add-to-cart-section {
     display: flex;

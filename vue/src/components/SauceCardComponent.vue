@@ -1,10 +1,16 @@
 <template>
     <div class="topping-card-container">
       <div class="topping-card-text-container">
-        <p class="topping-card-description">
-          {{ sauce.name }} &nbsp;
-        </p>
-        <input type="checkbox" class="sauce-checkbox" :id="'sauce-' + sauce.id" :value="1" v-on:click="$emit('add-sauce')"/>
+        <div class="sauce-text-content">
+          <p class="sauce-card-header">
+          {{ sauceHeader }} &nbsp;
+          </p>
+          <p class="sauce-card-description">
+            {{ sauceDescription }}
+          </p>
+        </div>
+        
+        <input type="checkbox" class="sauce-checkbox" :id="'sauce-' + sauce.productId" :value="1" v-on:click="$emit('add-sauce')"/>
       </div>
   </div>
 </template>
@@ -17,6 +23,16 @@ export default {
       type: Object,
       required: true
  
+  }
+},
+computed: {
+  sauceHeader() {
+   const arr = this.sauce.description.split('-')
+    return arr[0];
+  },
+  sauceDescription() {
+   const arr = this.sauce.description.split('-')
+    return arr[arr.length - 1];
   }
 }
 }
@@ -54,6 +70,10 @@ input[type="checkbox"] {
 
 input[type="checkbox"]:checked {
   accent-color: #e61d25;
+}
+
+.sauce-card-header {
+  font-weight: bold;
 }
 
 </style>

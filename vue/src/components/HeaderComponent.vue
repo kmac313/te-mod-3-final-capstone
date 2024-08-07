@@ -32,7 +32,7 @@
           >Login</router-link
         >
 
-        <img class="cart" src="../assets/cart.png" alt="cart" />
+        <img class="cart" src="../assets/cart.png" alt="cart" @click="showCart = !showCart" />
       </div>
     </div>
     <ul class="header-nav-links hidden" id="header-nav-links">
@@ -43,19 +43,21 @@
         <li @click.prevent="changePath('drink')">DRINKS</li>
       
     </ul>
-    <toast v-if="showToast" />
+    <toast v-if="showToast" :message="'You have logged out'" />
+    <CartComponent v-if="showCart" />
   </div>
 </template>
 
 <script>
 import Toast from './Toast.vue';
-
+import CartComponent from './CartComponent.vue';
 export default {
-  components: { Toast },
+  components: { Toast, CartComponent },
 
   data() {
     return {
-      showToast: false
+      showToast: false,
+      showCart: false
     }
   },
   

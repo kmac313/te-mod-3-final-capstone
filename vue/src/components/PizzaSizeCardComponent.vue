@@ -1,9 +1,9 @@
 <template>
-  <div class="pizza-size-card-container" :id="'size-' + size.id" v-on:click="$emit('add-size')">
+  <div class="pizza-size-card-container" :id="'size-' + size.productId" v-on:click="$emit('add-size')">
     <div class="pizza-size-card"></div>
     <div class="pizza-size-card-details">
       <div class="pizza-size-card-text-container">
-        <h2 class="pizza-size-card-text">{{ size.size }} Pizza</h2>
+        <h2 class="pizza-size-card-text">{{ size.description }}</h2>
         <p class="pizza-size-card-description">
           ${{ size.price }}
         </p>
