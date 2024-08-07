@@ -40,17 +40,22 @@ public class ProductController {
         return new ResponseEntity<>(menuObject, HttpStatus.OK);
     }
 
-    //TODO send front-end products that make up a pizza, GET
+
     @RequestMapping(path = "/menu/pizza", method = RequestMethod.GET)
-    public ResponseEntity<List<Product>> getPizzaMenu() {
+    public ResponseEntity<Map<String, List<Product>>> getPizzaMenu() {
         List<String> pizzaComponentCategories = new ArrayList<>();
         String[] categories = new String[]{"Size", "Crust", "Sauce", "Regular Topping", "Premium Topping"};
+        Map<String, List<Product>> pizzaComponents = new HashMap<>();
         for (String category : categories) {
-            pizzaComponentCategories.add(category);
+            List<String> tempList = new ArrayList<>();
+            tempList.add(category);
+            pizzaComponents.put(category,
+                    productDao.getProductsByCategoryDescription(tempList));
         }
-        System.out.println(pizzaComponentCategories);
-        List<Product> pizzaComponents = productDao.getProductsByCategoryDescription(pizzaComponentCategories);
+        System.out.println(pizzaComponents);
         return new ResponseEntity<>(pizzaComponents, HttpStatus.OK);
 
     }
+
+    //TODO method for getting products by requested categories (maybe add to the above function)
 }

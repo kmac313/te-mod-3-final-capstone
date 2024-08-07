@@ -2,7 +2,9 @@ INSERT INTO users (username, password_hash, role) VALUES ('user','$2a$08$UkVvwpU
 INSERT INTO users (username, password_hash, role) VALUES ('admin','$2a$08$UkVvwpULis18S19S5pZFn.YHPZt3oaqHZnDwqbCW9pft6uFtkXKDC','ROLE_ADMIN');
 
 INSERT INTO product_category (product_category_description) --PRODUCT CATEGORIES
-	VALUES ('Size'),('Crust'),('Sauce'), ('Regular Topping'), ('Premium Topping');
+	VALUES
+	('Size'),('Crust'),('Sauce'), ('Regular Topping'), 
+	('Premium Topping'), ('Salad'), ('Appetizer'), ('Drink'), ('Dessert');
 
 INSERT INTO product (description, price, product_category_id) --TOPPINGS
 	VALUES ('Pepperoni', 1.25,1), ('Sausage', 1.25,1), ('Extra Cheese', 0.75,1), ('Green Peppers', 1.00,1),
@@ -43,6 +45,29 @@ INSERT INTO product (product_category_id, price, description, quantity) --ADD SA
 ((SELECT product_category_id FROM product_category WHERE product_category_description = 'Sauce'), 0.00, 'Chipotle Sauce - A smoky and spicy sauce made from chipotle peppers, sometimes used on pizzas.', 10)
 ;
 
+INSERT INTO product (product_category_id, price, description, quantity) 
+	VALUES
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Dessert'), 5.50, 'Chocolate Cake - A rich and moist chocolate cake.', 20),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Dessert'), 4.75, 'Apple Pie - A traditional apple pie with a flaky crust.', 15),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Dessert'), 6.00, 'Cheesecake - A creamy cheesecake with a graham cracker crust.', 10),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Dessert'), 3.50, 'Brownie - A fudgy chocolate brownie.', 25),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Dessert'), 4.00, 'Ice Cream - A scoop of vanilla ice cream.', 30),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Drink'), 2.50, 'Lemonade - A refreshing lemonade.', 50),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Drink'), 2.25, 'Iced Tea - A chilled iced tea.', 40),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Drink'), 1.75, 'Coffee - A hot cup of coffee.', 60),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Drink'), 3.50, 'Smoothie - A fruit smoothie.', 35),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Drink'), 1.50, 'Soda - A can of soda.', 70),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Appetizer'), 6.75, 'Mozzarella Sticks - Fried mozzarella sticks with marinara sauce.', 20),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Appetizer'), 7.00, 'Nachos - Tortilla chips with cheese and toppings.', 15),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Appetizer'), 5.50, 'Spring Rolls - Crispy spring rolls with dipping sauce.', 25),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Appetizer'), 4.25, 'Garlic Bread - Toasted garlic bread.', 30),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Appetizer'), 6.00, 'Stuffed Mushrooms - Mushrooms stuffed with cheese and herbs.', 20),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Salad'), 7.50, 'Caesar Salad - Romaine lettuce with Caesar dressing and croutons.', 20),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Salad'), 8.00, 'Greek Salad - Mixed greens with feta cheese, olives, and vinaigrette.', 15),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Salad'), 6.50, 'Garden Salad - Mixed greens with assorted vegetables.', 25),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Salad'), 9.00, 'Cobb Salad - Mixed greens with chicken, bacon, and blue cheese.', 10),
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Salad'), 7.75, 'Spinach Salad - Fresh spinach with bacon and eggs.', 20)
+;
 INSERT INTO customer(first_name,last_name,street_address,city,zip_code,state_abbreviation,phone_number,email,username)
 VALUES
   ('Christen','Allen','2247 Ultrices, Av.','Columbus','11911','GA','1122537848','ligula.consectetuer.rhoncus@aol.couk','Nullam'),

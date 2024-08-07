@@ -22,7 +22,6 @@ public class InvoiceController {
         this.invoiceDao = invoiceDao;
     }
 
-    //TODO get invoices from specified range, all if range not specified. GET
     @RequestMapping(path = "/invoices", method = RequestMethod.GET)
     public ResponseEntity<List<Invoice>> getInvoices(@RequestParam(defaultValue = "1971-01-01") String from,
                                                      @RequestParam(defaultValue = "9999-12-31") String to) {
@@ -32,9 +31,8 @@ public class InvoiceController {
         return new ResponseEntity<List<Invoice>>(invoices, HttpStatus.OK);
     }
 
-    //TODO create/add Invoice, POST
-    //TODO ResponseStatus.CREATED
-    @RequestMapping(path = "/invoice", method = RequestMethod.POST)
+
+    @RequestMapping(path = "/invoices", method = RequestMethod.POST)
     public ResponseEntity<Invoice> createInvoice(@RequestBody Map<String, Object> placedOrder) {
         Invoice createdInvoice = null;
         List<Product> products = null;
@@ -42,28 +40,46 @@ public class InvoiceController {
         Boolean isDelivery = false;
         String address = "";
 
-        //TODO: Use Spring to serialize products
+        /*{
+            items: {
+                pizza: {
+                    [1,2,3],[1,3,4],[1,5,6]
+                },
+                other: [76,46,73,9]
+            },
+            creditcard: "123456789235",
+            isDelivery: true,
+            address: "123 Main Street"
+        }
+        */
+
+
         products = (List<Product>)placedOrder.get("products");
         creditCard = (String)placedOrder.get("credit_card");
         isDelivery = (Boolean)placedOrder.get("is_delivery");
         address = (String)placedOrder.get("address");
 
+        //TODO update/create pizza databases to reflect new order
+        //TODO update/create pizza_product databases to reflect new order
+        //TODO update/create invoice databases to reflect new order
+        //TODO update/create invoice_product databases to reflect new order
+
         System.out.println(products + "\n" + creditCard + "\n" + isDelivery + "\n" + address);
         System.out.println(products.get(0) instanceof Product);
-        return new ResponseEntity<Invoice>(new Invoice(0,0,BigDecimal.ZERO,true, false,
+        return new ResponseEntity<Invoice>(new Invoice(0,0,BigDecimal.ZERO,false, false,
                 new Timestamp(2024)), HttpStatus.CREATED);
     }
 
     //TODO update/modify existing Invoice, PUT
     // TODO ResponseStatus.CREATED
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(path = "/invoice/{invoiceId}", method = RequestMethod.PUT)
+    @RequestMapping(path = "/invoices/{invoiceId}", method = RequestMethod.PUT)
     public void updateInvoice(@RequestBody Invoice invoice,  @PathVariable int invoiceId) {
         //TODO: Implement updateInvoice method to DAO
     }
 
-    //TODO delete existing invoice, DELETE
-    @RequestMapping(path = "/invoice/{invoiceId}", method = RequestMethod.DELETE)
+
+    @RequestMapping(path = "/invoices/{invoiceId}", method = RequestMethod.DELETE)
     public void deleteInvoice(@PathVariable int invoiceId) {
         invoiceDao.deleteInvoiceById(invoiceId);
     }
