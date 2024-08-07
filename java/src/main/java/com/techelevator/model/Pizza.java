@@ -74,7 +74,7 @@ public class Pizza extends Product{
         this.components.add(component);
     }
 
-    //TODO how to make sure that component passed in is at the corretion memory address?
+    //TODO how to make sure that component passed in is at the correct memory address?
     public void removeComponent(Product component){
         this.components.remove(component);
     }

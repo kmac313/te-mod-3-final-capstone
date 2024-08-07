@@ -41,7 +41,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
 
     @Override
     public Invoice getInvoiceById(int id) {
-        String sql = "SELECT invoice_id, customer_id, total, is_delivery, is_complete, timestamp FROM invoice" +
+        String sql = "SELECT invoice_id, customer_id, total, is_delivery, is_complete, timestamp FROM invoice " +
                 "WHERE invoice_id = ?";
         Invoice invoice = null;
         try{
@@ -121,7 +121,25 @@ public class JdbcInvoiceDao implements InvoiceDao{
         return getInvoiceById(createdInvoiceId);
     }
 
-    //TODO Maybe we SHOULD update invoices?
+    @Override
+    public Invoice updateInvoice(Invoice invoice) {
+        String sql = "UPDATE invoice " +
+                "SET customer_id = ?, total = ?, is_delivery = ?, is_complete = ?, timestamp = ? " +
+                "WHERE invoice_id = ?";
+        int numRowsAffected = 0;
+        try {
+            numRowsAffected = db.update(sql, invoice.getCustomerId(), invoice.getTotal(),
+                    invoice.isDelivery(), invoice.isComplete(), invoice.getTimestamp(), invoice.getInvoiceId());
+            if (numRowsAffected == 0){
+                throw new DaoException("No matching Invoice found, check Invoice ID");
+            }
+        } catch (DataIntegrityViolationException eie) {
+            System.out.println("An error happened getting the invoice by ID");
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
+        return getInvoiceById(invoice.getInvoiceId());
+    }
 
     @Override
     public void deleteInvoiceById(int id) {
