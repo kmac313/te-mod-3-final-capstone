@@ -1,11 +1,11 @@
 <template>
-  <div class="pizza-size-card-container">
+  <div class="pizza-size-card-container" :id="'size-' + size.id" v-on:click="$emit('add-size')">
     <div class="pizza-size-card"></div>
     <div class="pizza-size-card-details">
       <div class="pizza-size-card-text-container">
-        <h2 class="pizza-size-card-text">{{ size }} Pizza</h2>
+        <h2 class="pizza-size-card-text">{{ size.size }} Pizza</h2>
         <p class="pizza-size-card-description">
-          ${{ price }}
+          ${{ size.price }}
         </p>
       </div>
 
@@ -18,15 +18,12 @@ export default {
     name: 'PizzaSizeCardComponent',
 
     props: {
-        price: {
-            type: Number,
+        size: {
+            type: Object,
             required: true
         },
 
-        size: {
-            type: String,
-            required: true
-        }
+        
     },
 
 }
@@ -41,10 +38,24 @@ export default {
     align-items: center;
     justify-content: center;
     gap: 20px;
-    border: 1px solid rgb(255, 167, 167);
     border-radius: 10px;
     padding: 10px;
     text-align: center;
     cursor: pointer;
+    border: 1px solid rgb(225, 225, 225);
+    box-shadow: rgba(0, 0, 0, 0.14) 0px 3px 6px;
+}
+
+.card-highlighted {
+  border: 2px solid #e61d25;
+}
+
+input[type="checkbox"] {
+  width: 25px;
+  height: 25px;
+}
+
+input[type="checkbox"]:checked {
+  accent-color: #e61d25;
 }
 </style>

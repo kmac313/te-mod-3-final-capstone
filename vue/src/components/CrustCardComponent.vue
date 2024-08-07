@@ -1,10 +1,10 @@
 <template>
     <div class="topping-card-container">
-      <div class="topping-card-text-container">
+      <div class="crust-card-text-container">
         <p class="topping-card-description">
-          {{ crust.name}}
+          {{ crust.description}}
         </p>
-        <input type="checkbox" class="topping-checkbox" :id="'crust-' + crust.id" :value="1" />
+        <input type="checkbox" class="crust-checkbox" :id="'crust-' + crust.productId" :value="1" v-on:click="$emit('add-crust')" />
       </div>
   </div>
 </template>
@@ -29,7 +29,8 @@ export default {
   align-items: center;
   justify-content: center;
   gap: 20px;
-  border: 1px solid rgb(255, 167, 167);
+  border: 1px solid rgb(225, 225, 225);
+  box-shadow: rgba(0, 0, 0, 0.14) 0px 3px 6px;
   border-radius: 10px;
   padding: 10px;
   text-align: center;
@@ -38,11 +39,20 @@ export default {
   margin-top: 20px;
 }
 
-.topping-card-text-container {
+.crust-card-text-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+}
+
+input[type="checkbox"] {
+  width: 25px;
+  height: 25px;
+}
+
+input[type="checkbox"]:checked {
+  accent-color: #e61d25;
 }
 
 </style>

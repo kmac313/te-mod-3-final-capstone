@@ -46,40 +46,13 @@ export function createStore(currentToken, currentUser) {
             sauce: "Alfredo"
           },
         ],
+        size: [],
 
-        toppings: [
+        toppings: [],
 
-          {
-            name: "Pepperoni",
-            price: "1.00",
-            id: 1,
-          },
+        premiumToppings: [],
 
-          {
-            name: "Bacon",
-            price: "1.00",
-            id: 2,
-          },
-
-          {
-            name: "Sausage",
-            price: "1.00",
-            id: 3,
-          },
-
-          {
-            name: "Veggies",
-            price: "1.00",
-            id: 4,
-          },
-
-        ],
-
-        crust: [
-          {name: "Regular",
-            id: 1
-          }
-        ],
+        crust: [],
 
         sauce : [
           {name: "Marinara",
@@ -87,7 +60,7 @@ export function createStore(currentToken, currentUser) {
           },
 
           {name: "Cheese",
-            id: 1
+            id: 2
           }
         ],
 
@@ -114,10 +87,11 @@ export function createStore(currentToken, currentUser) {
 
         ],
 
-        cart: [
-          
-        ]
+        
       },
+      cart: [
+          
+      ]
     },
     
     mutations: {
@@ -136,6 +110,26 @@ export function createStore(currentToken, currentUser) {
         state.token = '';
         state.user = {};
         axios.defaults.headers.common = {};
+      },
+      ADD_TO_CART(state, item) {
+        let newId = state.cart.length
+        item.id = newId
+        state.cart.push(item)
+      },
+      ADD_TOPPING(state, topping) {
+        state.inventory.toppings.push(topping)
+      },
+      ADD_PREMIUM_TOPPING(state, topping) {
+        state.inventory.premiumToppings.push(topping)
+      },
+      ADD_CRUST(state, crust) {
+        state.inventory.crust.push(crust)
+      },
+      ADD_SAUCE(state, sauce) {
+        state.inventory.sauce.push(sauce)
+      },
+      ADD_SIZE(state, size) {
+        state.inventory.size.push(size)
       }
     },
   });
