@@ -3,9 +3,7 @@ package com.techelevator.dao;
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Invoice;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.relational.core.sql.In;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
-import org.springframework.jdbc.InvalidResultSetAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -19,25 +17,6 @@ public class JdbcInvoiceDao implements InvoiceDao{
 
     public JdbcInvoiceDao(JdbcTemplate jdbcTemplate) {
         this.db = jdbcTemplate;
-    }
-
-    @Override
-    public List<Invoice> getInvoices() {
-        String sql = "SELECT invoice_id, customer_id, total, is_delivery, is_complete, timestamp " +
-                "FROM invoice ORDER BY invoice_id";
-        List<Invoice> allInvoices = new ArrayList<>();
-
-        try {
-            SqlRowSet results = db.queryForRowSet(sql);
-            while(results.next()){
-                allInvoices.add(mapRowSet(results));
-            }
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
-        } catch (DataIntegrityViolationException e) {
-            throw new DaoException("Data integrity violation", e);
-        }
-        return allInvoices;
     }
 
     @Override
@@ -78,12 +57,13 @@ public class JdbcInvoiceDao implements InvoiceDao{
     }
 
     @Override
-    public List<Invoice> getInvoicesFromDateRange(String from, String to, Principal principal) {
+    public List<Invoice> getInvoices(String from, String to, Principal principal) {
         String username = principal.getName();
+        System.out.println(username);
         List<Invoice> invoices = new ArrayList<>();
         List<Integer> fromInts = new ArrayList<>();
         List<Integer> toInts = new ArrayList<>();
-        String sql = "SELECT invoice_id, customer_id, total, is_delivery, is_complete, timestamp, username" +
+        String sql = "SELECT invoice_id, invoice.customer_id, total, is_delivery, is_complete, timestamp, username" +
                 " FROM invoice " +
                 "JOIN customer c ON invoice.customer_id = c.customer_id ";
         if(!from.equals("0")) {
@@ -101,7 +81,6 @@ public class JdbcInvoiceDao implements InvoiceDao{
         try{
 
             if(!from.equals("0") && !to.equals("0")){
-                //TODO replace WHERE with AND once username is introduced, and add username to each queryForRowSet()
                 sql+="WHERE timestamp BETWEEN make_date(?,?,?) AND make_date(?,?,?) ";
                 results = db.queryForRowSet(sql,
                         fromInts.get(0),fromInts.get(1),fromInts.get(2),
@@ -169,6 +148,19 @@ public class JdbcInvoiceDao implements InvoiceDao{
             throw new DaoException("Unable to connect to server or database", e);
         }
         return getInvoiceById(invoice.getInvoiceId());
+    }
+
+    @Override
+    public void createInvoiceProduct(int invoiceId, int productId) {
+        String sql = "INSERT INTO invoice_product (invoice_id, product_id) " +
+                "VALUES (?,?) ";
+        try{
+            db.update(sql, invoiceId, productId);
+        } catch (DataIntegrityViolationException eie) {
+            System.out.println("An error happened getting the invoice by ID");
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
     }
 
     @Override

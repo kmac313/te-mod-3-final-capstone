@@ -1,25 +1,19 @@
 package com.techelevator.controller;
 
 import com.techelevator.dao.InvoiceDao;
-import com.techelevator.dao.JdbcInvoiceDao;
 import com.techelevator.dao.PizzaDao;
 import com.techelevator.dao.ProductDao;
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Invoice;
 import com.techelevator.model.Pizza;
 import com.techelevator.model.Product;
-import org.apache.tomcat.jni.Time;
-import org.springframework.data.repository.config.RepositoryNameSpaceHandler;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.ZeroCopyHttpOutputMessage;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.security.Principal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,8 +36,7 @@ public class InvoiceController {
                                                      Principal principal) {
 
         List<Invoice> invoices = null;
-        invoices = invoiceDao.getInvoicesFromDateRange(from, to, principal);
-//        System.out.println(from + " - " + to);
+        invoices = invoiceDao.getInvoices(from, to, principal);
         return new ResponseEntity<List<Invoice>>(invoices, HttpStatus.OK);
     }
     @RequestMapping(path = "/invoices/{invoiceId}", method = RequestMethod.GET)
@@ -52,12 +45,11 @@ public class InvoiceController {
         return new ResponseEntity<Invoice>(invoiceDao.getInvoiceById(invoiceId), HttpStatus.OK);
     }
 
-    //TODO map getPizzasByInvoiceID
     @RequestMapping(path = "/invoices/{invoiceId}/pizzas", method = RequestMethod.GET)
     public ResponseEntity<List<Pizza>> getPizzasByInvoiceId(@PathVariable int invoiceId){
         return new ResponseEntity<>(pizzaDao.getPizzasByInvoiceId(invoiceId), HttpStatus.OK);
     }
-    //TODO map getProductsByInvoiceID
+
     @RequestMapping(path = "/invoices/{invoiceId}/products", method = RequestMethod.GET)
     public ResponseEntity<List<Product>> getProductsByInvoiceId(@PathVariable int invoiceId){
         return new ResponseEntity<>(productDao.getProductsByInvoiceId(invoiceId), HttpStatus.OK);
@@ -86,7 +78,6 @@ public class InvoiceController {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Non-Numeric CC Number");
             }
         }
-
         isDelivery = (Boolean)placedOrder.get("is_delivery");
         address = (String)placedOrder.get("address");
 
@@ -98,16 +89,18 @@ public class InvoiceController {
         createdInvoice = invoiceDao.createInvoice(invoice);
 
         /* Object Structure for the invoice
-        {
-            items: {
-                pizza: [
-                    [1,2,3],[1,3,4],[1,5,6]
+         {
+            "items": {
+                "pizza": [
+                    [16,23,26,4,5,7],
+                    [17,22,32,14],
+                    [19,20,33,5,11,10]
                 ],
-                other: [76,46,73,9]
+                "other": [54,45,40,40,41,37,38]
             },
-            creditcard: "123456789235",
-            isDelivery: true,
-            address: "123 Main Street"
+            "credit_card": "1234123412341234",
+            "is_delivery": true,
+            "address": "123 Main Street"
         }
         */
 
@@ -120,7 +113,7 @@ public class InvoiceController {
                     for (int productId : other) {
                         BigDecimal productPrice = productDao.getProductById(productId).getPrice();
                         createdInvoice.setTotal(createdInvoice.getTotal().add(productPrice));
-                        products.add(productDao.getProductById(productId));
+                        invoiceDao.createInvoiceProduct(createdInvoice.getInvoiceId(), productId);
                     }
                     break;
                 case "pizza":
@@ -132,29 +125,32 @@ public class InvoiceController {
                         newPizza.setPizzaName("");
                         newPizza.setAdditionalInstructions("");
                         newPizza.setInvoiceId(createdInvoice.getInvoiceId());
+
                         for (int productId : pizza) {
                             BigDecimal productPrice = productDao.getProductById(productId).getPrice();
                             newPizza.setTotal(newPizza.getTotal().add(productPrice));
-                            createdInvoice.setTotal(createdInvoice.getTotal().add(productPrice));
-                            newPizza.addComponent(productDao.getProductById(productId));
-                            products.add(productDao.getProductById(productId));
+                            Product nextProduct = productDao.getProductById(productId);
+                            newPizza.addComponent(nextProduct);
+                            invoiceDao.createInvoiceProduct(createdInvoice.getInvoiceId(), productId);
                         }
-                        pizzaDao.createPizza(newPizza);
+                        createdInvoice.setTotal(createdInvoice.getTotal().add(newPizza.getTotal()));
+                        Pizza createdPizza = pizzaDao.createPizza(newPizza);
+                        System.out.println("Created Pizza ID: " +createdPizza.getPizzaId());
+                        System.out.println("New Pizza Components: " +newPizza.getComponents());
+                        for (Product product: newPizza.getComponents()){
+                            pizzaDao.createPizzaProduct(createdPizza.getPizzaId(), product.getProductId()
+                            );
+                            System.out.println("Component product ID: "+product.getProductId());
+                        }
                     }
                     break;
             }
-            System.out.println(pizzasIntegerList);
         }
         //TODO: Add authentication to ALL controllers
-        //TODO: Add pricnciple users
-        //TODO: Alter DDL to link free floating tables(specialty and user tables)
 
-        //TODO update/create pizza databases to reflect new order
-        //TODO update/create pizza_product databases to reflect new order
-        //TODO update/create invoice databases to reflect new order
-        //TODO update/create invoice_product databases to reflect new order
 
-       System.out.println(items + "\n" + creditCard + "\n" + isDelivery + "\n" + address);
+
+       //System.out.println(items + "\n" + creditCard + "\n" + isDelivery + "\n" + address);
 
         return new ResponseEntity<Invoice>(invoiceDao.updateInvoice(createdInvoice), HttpStatus.CREATED);
     }

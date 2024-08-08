@@ -97,7 +97,23 @@ public class JdbcPizzaDao implements PizzaDao{
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         }
-        return getPizzaById(createdPizzaId);
+        Pizza createdPizza = getPizzaById(createdPizzaId);
+
+        return createdPizza ;
+    }
+
+    @Override
+    public void createPizzaProduct(int pizzaId, int productId) {
+        String sql = "INSERT INTO pizza_product (pizza_id, product_id) " +
+                "VALUES (?,?) ";
+        try{
+            db.update(sql, pizzaId, productId);
+        } catch (DataIntegrityViolationException eie) {
+            System.out.println("An error happened getting the product by ID");
+            System.out.println(eie);
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
     }
 
     @Override

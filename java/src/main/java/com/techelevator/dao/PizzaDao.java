@@ -11,6 +11,7 @@ public interface PizzaDao {
     Pizza getPizzaById(int id);
     List<Pizza> getPizzasByInvoiceId(int invoiceId);
     Pizza createPizza(Pizza pizza);
+    void createPizzaProduct(int pizzaId, int productId);
     Pizza updatePizza(Pizza pizza);
     void deletePizzaById(int id);
     Pizza updatePizzaComponents(Pizza pizza);
