@@ -7,10 +7,7 @@ import com.techelevator.model.Product;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -30,7 +27,9 @@ public class ProductController {
     }
 
     @RequestMapping(path = "/menu", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, List<Product>>> getMenu() {
+    public ResponseEntity<Map<String, List<Product>>> getMenu(@RequestHeader Map<String, String> header,  Principal principal) {
+        System.out.println(header);
+        System.out.println("ANYTHING");
         List<Product> products = productDao.getProducts();
         Map<String, List<Product>> menuObject = new HashMap<>();
         Map<Integer, String> categories = productDao.getCategories();
@@ -45,7 +44,7 @@ public class ProductController {
 
 
     @RequestMapping(path = "/menu/pizza", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, List<Product>>> getPizzaMenu(Principal principal) {
+    public ResponseEntity<Map<String, List<Product>>> getPizzaMenu() {
         List<String> pizzaComponentCategories = new ArrayList<>();
         String[] categories = new String[]{"Size", "Crust", "Sauce", "Regular Topping", "Premium Topping"};
         Map<String, List<Product>> pizzaComponents = new HashMap<>();

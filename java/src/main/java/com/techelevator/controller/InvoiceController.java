@@ -49,7 +49,7 @@ public class InvoiceController {
         List<Pizza> pizzas = pizzaDao.getPizzasByInvoiceId(invoiceId);
         return new ResponseEntity<>(pizzas, HttpStatus.OK);
     }
-
+    //TODO map -method that needs mapping-
     @RequestMapping(path = "/invoices/{invoiceId}/products", method = RequestMethod.GET)
     public ResponseEntity<List<Product>> getProductsByInvoiceId(@PathVariable int invoiceId){
         return new ResponseEntity<>(productDao.getProductsByInvoiceId(invoiceId), HttpStatus.OK);
