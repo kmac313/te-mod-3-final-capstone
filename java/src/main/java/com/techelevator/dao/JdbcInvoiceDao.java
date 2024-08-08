@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 @Component
@@ -77,32 +78,61 @@ public class JdbcInvoiceDao implements InvoiceDao{
     }
 
     @Override
-    public List<Invoice> getInvoicesFromDateRange(String from,  String to) {
-        List<Invoice> invoicesRange = new ArrayList<>();
-        String sql = "SELECT invoice_id, customer_id, total, is_delivery, is_complete, timestamp FROM invoice " +
-                "WHERE timestamp BETWEEN make_date(?,?,?) AND make_date(?,?,?) ";
+    public List<Invoice> getInvoicesFromDateRange(String from, String to, Principal principal) {
+        String username = principal.getName();
+        List<Invoice> invoices = new ArrayList<>();
         List<Integer> fromInts = new ArrayList<>();
         List<Integer> toInts = new ArrayList<>();
-        for (String s: from.split("-")){
-            fromInts.add(Integer.parseInt(s));
+        String sql = "SELECT invoice_id, customer_id, total, is_delivery, is_complete, timestamp, username" +
+                " FROM invoice " +
+                "JOIN customer c ON invoice.customer_id = c.customer_id ";
+        if(!from.equals("0")) {
+            for (String s : from.split("-")) {
+                fromInts.add(Integer.parseInt(s));
+            }
         }
-        for (String s: to.split("-")){
-            toInts.add(Integer.parseInt(s));
+        if (!to.equals("0")) {
+            for (String s : to.split("-")) {
+                toInts.add(Integer.parseInt(s));
+            }
         }
-        try {
-            SqlRowSet results = db.queryForRowSet(sql,
-                    fromInts.get(0),fromInts.get(1),fromInts.get(2),
-                    toInts.get(0), toInts.get(1), toInts.get(2));
+
+        SqlRowSet results = null;
+        try{
+
+            if(!from.equals("0") && !to.equals("0")){
+                //TODO replace WHERE with AND once username is introduced, and add username to each queryForRowSet()
+                sql+="WHERE timestamp BETWEEN make_date(?,?,?) AND make_date(?,?,?) ";
+                results = db.queryForRowSet(sql,
+                        fromInts.get(0),fromInts.get(1),fromInts.get(2),
+                        toInts.get(0), toInts.get(1), toInts.get(2));
+            } else if (!from.equals("0") && to.equals("0")) {
+                sql += "WHERE timestamp >= make_date(?,?,?) ";
+                results = db.queryForRowSet(sql,
+                        fromInts.get(0),fromInts.get(1),fromInts.get(2));
+            }else if (from.equals("0") && !to.equals("0")){
+                sql += "WHERE timestamp <= make_date(?,?,?) ";
+                results = db.queryForRowSet(sql,
+                        toInts.get(0), toInts.get(1), toInts.get(2));
+            } else {
+                results = db.queryForRowSet(sql);
+            }
 
             while(results.next()) {
-                invoicesRange.add(mapRowSet(results));
+                if (username.equals("admin")){
+                    invoices.add(mapRowSet(results));
+                } else {
+                    if(results.getString("username").equals(username)){
+                        invoices.add(mapRowSet(results));
+                    }
+                }
             }
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         } catch (DataIntegrityViolationException e) {
             throw new DaoException("Data integrity violation", e);
         }
-        return invoicesRange;
+        return invoices;
     }
 
     @Override

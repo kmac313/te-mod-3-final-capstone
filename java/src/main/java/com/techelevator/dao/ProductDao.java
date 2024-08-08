@@ -11,6 +11,7 @@ public interface ProductDao {
     Map<Integer,String> getCategories();
 
     Product getProductById(int productId);
+    List<Product> getProductsByInvoiceId(int invoiceId);
     List<Product> getProductsByCategoryIds(int[] categoryIds);
     List<Product> getProductsByCategoryDescription(List<String> categoryDescriptions);
     Product addProduct(Product product);

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,8 +23,10 @@ import java.util.Map;
 public class ProductController {
     private ProductDao productDao;
 
+
     public ProductController(ProductDao productDao) {
         this.productDao = productDao;
+
     }
 
     @RequestMapping(path = "/menu", method = RequestMethod.GET)
@@ -42,7 +45,7 @@ public class ProductController {
 
 
     @RequestMapping(path = "/menu/pizza", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, List<Product>>> getPizzaMenu() {
+    public ResponseEntity<Map<String, List<Product>>> getPizzaMenu(Principal principal) {
         List<String> pizzaComponentCategories = new ArrayList<>();
         String[] categories = new String[]{"Size", "Crust", "Sauce", "Regular Topping", "Premium Topping"};
         Map<String, List<Product>> pizzaComponents = new HashMap<>();
@@ -52,10 +55,12 @@ public class ProductController {
             pizzaComponents.put(category,
                     productDao.getProductsByCategoryDescription(tempList));
         }
-        System.out.println(pizzaComponents);
+
         return new ResponseEntity<>(pizzaComponents, HttpStatus.OK);
 
     }
 
     //TODO method for getting products by requested categories (maybe add to the above function)
+
+
 }

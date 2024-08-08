@@ -9,6 +9,7 @@ import java.util.List;
 public interface PizzaDao {
     List<Pizza> getPizzas();
     Pizza getPizzaById(int id);
+    List<Pizza> getPizzasByInvoiceId(int invoiceId);
     Pizza createPizza(Pizza pizza);
     Pizza updatePizza(Pizza pizza);
     void deletePizzaById(int id);
