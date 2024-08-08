@@ -31,7 +31,12 @@
           v-if="$store.state.token == ''"
           >Login</router-link
         >
-
+        <router-link
+          class="router-link-active"
+          v-bind:to="{ name: 'myOrders' }"
+          v-if="$store.state.token !== ''"
+          >My Orders</router-link
+        >
        
         <img class="cart" src="../assets/cart.png" alt="cart" @click="openCart" />
         
