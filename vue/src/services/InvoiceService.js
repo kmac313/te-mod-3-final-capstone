@@ -10,6 +10,11 @@ export default {
       },
 
     getOrders() {
-      return http.get('/invoices')
+      const token = localStorage.getItem('token')
+      return http.get('/invoices', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
     },
 }
