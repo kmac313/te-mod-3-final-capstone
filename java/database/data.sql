@@ -126,4 +126,21 @@ INSERT INTO invoice (customer_id, total, is_delivery, is_complete, timestamp)
 		(9, 110.50, true, true, '2024-04-30 17:30:00'),
 		(10, 130.00, false, false, '2024-05-10 08:45:00')
 ;
-	
+
+INSERT INTO invoice_product (invoice_id, product_id) 
+	VALUES
+	(1, 1), (1, 2), (2, 3), (2, 4), (3, 5), (3, 6), (4, 7), (4, 8), (5, 9), (5, 10),
+	(6, 11), (6, 12), (7, 13), (7, 14), (8, 15), (8, 16), (9, 17), (9, 18), (10, 19),
+	(10, 20), (11, 21), (11, 22), (12, 23), (12, 24), (13, 25), (13, 26), (14, 27),
+	(14, 28), (15, 29), (15, 30), (16, 31), (16, 32), (17, 33), (17, 34), (18, 35),
+	(22, 44), (23, 45), (23, 46), (24, 47), (24, 48), (25, 49), (25, 50), (26, 51),
+	(26, 52), (27, 53), (27, 54)
+;
+
+INSERT INTO pizza (invoice_id, pizza_name, total, additional_instructions)
+	VALUES
+	(1,'Custom Pizza 1', 10, 'None'), (2,'Custom Pizza 2', 10, 'None'), (3,'Custom Pizza 3', 10, 'None'),
+	(4,'Custom Pizza 4', 10, 'None'), (5,'Custom Pizza 5', 10, 'None'), (6,'Custom Pizza 6', 10, 'None')
+;
+
+

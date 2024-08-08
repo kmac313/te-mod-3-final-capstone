@@ -64,6 +64,25 @@ public class JdbcPizzaDao implements PizzaDao{
     }
 
     @Override
+    public List<Pizza> getPizzasByInvoiceId(int invoiceId) {
+        List<Pizza> pizzas = new ArrayList<>();
+        String sql = "SELECT pi.pizza_id, pi.invoice_id, " +
+                "pi.pizza_name, pi.total, pi.additional_instructions FROM pizza pi " +
+                "WHERE invoice_id = ? ";
+        try{
+            SqlRowSet results = db.queryForRowSet(sql, invoiceId);
+            while(results.next()){
+                pizzas.add(mapRowSet(results));
+            }
+        } catch (DataIntegrityViolationException eie) {
+            System.out.println("An error happened getting the drink by ID");
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
+        return pizzas;
+    }
+
+    @Override
     public Pizza createPizza(Pizza pizza) {
         String sql = "INSERT INTO pizza (invoice_id, pizza_name, total, additional_instructions) " +
                 "VALUES (?, ?, ?, ?) RETURNING pizza_id";
@@ -129,7 +148,7 @@ public class JdbcPizzaDao implements PizzaDao{
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         }
-        return null;
+        return pizza;
     }
 
     @Override

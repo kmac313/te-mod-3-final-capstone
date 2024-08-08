@@ -9,6 +9,7 @@ import com.techelevator.model.Invoice;
 import com.techelevator.model.Pizza;
 import com.techelevator.model.Product;
 import org.apache.tomcat.jni.Time;
+import org.springframework.data.repository.config.RepositoryNameSpaceHandler;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +37,12 @@ public class InvoiceController {
     }
 
     @RequestMapping(path = "/invoices", method = RequestMethod.GET)
-    public ResponseEntity<List<Invoice>> getInvoices(@RequestParam(defaultValue = "1971-01-01") String from,
-                                                     @RequestParam(defaultValue = "9999-12-31") String to) {
+    public ResponseEntity<List<Invoice>> getInvoices(@RequestParam(defaultValue = "0") String from,
+                                                     @RequestParam(defaultValue = "0") String to,
+                                                     Principal principal) {
+
         List<Invoice> invoices = null;
-        invoices = invoiceDao.getInvoicesFromDateRange(from, to);
+        invoices = invoiceDao.getInvoicesFromDateRange(from, to, principal);
 //        System.out.println(from + " - " + to);
         return new ResponseEntity<List<Invoice>>(invoices, HttpStatus.OK);
     }
@@ -48,6 +52,16 @@ public class InvoiceController {
         return new ResponseEntity<Invoice>(invoiceDao.getInvoiceById(invoiceId), HttpStatus.OK);
     }
 
+    //TODO map getPizzasByInvoiceID
+    @RequestMapping(path = "/invoices/{invoiceId}/pizzas", method = RequestMethod.GET)
+    public ResponseEntity<List<Pizza>> getPizzasByInvoiceId(@PathVariable int invoiceId){
+        return new ResponseEntity<>(pizzaDao.getPizzasByInvoiceId(invoiceId), HttpStatus.OK);
+    }
+    //TODO map getProductsByInvoiceID
+    @RequestMapping(path = "/invoices/{invoiceId}/products", method = RequestMethod.GET)
+    public ResponseEntity<List<Product>> getProductsByInvoiceId(@PathVariable int invoiceId){
+        return new ResponseEntity<>(productDao.getProductsByInvoiceId(invoiceId), HttpStatus.OK);
+    }
 
     @RequestMapping(path = "/invoices", method = RequestMethod.POST)
     public ResponseEntity<Invoice> createInvoice(@RequestBody Map<String, Object> placedOrder) {
@@ -62,9 +76,17 @@ public class InvoiceController {
         BigDecimal total = BigDecimal.ZERO;
 
         creditCard = (String)placedOrder.get("credit_card");
-        if (creditCard.length() != 16) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        for (int c = 0 ; c <creditCard.length() ; c++){
+            try {
+                Integer.parseInt(creditCard.substring(c, c + 1));
+                if (creditCard.length() != 16) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CC Number must be 16 digits");
+                }
+            } catch (NumberFormatException nfe) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Non-Numeric CC Number");
+            }
         }
+
         isDelivery = (Boolean)placedOrder.get("is_delivery");
         address = (String)placedOrder.get("address");
 
@@ -92,8 +114,6 @@ public class InvoiceController {
         items = (Map<String, int[]>)placedOrder.get("items");
         List<Integer> other = new ArrayList<>();
         for (Map.Entry entry : items.entrySet()) {
-            System.out.println(entry.getKey());
-            System.out.println(entry.getValue().getClass());
             switch (entry.getKey().toString()){
                 case "other":
                     other = (List<Integer>) entry.getValue();
@@ -102,8 +122,7 @@ public class InvoiceController {
                         createdInvoice.setTotal(createdInvoice.getTotal().add(productPrice));
                         products.add(productDao.getProductById(productId));
                     }
-                break;
-
+                    break;
                 case "pizza":
                     for (List<Integer> pizza : (List<List<Integer>>)entry.getValue()){
                         pizzasIntegerList.add(pizza);

@@ -84,6 +84,29 @@ public class jdbcProductDao implements ProductDao{
     }
 
     @Override
+    public List<Product> getProductsByInvoiceId(int invoiceId) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT p.product_id, p.product_category_id, pc.product_category_description, " +
+                "p.price, p.description, p.quantity " +
+                "FROM product p " +
+                "JOIN product_category pc ON p.product_category_id = pc.product_category_id " +
+                "JOIN invoice_product ip ON p.product_id = ip.product_id " +
+                "WHERE ip.invoice_id = ? " +
+                "ORDER BY p.product_id ";
+        try{
+            SqlRowSet results = db.queryForRowSet(sql, invoiceId);
+            while(results.next()){
+                products.add(mapRowSet(results));
+            }
+        } catch (DataIntegrityViolationException eie) {
+            System.out.println("An error happened getting the drinks");
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
+        return products;
+    }
+
+    @Override
     public List<Product> getProductsByCategoryIds(int[] categoryIds) {
         List<Product> categoryProducts = new ArrayList<>();
         String sql = "SELECT p.product_id, p.product_category_id, pc.product_category_description, " +
