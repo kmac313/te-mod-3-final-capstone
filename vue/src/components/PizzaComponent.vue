@@ -22,6 +22,7 @@
     props: {
       pizza: Object,
     },
+    
     methods: {},
     computed: {
       pizzaStyle() {
