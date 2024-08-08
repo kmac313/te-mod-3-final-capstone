@@ -169,14 +169,25 @@ public class JdbcPizzaDao implements PizzaDao{
 
     @Override
     public Pizza mapRowSet(SqlRowSet rowSet) {
-        return new Pizza(
+        Pizza pizza =  new Pizza(
                 rowSet.getInt("pizza_id"),
                 rowSet.getInt("invoice_id"),
                 rowSet.getString("pizza_name"),
                 rowSet.getBigDecimal("total"),
                 rowSet.getString("additional_instructions")
                 );
+        String sql = "SELECT product_id from pizza_product WHERE pizza_id = ? ";
+        try{
+            SqlRowSet results = db.queryForRowSet(sql, pizza.getPizzaId());
+            while(results.next()){
+                pizza.addComponent(productDao.getProductById(results.getInt("product_id")));
+            }
+        }catch (DataIntegrityViolationException eie) {
+            System.out.println("An error happened getting the drink by ID");
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
 
-
+        return pizza;
     }
 }

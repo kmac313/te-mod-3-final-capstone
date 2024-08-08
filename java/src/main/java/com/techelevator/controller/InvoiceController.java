@@ -41,13 +41,13 @@ public class InvoiceController {
     }
     @RequestMapping(path = "/invoices/{invoiceId}", method = RequestMethod.GET)
     public ResponseEntity<Invoice> getInvoiceById(@PathVariable int invoiceId) {
-        //TODO: Add a try catch argument to catch users trying to use a string as the id
         return new ResponseEntity<Invoice>(invoiceDao.getInvoiceById(invoiceId), HttpStatus.OK);
     }
 
     @RequestMapping(path = "/invoices/{invoiceId}/pizzas", method = RequestMethod.GET)
     public ResponseEntity<List<Pizza>> getPizzasByInvoiceId(@PathVariable int invoiceId){
-        return new ResponseEntity<>(pizzaDao.getPizzasByInvoiceId(invoiceId), HttpStatus.OK);
+        List<Pizza> pizzas = pizzaDao.getPizzasByInvoiceId(invoiceId);
+        return new ResponseEntity<>(pizzas, HttpStatus.OK);
     }
 
     @RequestMapping(path = "/invoices/{invoiceId}/products", method = RequestMethod.GET)
@@ -135,12 +135,9 @@ public class InvoiceController {
                         }
                         createdInvoice.setTotal(createdInvoice.getTotal().add(newPizza.getTotal()));
                         Pizza createdPizza = pizzaDao.createPizza(newPizza);
-                        System.out.println("Created Pizza ID: " +createdPizza.getPizzaId());
-                        System.out.println("New Pizza Components: " +newPizza.getComponents());
                         for (Product product: newPizza.getComponents()){
                             pizzaDao.createPizzaProduct(createdPizza.getPizzaId(), product.getProductId()
                             );
-                            System.out.println("Component product ID: "+product.getProductId());
                         }
                     }
                     break;

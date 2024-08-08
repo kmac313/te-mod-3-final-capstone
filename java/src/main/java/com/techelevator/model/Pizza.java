@@ -74,8 +74,12 @@ public class Pizza {
         this.components.add(component);
     }
 
-    //TODO how to make sure that component passed in is at the correct memory address?
+
     public void removeComponent(Product component){
-        this.components.remove(component);
+        for (Product c : this.components) {
+            if (c.getProductId() == component.getProductId()){this.components.remove(c);
+            }
+        }
+
     }
 }
