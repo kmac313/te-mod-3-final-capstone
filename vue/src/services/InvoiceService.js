@@ -8,4 +8,8 @@ export default {
     sendOrder(order) {
         return http.post('/invoices', order)
       },
+
+    getOrders() {
+      return http.get('/invoices')
+    },
 }

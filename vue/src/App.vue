@@ -20,6 +20,7 @@
 import HeaderComponent from "./components/HeaderComponent.vue";
 import FooterComponent from "./components/FooterComponent.vue";
 import productService from "./services/ProductService";
+import invoiceService from "./services/InvoiceService";
 export default {
   components: {
     HeaderComponent,
@@ -28,6 +29,13 @@ export default {
   methods: {
     // Move to App.vue
     addProducts() {
+      invoiceService.getOrders().then((data) => {
+        // for(let invoice of data ) {
+        //   this.$store.commit("ADD_INVOICE", invoice);
+        // }
+        console.log(data)
+      });
+
       productService.getProducts().then((data) => {
         const regularToppings = data.data["Regular Topping"];
         const premiumToppings = data.data["Premium Topping"];
