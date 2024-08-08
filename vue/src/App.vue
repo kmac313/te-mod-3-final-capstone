@@ -19,11 +19,89 @@
 <script>
 import HeaderComponent from "./components/HeaderComponent.vue";
 import FooterComponent from "./components/FooterComponent.vue";
-
+import productService from "./services/ProductService";
 export default {
   components: {
     HeaderComponent,
     FooterComponent,
+  },
+  methods: {
+    // Move to App.vue
+    addProducts() {
+      productService.getProducts().then((data) => {
+        const regularToppings = data.data["Regular Topping"];
+        const premiumToppings = data.data["Premium Topping"];
+        const sizes = data.data["Size"];
+        const crusts = data.data["Crust"];
+        const sauces = data.data["Sauce"];
+        const drinks = data.data["Drink"];
+
+        for(let regTopping of regularToppings ) {
+          this.$store.commit("ADD_TOPPING", regTopping);
+        }
+
+        for(let premTopping of premiumToppings ) {
+          this.$store.commit("ADD_PREMIUM_TOPPING", premTopping);
+        }
+
+        for(let size of sizes ) {
+          this.$store.commit("ADD_SIZE", size);
+        }
+
+        for(let crust of crusts ) {
+          this.$store.commit("ADD_CRUST", crust);
+        }
+
+
+        for(let sauce of sauces ) {
+          this.$store.commit("ADD_SAUCE", sauce);
+        }
+
+        for(let drink of drinks ) {
+          this.$store.commit("ADD_DRINK", drink);
+        }
+
+        let storedPizzas = localStorage.getItem('pizza')
+      
+        if(storedPizzas) {
+          storedPizzas = JSON.parse(storedPizzas)
+          console.log(storedPizzas)
+          for(let item of storedPizzas) {
+            this.$store.commit('ADD_TO_CURR_ORDER', item);
+          }
+        }
+
+        let storedDrinks = localStorage.getItem('drink')
+      
+        if(storedDrinks) {
+          storedDrinks = JSON.parse(storedDrinks)
+          console.log(storedDrinks)
+          for(let item of storedDrinks) {
+            this.$store.commit('ADD_TO_CURR_ORDER', item);
+          }
+        }
+
+        let storedZipCode = localStorage.getItem('zipcode');
+
+        if(storedZipCode) {
+          this.$store.commit('ADD_ZIPCODE', parseInt(storedZipCode))
+        }
+
+        let storedOrderType = localStorage.getItem('orderType');
+
+        if(storedOrderType) {
+          this.$store.commit('UPDATE_ORDER_TYPE', storedOrderType)
+        }
+        
+      })
+      
+    },
+  },
+  beforeMount() {
+    if(this.$store.state.inventory.crust.length === 0) {
+      this.addProducts();
+    }
+    
   },
 };
 </script>

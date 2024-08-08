@@ -3,7 +3,7 @@
     <footer>
       <div class="footer-logo">
         <img
-          src="src\assets\Super_Pizza_Mascot_Logo-removebg-preview.png"
+          src="../../public/Super_Pizza_Mascot_Logo-removebg-preview.png"
           alt="Pizza"
           style="width: 55%"
         />
@@ -24,10 +24,10 @@
       </div>
       <div class="socials">
         <h3>Follow Us</h3>
-        <img src="src\assets\facebook.png" alt="Facebook" />
-        <img src="src\assets\instagram.png" alt="Instagram" />
-        <img src="src\assets\twitter.png" alt="Twitter" />
-        <img src="src\assets\tiktok.png" alt="Youtube" />
+        <img src="../../public/facebook.png" alt="Facebook" />
+        <img src="../../public/instagram.png" alt="Instagram" />
+        <img src="../../public/twitter.png" alt="Twitter" />
+        <img src="../../public/tiktok.png" alt="Youtube" />
 
       </div>
       <div class="newsletter">

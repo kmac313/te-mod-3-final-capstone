@@ -60,6 +60,7 @@ export function createStore(currentToken, currentUser) {
 
         
       },
+      showCart: false,
       currentOrder: [
         
       ],
@@ -67,7 +68,8 @@ export function createStore(currentToken, currentUser) {
       isDelivery: {
         orderType: '',
         address: "123 Main Street",
-        eta: "15-20 minutes"
+        eta: "15-20 minutes",
+        zipcode: null
       },
       
       cart: {
@@ -82,7 +84,7 @@ export function createStore(currentToken, currentUser) {
         invoice: {
           creditcard: "", 
           isDelivery: true,
-          address: "123 Main Street",
+          address: "",
           
         },
 
@@ -109,8 +111,6 @@ export function createStore(currentToken, currentUser) {
         axios.defaults.headers.common = {};
       },
       ADD_TO_CURR_ORDER(state, item) {
-        const newId = state.currentOrder.length + 1;
-        item.currOrderId = newId;
         state.currentOrder.push(item)
       },
       ADD_TO_PIZZA_CART(state, pizza) {
@@ -140,6 +140,12 @@ export function createStore(currentToken, currentUser) {
       UPDATE_ORDER_TYPE(state, orderType) {
         state.isDelivery.orderType = orderType
         state.invoice.isDelivery = orderType === 'delivery' ? true : false
+        localStorage.setItem('orderType', state.isDelivery.orderType)
+      },
+
+      ADD_ZIPCODE(state, zip) {
+        state.isDelivery.zipcode = zip
+        localStorage.setItem('zipcode', zip)
       },
 
       ADD_INVOICE(state, invoice) {
@@ -151,6 +157,9 @@ export function createStore(currentToken, currentUser) {
           other: []
         };
         state.currentOrder = [];
+      },
+      TOGGLE_CART(state, value) {
+        state.showCart = value
       }
     },
   });

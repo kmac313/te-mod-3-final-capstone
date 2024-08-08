@@ -3,7 +3,7 @@
     <div class="header">
       <div class="header-logo">
         <img
-          src="src\assets\Super_Pizza_Mascot_Logo-removebg-preview.png"
+          src="../../public/Super_Pizza_Mascot_Logo-removebg-preview.png"
           alt="Pizza"
           style="width: 55%"
         />
@@ -33,20 +33,20 @@
         >
 
        
-        <img class="cart" src="../assets/cart.png" alt="cart" @click="showCart = !showCart" />
+        <img class="cart" src="../assets/cart.png" alt="cart" @click="openCart" />
         
       </div>
     </div>
     <ul class="header-nav-links hidden" id="header-nav-links">
       
-        <li @click.prevent="changePath('pizza')">PIZZAS</li>      
+        <li @click.prevent="changePath('/pizza')">PIZZAS</li>      
       
         <!-- Change path to /drink -->
-        <li @click.prevent="changePath('drink')">DRINKS</li>
+        <li @click.prevent="changePath('/drink')">DRINKS</li>
       
     </ul>
     <toast v-if="showToast" :message="'You have logged out'" />
-    <CartComponent v-if="showCart" @close-cart="closeCart()"/>
+    <CartComponent v-if="storeShowCart" @close-cart="closeCart()" @open-cart="openCart()"/>
   </div>
 </template>
 
@@ -59,7 +59,6 @@ export default {
   data() {
     return {
       showToast: false,
-      showCart: false
     }
   },
   
@@ -83,7 +82,13 @@ export default {
     },
 
     closeCart() {
-      this.showCart = false;
+      this.$store.commit('TOGGLE_CART', false)
+      
+    },
+
+    openCart() {
+      this.$store.commit('TOGGLE_CART', true)
+      
     },
 
     changePath(path) {
@@ -92,6 +97,11 @@ export default {
       this.$router.replace(path)
     },
   },
+  computed: {
+    storeShowCart() {
+      return this.$store.state.showCart;
+    }
+  }
 };
 </script>
 

@@ -7,8 +7,31 @@
         </button>
       </div>
       <h1 class="cart-header">Your Cart</h1>
+      <!-- User zipcode -->
+      <div class="cart-zipcode">
+        <div v-if="zipcode == null">
+          <form class="request-cart-zipcode">
+            <label for="zipcode">Please enter your zip code</label>
+            <input
+              id="zipcode"
+              type="text"
+              pattern="[0-9]{5}"
+              placeholder="zipcode"
+              required
+            />
+            <button class="submit-zipcode" @click="setZipCode">Save</button>
+          </form>
+        </div>
+        <div class="show-cart-zipcode" v-if="zipcode != null">
+          <p>Zip code: {{ zipcode }}</p>
+          <button class="submit-zipcode" @click="setZipCodeToNull">
+            Change
+          </button>
+        </div>
+      </div>
 
-      <div class="carryout-delivery">
+      <!-- Carryout or delivery -->
+      <div class="carryout-delivery" v-if="zipcode !== null">
         <h2>Carryout or Delivery</h2>
 
         <div class="order-type-container" v-if="orderType.length > 0">
@@ -25,8 +48,8 @@
 
         <select
           class="cart-select"
-          v-model="orderType"
-          v-on:change="updateOrder(orderType)"
+          v-model="selectedOption"
+          v-on:change="updateOrder(selectedOption)"
           v-if="orderType.length === 0"
         >
           <option value="carryout">Carryout</option>
@@ -34,26 +57,40 @@
         </select>
       </div>
 
-      <h2>Your order:</h2>
-      <div class="order-header" v-for="(item, index) in allItems" :key="index">
-        <div class="item-heading">
-          <h3>{{ item?.description }}</h3>
-          <p>Price: ${{ parseInt(item?.price).toFixed(2) }}</p>
+      <!-- Items -->
+      <div v-if="orderType !== ''">
+        <h2>Your order:</h2>
+        
+        <div v-if="allItems.length == 0">
+            <p>Your cart is empty</p>
         </div>
-        <h4 v-if="item?.sauce">
-          Sauce: {{ item?.sauce.description.split("-")[0] }}
-        </h4>
-        <h4 v-if="item?.crust">Crust: {{ item?.crust.description }}</h4>
-        <div v-if="item.topping && item?.topping.length > 0">
-          <h4>Toppings:</h4>
-          <p v-for="(topping, index) in item.topping" :key="index">
-            {{ topping?.description }}
-          </p>
+
+        <!-- list all items -->
+        <div
+          class="order-header"
+          v-for="(item, index) in allItems"
+          :key="index"
+        >
+          <div class="item-heading">
+            <h3>{{ item?.description }}</h3>
+            <p>Price: ${{ parseInt(item?.price).toFixed(2) }}</p>
+          </div>
+          <h4 v-if="item?.sauce">
+            Sauce: {{ item?.sauce.description.split("-")[0] }}
+          </h4>
+          <h4 v-if="item?.crust">Crust: {{ item?.crust.description }}</h4>
+          <div v-if="item.topping && item?.topping.length > 0">
+            <h4>Toppings:</h4>
+            <p v-for="(topping, index) in item.topping" :key="index">
+              {{ topping?.description }}
+            </p>
+          </div>
         </div>
       </div>
 
-      <h2>Payment method:</h2>
-      <div class="payment-container">
+      <!-- Payment info -->
+      <div class="payment-container" v-if="orderType !== '' && allItems.length > 0">
+        <h2>Payment method:</h2>
         <div class="payment-radio-buttons">
           <input
             type="radio"
@@ -193,83 +230,111 @@
           </div>
         </form>
       </div>
+
+    
     </div>
     <Toast :message="toastMessage" v-if="showToast" />
   </div>
 </template>
 
 <script>
-import Toast from '../components/Toast.vue'
-import invoiceService from '../services/InvoiceService'
+import Toast from "../components/Toast.vue";
+import invoiceService from "../services/InvoiceService";
 
 export default {
   data() {
     return {
-      allItems: this.$store.state.currentOrder,
+      selectedOption: '',
       invoice: {
         items: this.$store.state.cart,
         creditcard: this.$store.state.invoice.creditcard,
         isDelivery: this.$store.state.invoice.isDelivery,
         address: this.$store.state.invoice.address,
       },
-      orderType: this.$store.state.isDelivery.orderType,
       eta: this.$store.state.isDelivery.eta,
       address: this.$store.state.isDelivery.address,
+      zipcode: this.$store.state.isDelivery.zipcode,
       paymentmethod: "",
       showToast: false,
-      toastMessage: 'This has not been changed'
+      toastMessage: "This has not been changed",
     };
   },
   components: {
-    Toast
+    Toast,
   },
   methods: {
     submitOrder() {
       const invoice = invoiceService.sendOrder(this.invoice).then((data) => {
-        try{
-            this.$store.commit("ADD_INVOICE", data.data);
-            this.$store.commit("EMPTY_CART")
-        if (this.$store.state.token.length > 0) {
-            this.toastMessage = 'We have received your order. Check you email for order information'
-            
+        try {
+          this.$store.commit("ADD_INVOICE", data.data);
+          this.$store.commit("EMPTY_CART");
+          if (this.$store.state.token.length > 0) {
+            this.toastMessage =
+              "We have received your order. Check you email for order information";
+
+            this.showToast = true;
+            setTimeout(() => {
+              this.showToast = false;
+              this.$router.replace("/myOrders");
+              this.$emit("close-cart");
+            }, 2500);
+          } else {
+            this.toastMessage =
+              "We have received your order. Check you email for order information";
+            this.showToast = true;
+            setTimeout(() => {
+              this.showToast = false;
+              this.$router.replace("/");
+              this.$emit("close-cart");
+            }, 2500);
+          }
+        } catch (err) {
+          console.log("error");
+          this.toastMessage = "Unable to process, your order. Please try again";
           this.showToast = true;
           setTimeout(() => {
-            this.showToast = false;
-            this.$router.replace("/myOrders");
-            this.$emit('close-cart');
-          }, 2500);
-          
-        } else {
-            
-            this.toastMessage = 'We have received your order. Check you email for order information'
-          this.showToast = true;
-          setTimeout(() => {
-            this.showToast = false;
-            this.$router.replace("/");
-            this.$emit('close-cart');
-          }, 2500);
-          
-        }
-        }
-        catch(err) {
-        console.log('error')
-        this.toastMessage = 'Unable to process, your order. Please try again'
-        this.showToast = true;
-        setTimeout(() => {
             this.showToast = false;
           }, 3500);
-      }
-        
-      })
-      
+        }
+      });
     },
 
     updateOrder(type) {
       this.$store.commit("UPDATE_ORDER_TYPE", type);
-      this.orderType = type;
+      localStorage.setItem('orderType', type)
       console.log(this.$store.state.isDelivery.orderType);
     },
+
+    setZipCode() {
+      const inputElem = document.getElementById("zipcode");
+
+      const zip = inputElem.value;
+      const pattern = /^\d{5}(?:-?\d{4})?$/;
+      if (pattern.test(zip)) {
+        this.$store.commit("ADD_ZIPCODE", zip);
+        this.zipcode = zip;
+      } else {
+        this.toastMessage = "Invalid zipcode format";
+        this.showToast = true;
+        setTimeout(() => {
+          this.showToast = false;
+        }, 3500);
+      }
+    },
+    setZipCodeToNull() {
+      this.$store.commit("ADD_ZIPCODE", "");
+      this.zipcode = null;
+    },
   },
+
+  computed: {
+    allItems() {
+        return this.$store.state.currentOrder
+    },
+    orderType() {
+      return this.$store.state.isDelivery.orderType
+    }
+  }
 };
 </script>
 
@@ -297,6 +362,54 @@ export default {
   flex-direction: column;
   overflow-y: scroll;
   overflow-x: hidden;
+}
+
+.cart-zipcode {
+  padding-bottom: 20px;
+  width: 100%;
+  border-bottom: 1px solid #1e1e1e;
+}
+
+.request-cart-zipcode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.request-cart-zipcode label {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.request-cart-zipcode input,
+.request-cart-zipcode button {
+  width: 70%;
+  margin-bottom: 10px;
+}
+
+.submit-zipcode {
+  background-color: #000;
+  color: #fff;
+  border: 1px solid #000;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.submit-zipcode:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+.show-cart-zipcode {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.show-cart-zipcode .submit-zipcode {
+  width: 40%;
+  height: 70%;
+  padding: 5px 10px;
 }
 
 .item-heading,
@@ -333,7 +446,6 @@ button[type="submit"]:hover {
   margin: 10px;
   background-color: #000;
   color: #fff;
-  border: none;
   border-radius: 15px;
   padding: 9px 15px;
   cursor: pointer;

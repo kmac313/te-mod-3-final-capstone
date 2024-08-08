@@ -52,7 +52,6 @@ computed: {
   padding: 10px;
   text-align: center;
   cursor: pointer;
-  width: 400px;
   margin-top: 20px;
 }
 
