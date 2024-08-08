@@ -3,13 +3,13 @@
     <div class="drink-card" :style="drinkStyle"></div>
     <div class="drink-card-details">
       <div class="drink-card-text-container">
-        <h2 class="drink-card-text" >{{ drinkName }} Drink</h2>
+        <h2 class="drink-card-text">{{ drinkName }} Drink</h2>
         <p class="drink-card-description">
           ${{ drink.price.toFixed(2) }} 
         </p>
       </div>
 
-      <button class="add-to-cart-btn"  v-on:click="$emit('show-popup')" >
+      <button class="add-to-cart-btn" v-on:click="$emit('show-popup')" >
           Add to Cart
       </button>
     </div>
