@@ -16,7 +16,7 @@ export default {
 .toast-container {
     position: fixed;
     top: 20px;
-    left: 45%;
+    left: 500px;
     background: #000000df;
     color: white;
     border-radius: 15px;

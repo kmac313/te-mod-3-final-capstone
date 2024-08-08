@@ -14,6 +14,7 @@
         src="../assets/arrow.png"
         alt="Pizza"
         style="width: 8%"
+        @click="this.$router.replace('/pizza')"
       />
     </div>
   </div>

@@ -84,7 +84,11 @@ export function createStore(currentToken, currentUser) {
           isDelivery: true,
           address: "123 Main Street",
           
-        }
+        },
+
+        allInvoices: [
+
+        ]
     },
     
     mutations: {
@@ -137,6 +141,17 @@ export function createStore(currentToken, currentUser) {
         state.isDelivery.orderType = orderType
         state.invoice.isDelivery = orderType === 'delivery' ? true : false
       },
+
+      ADD_INVOICE(state, invoice) {
+        state.allInvoices.push(invoice)
+      },
+      EMPTY_CART(state) {
+        state.cart = {
+          pizza: [],
+          other: []
+        };
+        state.currentOrder = [];
+      }
     },
   });
   return store;

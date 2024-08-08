@@ -9,6 +9,7 @@ import RegisterView from '../views/RegisterView.vue';
 import Pizza from '../views/Pizza.vue';
 import CustomPizza from '../views/CustomPizza.vue';
 import Drink from '../views/Drink.vue';
+import MyOrders from '../views/MyOrders.vue';
 
 /**
  * The Vue Router is used to "direct" the browser to render a specific view component
@@ -87,10 +88,17 @@ const routes = [
     },
 
 
-  // CHECKOUT
+  // Customer orders
 
-    // /checkout
-
+    // /myOrders
+    {
+      path: "/myOrders",
+      name: "myOrders",
+      component: MyOrders,
+      meta: {
+        requiresAuth: true
+      }
+    },
 
   // ADMIN DASHBOARD
     // create /admin path - general overview
