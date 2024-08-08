@@ -7,10 +7,7 @@ import com.techelevator.model.Product;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -61,6 +58,39 @@ public class ProductController {
     }
 
     //TODO method for getting products by requested categories (maybe add to the above function)
+
+    //TODO Get Product By Id Method
+
+    @RequestMapping(path = "/menu/{productId}", method = RequestMethod.GET)
+    public ResponseEntity<Product> getProductById(@PathVariable int productId) {
+        return new ResponseEntity<Product>(productDao.getProductById(productId), HttpStatus.OK);
+    }
+
+    //TODO Get Product By InvoiceId Method
+
+    @RequestMapping(path = "/menu/{invoiceId}/invoices", method = RequestMethod.GET)
+    public ResponseEntity<List<Product>> getProductsByInvoiceId(@PathVariable int invoiceId) {
+        List<Product> products = productDao.getProductsByInvoiceId(invoiceId);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    //TODO Get Products By Category Description Method
+
+    //TODO Add Products Method
+
+    //TODO Delete Products Method
+
+    @RequestMapping(path = "/menu/{productId}", method = RequestMethod.DELETE)
+    public void deleteProduct(@PathVariable int productId) {
+        productDao.deleteProductById(productId);
+    }
+
+    //TODO Update Products Method
+
+
+
+
+
 
 
 }
