@@ -1,7 +1,9 @@
 package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
+import com.techelevator.model.Authority;
 import com.techelevator.model.Invoice;
+import com.techelevator.model.User;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
@@ -13,6 +15,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 @Component
 public class JdbcInvoiceDao implements InvoiceDao{
     private final JdbcTemplate db;
@@ -59,8 +63,8 @@ public class JdbcInvoiceDao implements InvoiceDao{
     }
 
     @Override
-    public List<Invoice> getInvoices(String from, String to, Principal principal) {
-        String username = principal.getName();
+    public List<Invoice> getInvoices(String from, String to, User user) {
+        String username = user.getUsername();
         System.out.println(username);
         List<Invoice> invoices = new ArrayList<>();
         List<Integer> fromInts = new ArrayList<>();
@@ -100,7 +104,15 @@ public class JdbcInvoiceDao implements InvoiceDao{
             }
 
             while(results.next()) {
+                Set<Authority> authorities = user.getAuthorities();
+                List<String> authorityNames = new  ArrayList<>();
+                for (Authority a: authorities){
+                    authorityNames.add(a.getName());
+                }
+                //TODO check to see if this results in duplicate invoices returned
                 if (username.equals("admin")){
+                    invoices.add(mapRowSet(results));
+                }else if(authorityNames.contains("ROLE_ADMIN")){
                     invoices.add(mapRowSet(results));
                 } else {
                     if(results.getString("username").equals(username)){

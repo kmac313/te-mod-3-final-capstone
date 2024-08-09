@@ -3,10 +3,12 @@ package com.techelevator.controller;
 import com.techelevator.dao.InvoiceDao;
 import com.techelevator.dao.PizzaDao;
 import com.techelevator.dao.ProductDao;
+import com.techelevator.dao.UserDao;
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Invoice;
 import com.techelevator.model.Pizza;
 import com.techelevator.model.Product;
+import com.techelevator.model.User;
 import org.apache.logging.log4j.spi.ObjectThreadContextMap;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +27,13 @@ public class InvoiceController {
     private InvoiceDao invoiceDao;
     private ProductDao productDao;
     private PizzaDao pizzaDao;
+    private UserDao userDao;
 
-    public InvoiceController(InvoiceDao invoiceDao, ProductDao productDao, PizzaDao pizzaDao) {
+    public InvoiceController(InvoiceDao invoiceDao, ProductDao productDao, PizzaDao pizzaDao, UserDao userDao) {
         this.invoiceDao = invoiceDao;
         this.productDao = productDao;
         this.pizzaDao = pizzaDao;
+        this.userDao = userDao;
     }
 
     @RequestMapping(path = "/invoices", method = RequestMethod.GET)
@@ -38,12 +42,12 @@ public class InvoiceController {
                                                      Principal principal) {
 
         List<Invoice> invoices = null;
-        invoices = invoiceDao.getInvoices(from, to, principal);
+        User user = userDao.getUserByUsername(principal.getName());
+        invoices = invoiceDao.getInvoices(from, to, user);
         return new ResponseEntity<List<Invoice>>(invoices, HttpStatus.OK);
     }
     @RequestMapping(path = "/invoices/{invoiceId}", method = RequestMethod.GET)
     public ResponseEntity<Map<String, Object>> getInvoiceById(@PathVariable int invoiceId) {
-        //TODO return object that contains invoice, pizzas, other products
         Invoice invoice = invoiceDao.getInvoiceById(invoiceId);
         List<Pizza> pizzas = pizzaDao.getPizzasByInvoiceId(invoiceId);
         List<Product> products = productDao.getProductsByInvoiceId(invoiceId);
@@ -62,7 +66,6 @@ public class InvoiceController {
         List<Pizza> pizzas = pizzaDao.getPizzasByInvoiceId(invoiceId);
         return new ResponseEntity<>(pizzas, HttpStatus.OK);
     }
-    //TODO map -method that needs mapping-
     @RequestMapping(path = "/invoices/{invoiceId}/products", method = RequestMethod.GET)
     public ResponseEntity<List<Product>> getProductsByInvoiceId(@PathVariable int invoiceId){
         return new ResponseEntity<>(productDao.getProductsByInvoiceId(invoiceId), HttpStatus.OK);
@@ -157,6 +160,7 @@ public class InvoiceController {
             }
         }
         //TODO: Add authentication to ALL controllers
+        //TODO: Double Check that all methods that front end needs have been mapped
 
 
 
@@ -184,9 +188,4 @@ public class InvoiceController {
         invoiceDao.deleteInvoiceById(invoiceId);
     }
 
-    @RequestMapping(path = "/delivery", method = RequestMethod.POST)
-    public ResponseEntity<Boolean> validateDelivery(@RequestBody String address) {
-        //TODO: Integrate Mapbox API
-        return new ResponseEntity<Boolean>(false, HttpStatus.OK);
-    }
 }
