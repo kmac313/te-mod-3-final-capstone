@@ -26,7 +26,7 @@ public class ProductController {
 
     }
 
-    @RequestMapping(path = "/menu", method = RequestMethod.GET)
+    @RequestMapping(path = "/menu", method = RequestMethod.POST)
     public ResponseEntity<Map<String, List<Product>>> getMenu(@RequestHeader Map<String, String> header,
                                                               @RequestBody Map<String, List<String>> requestObject) {
         List<String> requestedCategories = requestObject.get("categories");
