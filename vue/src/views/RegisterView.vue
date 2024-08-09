@@ -114,6 +114,7 @@ label {
 }
 
 #register {
+  margin-top: 8em;
   min-height: 80vh;
   display: flex;
   justify-content: center;

@@ -1,11 +1,10 @@
 <template>
   <div>
-    <div class="header">
+    <div :class="['header', { shrink: isShrunk }]">
       <div class="header-logo">
         <img
           src="../../public/Super_Pizza_Mascot_Logo-removebg-preview.png"
           alt="Pizza"
-          style="width: 55%"
         />
       </div>
 
@@ -22,20 +21,26 @@
         <p
           v-on:click.prevent="logOut"
           v-if="$store.state.token != ''"
-          class="logout-btn"
+          class="login-div-btn"
           >Logout</p
         >
         <router-link
-          class="router-link-active"
+        class="login-div-btn"
           v-bind:to="{ name: 'login' }"
           v-if="$store.state.token == ''"
           >Login</router-link
         >
         <router-link
-          class="router-link-active"
+        class="login-div-btn"
           v-bind:to="{ name: 'myOrders' }"
-          v-if="$store.state.token !== ''"
+          v-if="$store.state.token !== '' && $store.state.user?.authorities[0].name !== 'ROLE_ADMIN'"
           >My Orders</router-link
+        >
+        <router-link
+        class="login-div-btn"
+          v-bind:to="{ name: 'admin' }"
+          v-if="user == 'ROLE_ADMIN'"
+          >Dashboard</router-link
         >
        
         <img class="cart" src="../assets/cart.png" alt="cart" @click="openCart" />
@@ -48,6 +53,12 @@
       
         <!-- Change path to /drink -->
         <li @click.prevent="changePath('/drink')">DRINKS</li>
+
+        <li @click.prevent="changePath('/sides')">APPETIZERS</li>
+
+        <li @click.prevent="changePath('/salad')">SALADS</li>
+
+        <li @click.prevent="changePath('/dessert')">DESSERTS</li>
       
     </ul>
     <toast v-if="showToast" :message="'You have logged out'" />
@@ -64,6 +75,7 @@ export default {
   data() {
     return {
       showToast: false,
+      isShrunk: false,
     }
   },
   
@@ -101,34 +113,69 @@ export default {
       menuItems.classList.remove('show')
       this.$router.replace(path)
     },
+    handleScroll() {
+      this.isShrunk = window.scrollY > 50; 
+    },
   },
   computed: {
     storeShowCart() {
       return this.$store.state.showCart;
+    },
+    user() {
+      return this.$store.state.user?.authorities?.name
     }
+  },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll);
+  },
+
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
   }
 };
 </script>
 
 <style scoped>
 .header {
-  position: relative;
+  position: fixed;
+  top: 0;
   background-color: #fff;
   display: grid;
-  grid-template-columns: 1fr 6fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
-  justify-items: start;
   font-size: 1.2em;
   border-bottom: #e0e0e0 solid 1px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-  padding: 0px;
+  padding: 10px 0px;
   margin: 0px;
-  width: 100vw;
+  width: 100%;
   z-index: 99999999;
+  transition: padding 0.3s, font-size 0.3s;
 }
 
 .header-logo {
+  display: flex;
   text-align: center;
+  justify-content: flex-start;
+  padding-left: 55px;
+}
+
+.header-logo img {
+  width: 20%;
+}
+
+.header.shrink {
+  padding: 0px; 
+  font-size: 0.9em; 
+}
+
+.header-logo img {
+  width: 20%; 
+  transition: width 0.3s; 
+}
+
+.header.shrink .header-logo img {
+  width: 15%; 
 }
 
 nav {
@@ -168,8 +215,8 @@ nav {
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 5em;
-  left: 14em;
+  top: 4.75em;
+  left: 30em;
   list-style: none;
   background-color: white;
   padding: 0px 10px;
@@ -195,7 +242,7 @@ nav {
   cursor: pointer;
 }
 
-.header-nav-links li:nth-child(2) {
+.header-nav-links li:nth-child(5) {
   border-bottom: none;
 }
 
@@ -246,6 +293,18 @@ nav {
   justify-content: flex-end;
   align-items: center;
   gap: 20px;
+  padding-right: 55px;
+  
+}
+
+.login-div-btn {
+  border-bottom: 3px solid transparent; 
+  transition: border-color 0.8s ease-in-out; 
+  cursor:pointer;
+}
+
+.login-div-btn:hover {
+  border-bottom: 3px solid #e61d25; 
 }
 
 </style>

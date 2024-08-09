@@ -58,9 +58,9 @@
       </div>
 
       <!-- Items -->
-      <div v-if="orderType !== ''">
+      <div v-if="orderType !== ''" class="order-container">
         <h2>Your order:</h2>
-        
+        <h4>Total: ${{ finalPrice }}</h4>
         <div v-if="allItems.length == 0">
             <p>Your cart is empty</p>
         </div>
@@ -79,7 +79,7 @@
             Sauce: {{ item?.sauce.description.split("-")[0] }}
           </h4>
           <h4 v-if="item?.crust">Crust: {{ item?.crust.description }}</h4>
-          <div v-if="item.topping && item?.topping.length > 0">
+          <div v-if="item?.topping && item?.topping.length > 0">
             <h4>Toppings:</h4>
             <p v-for="(topping, index) in item.topping" :key="index">
               {{ topping?.description }}
@@ -333,6 +333,19 @@ export default {
     },
     orderType() {
       return this.$store.state.isDelivery.orderType
+    },
+    finalPrice() {
+      let allItems = this.$store.state.currentOrder
+      let total = 0.00
+      if(allItems.length > 0) {
+        for( let item of allItems) {
+          console.log(total)
+          total += parseFloat(item.price)
+        }
+      } 
+      
+
+      return total.toFixed(2)
     }
   }
 };
@@ -502,13 +515,18 @@ button[type="submit"]:hover {
 }
 
 .order-header {
-  width: 100%;
+  width: 70%;
   text-align: center;
   align-items: center;
   padding-left: 30px;
-  border: 1px solid #d1d1d1;
+  border-bottom: 1px solid #e6e6e6;
   margin: 10px 0px;
-  box-shadow: 0 2px 4px 3px rgba(0, 0, 0, 0.085);
+}
+
+.order-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .order-header p,

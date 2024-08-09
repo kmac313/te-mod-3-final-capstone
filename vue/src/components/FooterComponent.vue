@@ -44,8 +44,11 @@
 <style scoped>
     footer {
         display: grid;
+        position: relative;
+        z-index: 99;
         grid-template-columns: 1fr 1fr 1fr 1fr;
         border-bottom: #e0e0e0 solid 1px;
+        background-color: #fff;
         box-shadow: 0 -4px 2px 0px rgba(0, 0, 0, 0.1);
         margin-top: 20px;
     }

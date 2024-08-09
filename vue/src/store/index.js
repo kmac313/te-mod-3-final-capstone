@@ -58,6 +58,12 @@ export function createStore(currentToken, currentUser) {
 
         drinks: [],
 
+        desserts: [],
+
+        sides: [],
+
+        salads: []
+
         
       },
       showCart: false,
@@ -119,7 +125,7 @@ export function createStore(currentToken, currentUser) {
       ADD_TO_OTHER_CART(state, item) {
         state.cart.other.push(item)
       },
-      ADD_TOPPING(state, topping) {
+      ADD_REGULAR_TOPPING(state, topping) {
         state.inventory.toppings.push(topping)
       },
       ADD_PREMIUM_TOPPING(state, topping) {
@@ -133,6 +139,15 @@ export function createStore(currentToken, currentUser) {
       },
       ADD_SIZE(state, size) {
         state.inventory.size.push(size)
+      },
+      ADD_SALAD(state, salad) {
+        state.inventory.salads.push(salad)
+      },
+      ADD_DESSERT(state, dessert) {
+        state.inventory.desserts.push(dessert)
+      },
+      ADD_APPETIZER(state, side) {
+        state.inventory.sides.push(side)
       },
       ADD_DRINK(state, drink) {
         state.inventory.drinks.push(drink)

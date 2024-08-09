@@ -5,7 +5,7 @@
       <HeaderComponent />
     </div>
     <!-- Body -->
-    <div>
+    <div class="body-container">
       <router-view />
     </div>
     
@@ -21,95 +21,79 @@ import HeaderComponent from "./components/HeaderComponent.vue";
 import FooterComponent from "./components/FooterComponent.vue";
 import productService from "./services/ProductService";
 import invoiceService from "./services/InvoiceService";
+
 export default {
   components: {
     HeaderComponent,
     FooterComponent,
   },
   methods: {
-    // Move to App.vue
     addProducts() {
       invoiceService.getOrders().then((data) => {
-        // for(let invoice of data ) {
-        //   this.$store.commit("ADD_INVOICE", invoice);
-        // }
-        console.log(data)
+        for (let invoice of data.data) {
+          this.$store.commit("ADD_INVOICE", invoice);
+        }
       });
 
       productService.getProducts().then((data) => {
-        const regularToppings = data.data["Regular Topping"];
-        const premiumToppings = data.data["Premium Topping"];
-        const sizes = data.data["Size"];
-        const crusts = data.data["Crust"];
-        const sauces = data.data["Sauce"];
-        const drinks = data.data["Drink"];
+        const categories = {
+          'Regular Topping': 'ADD_REGULAR_TOPPING',
+          'Premium Topping': 'ADD_PREMIUM_TOPPING',
+          'Size': 'ADD_SIZE',
+          'Crust': 'ADD_CRUST',
+          'Sauce': 'ADD_SAUCE',
+          'Drink': 'ADD_DRINK',
+          'Dessert': 'ADD_DESSERT',
+          'Appetizer': 'ADD_APPETIZER',
+          'Salad': 'ADD_SALAD'
+        };
 
-        for(let regTopping of regularToppings ) {
-          this.$store.commit("ADD_TOPPING", regTopping);
-        }
-
-        for(let premTopping of premiumToppings ) {
-          this.$store.commit("ADD_PREMIUM_TOPPING", premTopping);
-        }
-
-        for(let size of sizes ) {
-          this.$store.commit("ADD_SIZE", size);
-        }
-
-        for(let crust of crusts ) {
-          this.$store.commit("ADD_CRUST", crust);
-        }
-
-
-        for(let sauce of sauces ) {
-          this.$store.commit("ADD_SAUCE", sauce);
-        }
-
-        for(let drink of drinks ) {
-          this.$store.commit("ADD_DRINK", drink);
-        }
-
-        let storedPizzas = localStorage.getItem('pizza')
-      
-        if(storedPizzas) {
-          storedPizzas = JSON.parse(storedPizzas)
-          console.log(storedPizzas)
-          for(let item of storedPizzas) {
-            this.$store.commit('ADD_TO_CURR_ORDER', item);
+        for (const [category, mutation] of Object.entries(categories)) {
+          const items = data.data[category];
+          if (items) {
+            items.forEach(item => {
+              this.$store.commit(mutation, item);
+            });
           }
         }
 
-        let storedDrinks = localStorage.getItem('drink')
-      
-        if(storedDrinks) {
-          storedDrinks = JSON.parse(storedDrinks)
-          console.log(storedDrinks)
-          for(let item of storedDrinks) {
-            this.$store.commit('ADD_TO_CURR_ORDER', item);
-          }
-        }
-
-        let storedZipCode = localStorage.getItem('zipcode');
-
-        if(storedZipCode) {
-          this.$store.commit('ADD_ZIPCODE', parseInt(storedZipCode))
-        }
-
-        let storedOrderType = localStorage.getItem('orderType');
-
-        if(storedOrderType) {
-          this.$store.commit('UPDATE_ORDER_TYPE', storedOrderType)
-        }
         
-      })
-      
+        this.loadStoredItems('pizza', 'ADD_TO_CURR_ORDER');
+        this.loadStoredItems('drink', 'ADD_TO_CURR_ORDER');
+        this.loadStoredItems('sides', 'ADD_TO_CURR_ORDER');
+        this.loadStoredItems('dessert', 'ADD_TO_CURR_ORDER');
+        this.loadStoredItems('salads', 'ADD_TO_CURR_ORDER');
+
+        
+        this.loadStoredData('zipcode', 'ADD_ZIPCODE', true);
+        this.loadStoredData('orderType', 'UPDATE_ORDER_TYPE', false);
+      });
     },
+    
+    loadStoredItems(storageKey, mutation) {
+      let storedItems = localStorage.getItem(storageKey);
+      if (storedItems && storedItems !== 'undefined') {
+        storedItems = JSON.parse(storedItems);
+        if (Array.isArray(storedItems) && storedItems.length > 0) {
+          storedItems.forEach(item => {
+            this.$store.commit(mutation, item);
+          });
+        }
+      }
+    },
+    
+    loadStoredData(storageKey, mutation, isNumeric) {
+      let storedData = localStorage.getItem(storageKey);
+      if (storedData && storedData !== 'undefined') {
+        this.$store.commit(mutation, isNumeric ? parseInt(storedData) : storedData);
+      }
+    }
   },
-  beforeMount() {
-    if(this.$store.state.inventory.crust.length === 0) {
+  
+  mounted() {
+    if (this.$store.state.inventory.crust.length === 0) {
       this.addProducts();
     }
-    
   },
 };
 </script>
@@ -127,9 +111,16 @@ body {
   overflow-x: hidden;
 }
 
-a, .router-link-active, .router-link-active:visited, .router-link-active:active {
-        text-decoration: none;
-        color: black;
+.body-container {
+  margin-top: 9vh;
+}
+
+a,
+.router-link-active,
+.router-link-active:visited,
+.router-link-active:active {
+  text-decoration: none;
+  color: black;
 }
 
 .header-nav-links {
@@ -146,28 +137,27 @@ a, .router-link-active, .router-link-active:visited, .router-link-active:active 
   border: #e6e6e6 solid 1px;
   z-index: 5;
   visibility: hidden;
-  transition: opacity 0.8s ease, transform 0.3s ease; 
+  transition: opacity 0.8s ease, transform 0.3s ease;
   transform: translateY(-100px);
 }
 .show {
   visibility: visible;
 }
 
-.header-nav-links.show { 
-  opacity: 1; 
-  transform: translateY(0); 
+.header-nav-links.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .header-nav-links .router-link-active {
   border-bottom: #a9a9a9 solid 1px;
   padding: 10px 8px 10px 8px;
-  width: 100%
+  width: 100%;
 }
 
 .header-nav-links .router-link-active:nth-child(3) {
   border-bottom: none;
 }
-
 
 .header-nav-links li:hover,
 .header-nav-links .router-link-active:hover {

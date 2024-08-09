@@ -10,6 +10,10 @@ import Pizza from '../views/Pizza.vue';
 import CustomPizza from '../views/CustomPizza.vue';
 import Drink from '../views/Drink.vue';
 import MyOrders from '../views/MyOrders.vue';
+import Desserts from '../views/Desserts.vue';
+import Sides from '../views/Sides.vue';
+import Salads from '../views/Salads.vue'
+import Admin from '../views/Admin.vue'
 
 /**
  * The Vue Router is used to "direct" the browser to render a specific view component
@@ -87,6 +91,39 @@ const routes = [
       }
     },
 
+    // desserts
+
+    {
+      path: "/dessert",
+      name: "dessert",
+      component: Desserts,
+      meta: {
+        requiresAuth: false
+      }
+    },
+
+    // sides
+
+    {
+      path: "/sides",
+      name: "sides",
+      component: Sides,
+      meta: {
+        requiresAuth: false
+      }
+    },
+
+    // salads
+
+    {
+      path: "/salad",
+      name: "salad",
+      component: Salads,
+      meta: {
+        requiresAuth: false
+      }
+    },
+
 
   // Customer orders
 
@@ -102,6 +139,15 @@ const routes = [
 
   // ADMIN DASHBOARD
     // create /admin path - general overview
+    // /myOrders
+    {
+      path: "/admin",
+      name: "admin",
+      component: Admin,
+      meta: {
+        requiresAuth: true
+      }
+    },
     // create admin/viewOrders path - admins can update or cancel orders
     // create admin/viewInventory path - admins can modify inventory/stock
     // create admin/viewSpecialtyPizzas path - admins can view, delete, or add pizzas
