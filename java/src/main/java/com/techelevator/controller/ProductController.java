@@ -2,13 +2,17 @@ package com.techelevator.controller;
 
 import com.techelevator.dao.InvoiceDao;
 import com.techelevator.dao.ProductDao;
+import com.techelevator.exception.DaoException;
+import com.techelevator.model.Customer;
 import com.techelevator.model.Invoice;
 import com.techelevator.model.Product;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +30,7 @@ public class ProductController {
 
     }
 
-    @RequestMapping(path = "/menu", method = RequestMethod.POST)
+    @RequestMapping(path = "/menu", method = RequestMethod.GET)
     public ResponseEntity<Map<String, List<Product>>> getMenu(@RequestHeader Map<String, String> header,
                                                               @RequestBody Map<String, List<String>> requestObject) {
         List<String> requestedCategories = requestObject.get("categories");
@@ -83,19 +87,61 @@ public class ProductController {
     }
 
 
-
     @RequestMapping(path = "/menu/{productId}", method = RequestMethod.DELETE)
     public void deleteProduct(@PathVariable int productId) {
         productDao.deleteProductById(productId);
     }
 
-    //TODO Add Products Method
-    //TODO Update Products Method
+    @RequestMapping(path = "/menu", method = RequestMethod.POST)
+    public ResponseEntity<Product> createProduct(@RequestBody Map<String, Object> newProduct) {
+
+         /* Object Structure for the product
+         {
+            "productId" : null
+            "productCategoryId" : 2
+            "productCategoryDescription" : "3"
+            "price" : 0.75
+            "description" : "Extra Cheese"
+            "quantity" : 10
+        }
+        */
+
+        int productCategoryId = (int)newProduct.get("productCategoryId");
+        String productCategoryDescription = (String)newProduct.get("productCategoryDescription");
+        BigDecimal price = BigDecimal.valueOf((Double)newProduct.get("price"));
+        String description = (String)newProduct.get("description");
+        int quantity = (int)newProduct.get("quantity");
+
+        Product createdProduct;
+
+
+        Product product = new Product();
+        product.setProductCategoryId(productCategoryId);
+        product.setProductCategoryDescription(productCategoryDescription);
+        product.setPrice(price);
+        product.setDescription(description);
+        product.setQuantity(quantity);
+        createdProduct = productDao.addProduct(product);
+
+        return new ResponseEntity<Product>(createdProduct, HttpStatus.CREATED);
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @RequestMapping(path = "/menu/{productId}", method = RequestMethod.PUT)
+    public ResponseEntity<Product>updateProduct (@RequestBody Product product,  @PathVariable int productId) {
+        product.setProductId(productId);
+        Product updatedProduct = null;
+        try {
+            updatedProduct = productDao.updateProduct(product);
+        } catch(DaoException doe) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+        }
+        return new ResponseEntity<Product>(updatedProduct, HttpStatus.OK);
+    }
 
 
 
 
 
 
-
-}
+    }
