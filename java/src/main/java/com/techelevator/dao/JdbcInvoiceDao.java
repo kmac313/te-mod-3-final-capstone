@@ -3,10 +3,12 @@ package com.techelevator.dao;
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Invoice;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -29,10 +31,10 @@ public class JdbcInvoiceDao implements InvoiceDao{
             if(result.next()){
                 invoice = mapRowSet(result);
             }
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
-        } catch (DataIntegrityViolationException e) {
-            throw new DaoException("Data integrity violation", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return invoice;
     }
@@ -48,10 +50,10 @@ public class JdbcInvoiceDao implements InvoiceDao{
             while (results.next()){
                 customerInvoices.add(mapRowSet(results));
             }
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
-        } catch (DataIntegrityViolationException e) {
-            throw new DaoException("Data integrity violation", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return customerInvoices;
     }
@@ -106,10 +108,10 @@ public class JdbcInvoiceDao implements InvoiceDao{
                     }
                 }
             }
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
-        } catch (DataIntegrityViolationException e) {
-            throw new DaoException("Data integrity violation", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return invoices;
     }
@@ -122,10 +124,10 @@ public class JdbcInvoiceDao implements InvoiceDao{
         try{
              createdInvoiceId = db.queryForObject(sql, int.class,
                     invoice.getCustomerId(), invoice.getTotal(), invoice.isDelivery(), invoice.isComplete());
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
-        } catch (DataIntegrityViolationException e) {
-            throw new DaoException("Data integrity violation", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return getInvoiceById(createdInvoiceId);
     }
@@ -142,10 +144,10 @@ public class JdbcInvoiceDao implements InvoiceDao{
             if (numRowsAffected == 0){
                 throw new DaoException("No matching Invoice found, check Invoice ID");
             }
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the invoice by ID");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return getInvoiceById(invoice.getInvoiceId());
     }
@@ -156,10 +158,10 @@ public class JdbcInvoiceDao implements InvoiceDao{
                 "VALUES (?,?) ";
         try{
             db.update(sql, invoiceId, productId);
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the invoice by ID");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
     }
 
@@ -168,10 +170,10 @@ public class JdbcInvoiceDao implements InvoiceDao{
         String sql = "DELETE FROM invoice WHERE invoice_id = ?";
         try{
             db.update(sql, id);
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
-        } catch (DataIntegrityViolationException e) {
-            throw new DaoException("Data integrity violation", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
 
     }
@@ -181,10 +183,10 @@ public class JdbcInvoiceDao implements InvoiceDao{
         String sql = "DELETE FROM invoice WHERE customer_id = ?";
         try{
             db.update(sql, id);
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
-        } catch (DataIntegrityViolationException e) {
-            throw new DaoException("Data integrity violation", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
 
     }

@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface InvoiceDao {
     Invoice getInvoiceById(int id);
+    List<Invoice> getInvoicesByCustomerId(int id);
 
             //TODO Change invoice authroization to be based on role and not username
 

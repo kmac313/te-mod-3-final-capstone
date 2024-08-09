@@ -12,6 +12,8 @@ public class Customer {
     private String email;
     private String username;
 
+    public Customer() {}
+
     public Customer(int customerId, String firstName, String lastName, String streetAddress,
                     String city, int zipcode, String stateAbbreviation, String phoneNumber, String email, String username) {
         this.customerId = customerId;

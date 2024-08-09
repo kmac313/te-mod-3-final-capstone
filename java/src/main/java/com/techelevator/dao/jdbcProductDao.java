@@ -3,6 +3,7 @@ package com.techelevator.dao;
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Product;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -36,10 +38,10 @@ public class jdbcProductDao implements ProductDao{
             while(results.next()){
                 allProducts.add(mapRowSet(results));
             }
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the drinks");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return allProducts;
     }
@@ -56,10 +58,10 @@ public class jdbcProductDao implements ProductDao{
                         results.getInt("product_category_id"),
                         results.getString("product_category_description"));
             }
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the drinks");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return categories;
     }
@@ -75,10 +77,10 @@ public class jdbcProductDao implements ProductDao{
             if(result.next()){
                 product = mapRowSet(result);
             }
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the drinks");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return product;
     }
@@ -98,10 +100,10 @@ public class jdbcProductDao implements ProductDao{
             while(results.next()){
                 products.add(mapRowSet(results));
             }
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the drinks");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return products;
     }
@@ -121,10 +123,10 @@ public class jdbcProductDao implements ProductDao{
             while(results.next()) {
                 categoryProducts.add(mapRowSet(results));
             }
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the drinks");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return categoryProducts;
     }
@@ -145,10 +147,10 @@ public class jdbcProductDao implements ProductDao{
             while(results.next()){
                 categoryProducts.add(mapRowSet(results));
             }
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the drinks");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return categoryProducts;
     }
@@ -163,10 +165,10 @@ public class jdbcProductDao implements ProductDao{
             createdProductId=db.queryForObject(sql,int.class,
                     product.getProductCategoryId(), product.getPrice(), product.getDescription(), product.getQuantity()
                     );
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the drinks");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return getProductById(createdProductId);
     }
@@ -176,10 +178,10 @@ public class jdbcProductDao implements ProductDao{
         String sql = "DELETE FROM product WHERE product_id = ?";
         try{
             db.update(sql, productId);
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the drinks");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
     }
 
@@ -201,10 +203,10 @@ public class jdbcProductDao implements ProductDao{
                 updatedProduct = getProductById(product.getProductId());
             }
 
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the drinks");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return updatedProduct;
 

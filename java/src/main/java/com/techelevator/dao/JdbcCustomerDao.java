@@ -4,10 +4,12 @@ import com.techelevator.exception.DaoException;
 import com.techelevator.model.Customer;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.constraints.Null;
 import java.util.ArrayList;
@@ -31,10 +33,10 @@ public class JdbcCustomerDao implements CustomerDao{
             while (results.next()){
                 allCustomers.add(mapRowSet(results));
             }
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the list of customers");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return allCustomers;
     }
@@ -48,10 +50,10 @@ public class JdbcCustomerDao implements CustomerDao{
             if (result.next()){
                 customer = mapRowSet(result);
             }
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the customer by ID");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return customer;
     }
@@ -65,10 +67,10 @@ public class JdbcCustomerDao implements CustomerDao{
             if (result.next()) {
                 customer = mapRowSet(result);
             }
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the customer by email");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return customer;
     }
@@ -76,19 +78,20 @@ public class JdbcCustomerDao implements CustomerDao{
     @Override
     public Customer createCustomer(Customer customer) {
         int newCustomerId = 0;
-        String sql = "INSERT INTO customer (customer_id, first_name, last_name, street_address, city, " +
+        String sql = "INSERT INTO customer (first_name, last_name, street_address, city, " +
                 "zip_code, state_abbreviation, phone_number, email, username) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING customer_id";
         try {
             newCustomerId = db.queryForObject(sql, int.class,
                     customer.getFirstName(), customer.getLastName(), customer.getStreetAddress(),
-                    customer.getCity(), customer.getZipcode(), customer.getStateAbbreviation(), customer.getPhoneNumber(),
+                    customer.getCity(), customer.getZipcode(), customer.getStateAbbreviation(),
+                    Long.parseLong(customer.getPhoneNumber()),
                     customer.getEmail(), customer.getUsername());
 
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened adding the customer to DB");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         } catch (NullPointerException np){
             System.out.println("Null Pointer Exception");
         }
@@ -113,10 +116,10 @@ public class JdbcCustomerDao implements CustomerDao{
             } else {
                 updatedCustomer = getCustomerById(customer.getCustomerId());
             }
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
-        } catch (DataIntegrityViolationException e) {
-            throw new DaoException("Data integrity violation", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return updatedCustomer;
     }
@@ -126,10 +129,10 @@ public class JdbcCustomerDao implements CustomerDao{
         String sql = "DELETE FROM customer WHERE customer_id = ?";
         try {
             db.update(sql, id);
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
-        } catch (DataIntegrityViolationException e) {
-            throw new DaoException("Data integrity violation", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
     }
 
@@ -138,10 +141,10 @@ public class JdbcCustomerDao implements CustomerDao{
         String sql = "DELETE FROM customer WHERE username = ?";
         try {
             db.update(sql, username);
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
-        } catch (DataIntegrityViolationException e) {
-            throw new DaoException("Data integrity violation", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
     }
 

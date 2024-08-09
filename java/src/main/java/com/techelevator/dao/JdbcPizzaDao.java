@@ -3,10 +3,12 @@ package com.techelevator.dao;
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Pizza;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +37,10 @@ public class JdbcPizzaDao implements PizzaDao{
             while(results.next()){
                 allPizzas.add(mapRowSet(results));
             }
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the drink by ID");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return allPizzas;
     }
@@ -55,10 +57,10 @@ public class JdbcPizzaDao implements PizzaDao{
             if (result.next()){
                 pizza = mapRowSet(result);
             }
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the drink by ID");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return pizza;
     }
@@ -74,10 +76,10 @@ public class JdbcPizzaDao implements PizzaDao{
             while(results.next()){
                 pizzas.add(mapRowSet(results));
             }
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the drink by ID");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return pizzas;
     }
@@ -92,10 +94,10 @@ public class JdbcPizzaDao implements PizzaDao{
             createdPizzaId = db.queryForObject(sql, int.class,
                     pizza.getInvoiceId(), pizza.getPizzaName(), pizza.getTotal(),
                     pizza.getAdditionalInstructions());
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the pizza by ID");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         Pizza createdPizza = getPizzaById(createdPizzaId);
 
@@ -108,11 +110,10 @@ public class JdbcPizzaDao implements PizzaDao{
                 "VALUES (?,?) ";
         try{
             db.update(sql, pizzaId, productId);
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the product by ID");
-            System.out.println(eie);
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
     }
 
@@ -128,10 +129,10 @@ public class JdbcPizzaDao implements PizzaDao{
             if (numRowsAffected == 0){
                 throw new DaoException("No matching Pizza found, check Pizza ID");
             }
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the drink by ID");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return null;
     }
@@ -141,10 +142,10 @@ public class JdbcPizzaDao implements PizzaDao{
         String sql = "DELETE FROM pizza WHERE pizza_id = ?";
         try {
             db.update(sql, id);
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the drink by ID");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
 
     }
@@ -159,10 +160,10 @@ public class JdbcPizzaDao implements PizzaDao{
             while(results.next()){
                 pizza.addComponent(productDao.getProductById(results.getInt(1)));
             }
-        } catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the drink by ID");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return pizza;
     }
@@ -182,10 +183,10 @@ public class JdbcPizzaDao implements PizzaDao{
             while(results.next()){
                 pizza.addComponent(productDao.getProductById(results.getInt("product_id")));
             }
-        }catch (DataIntegrityViolationException eie) {
-            System.out.println("An error happened getting the drink by ID");
-        } catch (CannotGetJdbcConnectionException e) {
-            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
 
         return pizza;

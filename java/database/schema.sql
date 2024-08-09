@@ -101,8 +101,8 @@ ALTER TABLE product
 ;
 
 ALTER TABLE invoice_product
-	ADD CONSTRAINT FK_invoice_id FOREIGN KEY (invoice_id) REFERENCES invoice (invoice_id),
-	ADD CONSTRAINT FK_product_id FOREIGN KEY (product_id) REFERENCES product (product_id)
+	ADD CONSTRAINT FK_invoice_id FOREIGN KEY (invoice_id) REFERENCES invoice (invoice_id) ON DELETE CASCADE,
+	ADD CONSTRAINT FK_product_id FOREIGN KEY (product_id) REFERENCES product (product_id) ON DELETE CASCADE
 ;
 
 ALTER TABLE customer
