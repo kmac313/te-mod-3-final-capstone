@@ -171,6 +171,8 @@ public class InvoiceController {
         invoiceDao.deleteInvoiceById(invoiceId);
     }
 
+    //TODO Delete Invoices By CustomerId Method
+
     @RequestMapping(path = "/delivery", method = RequestMethod.POST)
     public ResponseEntity<Boolean> validateDelivery(@RequestBody String address) {
         //TODO: Integrate Mapbox API
