@@ -27,15 +27,25 @@ public class ProductController {
     }
 
     @RequestMapping(path = "/menu", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, List<Product>>> getMenu(@RequestHeader Map<String, String> header,  Principal principal) {
-        System.out.println(header);
-        System.out.println("ANYTHING");
-        List<Product> products = productDao.getProducts();
+    public ResponseEntity<Map<String, List<Product>>> getMenu(@RequestHeader Map<String, String> header,
+                                                              @RequestBody Map<String, List<String>> requestObject) {
+        List<String> requestedCategories = requestObject.get("categories");
+        List<Product> products = new ArrayList<>();
         Map<String, List<Product>> menuObject = new HashMap<>();
-        Map<Integer, String> categories = productDao.getCategories();
-        for (String category : categories.values()) {
-            menuObject.put(category, new ArrayList<>());
+        Map<Integer, String> categories = new HashMap<>();
+        if (requestedCategories.size() != 0){
+            products = productDao.getProductsByCategoryDescription(requestedCategories);
+            for (String category: requestedCategories){
+                menuObject.put(category, new ArrayList<>());
+            }
+        } else {
+            categories =  productDao.getCategories();
+            products = productDao.getProducts();
+            for (String category : categories.values()) {
+                menuObject.put(category, new ArrayList<>());
+            }
         }
+
         for (Product product : products) {
             menuObject.get(product.getProductCategoryDescription()).add(product);
         }
@@ -59,7 +69,6 @@ public class ProductController {
 
     }
 
-    //TODO method for getting products by requested categories (maybe add to the above function)
 
     //TODO Get Product By Id Method
 
@@ -79,8 +88,6 @@ public class ProductController {
     //TODO Get Products By Category Description Method
 
     //TODO Add Products Method
-
-    //TODO Delete Products Method
 
     @RequestMapping(path = "/menu/{productId}", method = RequestMethod.DELETE)
     public void deleteProduct(@PathVariable int productId) {

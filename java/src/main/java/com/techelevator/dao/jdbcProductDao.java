@@ -1,6 +1,7 @@
 package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
+import com.techelevator.model.Pizza;
 import com.techelevator.model.Product;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -106,6 +107,25 @@ public class jdbcProductDao implements ProductDao{
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return products;
+    }
+
+    @Override
+    public List<Product> filterOutPizzaProducts(List<Product> productList, List<Pizza> pizzaList) {
+        List<Integer> pizzaComponentIds = new ArrayList<>();
+        List<Product> filteredProducts = new ArrayList<>();
+        for (Pizza pizza : pizzaList) {
+            List<Product> components = pizza.getComponents();
+            for(Product component: components){
+                pizzaComponentIds.add(component.getProductId());
+            }
+        }
+        for (Product product: productList){
+            int id = product.getProductId();
+            if (!pizzaComponentIds.contains(id)){
+                filteredProducts.add(product);
+            }
+        }
+        return filteredProducts;
     }
 
     @Override

@@ -4,7 +4,6 @@ DROP TABLE IF EXISTS product CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS customer CASCADE;
 DROP TABLE IF EXISTS invoice CASCADE;
-DROP TABLE IF EXISTS specialty_pizza CASCADE;
 DROP TABLE IF EXISTS pizza CASCADE;
 DROP TABLE IF EXISTS pizza_product CASCADE;
 DROP TABLE IF EXISTS invoice_product CASCADE;
@@ -50,13 +49,6 @@ CREATE TABLE invoice (
 	CONSTRAINT PK_invoice_id PRIMARY KEY (invoice_id)
 );
 
-CREATE TABLE specialty_pizza (
-	pizza_id SERIAL,
-	specialty_pizza_name varchar(50) NOT NULL,
-	premium numeric (4,2),
-	CONSTRAINT PK_specialty_pizza_id PRIMARY KEY (pizza_id)
-);
-
 CREATE TABLE pizza (
 	pizza_id SERIAL,
 	invoice_id int NOT NULL,
@@ -77,8 +69,8 @@ CREATE TABLE pizza_product (
 	pizza_id int NOT NULL,
 	product_id int NOT NULL,
 	CONSTRAINT FK_pizza_product_pizza_id FOREIGN KEY (pizza_id) REFERENCES pizza(pizza_id),
-	CONSTRAINT FK_pizza_product_product_id FOREIGN KEY (product_id) REFERENCES product(product_id),
-	CONSTRAINT FK_specialty_pizza_product_pizza_id FOREIGN KEY (pizza_id) REFERENCES specialty_pizza(pizza_id)
+	CONSTRAINT FK_pizza_product_product_id FOREIGN KEY (product_id) REFERENCES product(product_id)
+
 );
 
 CREATE TABLE product_category (

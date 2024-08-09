@@ -1,5 +1,6 @@
 package com.techelevator.dao;
 
+import com.techelevator.model.Pizza;
 import com.techelevator.model.Product;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
@@ -12,11 +13,13 @@ public interface ProductDao {
 
     Product getProductById(int productId);
     List<Product> getProductsByInvoiceId(int invoiceId);
+    List<Product> filterOutPizzaProducts(List<Product> productList, List<Pizza> pizzaList);
     List<Product> getProductsByCategoryIds(int[] categoryIds);
     List<Product> getProductsByCategoryDescription(List<String> categoryDescriptions);
     Product addProduct(Product product);
     void deleteProductById(int productId);
     Product updateProduct (Product product);
+
 
     Product mapRowSet (SqlRowSet rowSet);
 }

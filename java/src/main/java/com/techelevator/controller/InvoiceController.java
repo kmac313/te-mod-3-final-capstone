@@ -7,6 +7,7 @@ import com.techelevator.exception.DaoException;
 import com.techelevator.model.Invoice;
 import com.techelevator.model.Pizza;
 import com.techelevator.model.Product;
+import org.apache.logging.log4j.spi.ObjectThreadContextMap;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 @RestController
@@ -40,8 +42,19 @@ public class InvoiceController {
         return new ResponseEntity<List<Invoice>>(invoices, HttpStatus.OK);
     }
     @RequestMapping(path = "/invoices/{invoiceId}", method = RequestMethod.GET)
-    public ResponseEntity<Invoice> getInvoiceById(@PathVariable int invoiceId) {
-        return new ResponseEntity<Invoice>(invoiceDao.getInvoiceById(invoiceId), HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> getInvoiceById(@PathVariable int invoiceId) {
+        //TODO return object that contains invoice, pizzas, other products
+        Invoice invoice = invoiceDao.getInvoiceById(invoiceId);
+        List<Pizza> pizzas = pizzaDao.getPizzasByInvoiceId(invoiceId);
+        List<Product> products = productDao.getProductsByInvoiceId(invoiceId);
+        List<Product> filtered = productDao.filterOutPizzaProducts(products, pizzas);
+        Map<String, Object> response = new HashMap<>();
+        response.put("invoice", invoice);
+        response.put("pizzas", pizzas);
+        response.put("other", filtered);
+
+
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
     }
 
     @RequestMapping(path = "/invoices/{invoiceId}/pizzas", method = RequestMethod.GET)

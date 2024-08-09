@@ -81,7 +81,7 @@ INSERT INTO product (product_category_id, price, description, quantity)
 ((SELECT product_category_id FROM product_category WHERE product_category_description = 'Salad'), 8.00, 'Greek Salad - Mixed greens with feta cheese, olives, and vinaigrette.', 15),
 ((SELECT product_category_id FROM product_category WHERE product_category_description = 'Salad'), 6.50, 'Garden Salad - Mixed greens with assorted vegetables.', 25),
 ((SELECT product_category_id FROM product_category WHERE product_category_description = 'Salad'), 9.00, 'Cobb Salad - Mixed greens with chicken, bacon, and blue cheese.', 10),
-((SELECT product_category_id FROM product_category WHERE product_category_description = 'Salad'), 7.75, 'Spinach Salad - Fresh spinach with bacon and eggs.', 20)
+((SELECT product_category_id FROM product_category WHERE product_category_description = 'Salad'), 7.75, 'Spinach Salad - Fresh spinach with bacon and eggs.', 20),
 -- Adding specialty_pizza
 ((SELECT product_category_id FROM product_category WHERE product_category_description = 'Specialty Pizza'), 12.99, 'Margherita Pizza - Classic pizza with fresh tomatoes, mozzarella cheese, and basil.', 15),
 ((SELECT product_category_id FROM product_category WHERE product_category_description = 'Specialty Pizza'), 14.99, 'Pepperoni Pizza - Loaded with pepperoni and mozzarella cheese.', 20),
@@ -143,9 +143,7 @@ INSERT INTO invoice_product (invoice_id, product_id)
 	(1, 1), (1, 2), (2, 3), (2, 4), (3, 5), (3, 6), (4, 7), (4, 8), (5, 9), (5, 10),
 	(6, 11), (6, 12), (7, 13), (7, 14), (8, 15), (8, 16), (9, 17), (9, 18), (10, 19),
 	(10, 20), (11, 21), (11, 22), (12, 23), (12, 24), (13, 25), (13, 26), (14, 27),
-	(14, 28), (15, 29), (15, 30), (16, 31), (16, 32), (17, 33), (17, 34), (18, 35),
-	(22, 44), (23, 45), (23, 46), (24, 47), (24, 48), (25, 49), (25, 50), (26, 51),
-	(26, 52), (27, 53), (27, 54)
+	(14, 28), (15, 29), (15, 30), (16, 31), (16, 32), (17, 33), (17, 34)
 ;
 
 INSERT INTO pizza (invoice_id, pizza_name, total, additional_instructions)
