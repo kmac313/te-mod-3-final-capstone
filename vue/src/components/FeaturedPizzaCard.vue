@@ -3,9 +3,9 @@
     <div class="pizza-card" :style="pizzaStyle"></div>
     <div class="featured-pizza-card-details">
       <div class="featured-pizza-card-text-container">
-        <h2 class="featured-pizza-card-text">{{ pizza.name }} Pizza</h2>
+        <h2 class="featured-pizza-card-text">{{ pizzaName }} Pizza</h2>
         <p class="featured-pizza-card-description">
-          Our {{ pizza.name }} pizza is the best pizza you will ever eat!
+          {{ pizza.description }}
         </p>
       </div>
 
@@ -23,6 +23,12 @@
 <script>
 export default {
   name: "FeaturedPizzaCard",
+  data() {
+    return {
+      pizzaName: this.pizza?.description.split("-")[0],
+      pizzaDescription: this.pizza?.description.split("-")[1]
+    }
+  },
   props: {
     pizza: Object,
   },
@@ -31,7 +37,7 @@ export default {
     pizzaStyle() {
         return {
             // Images must be placed inside of public folder
-            backgroundImage: `url('./${this.pizza.name}.jpg')`
+            backgroundImage: `url('./${this.pizzaName}.jpg')`
         };
     }
 }

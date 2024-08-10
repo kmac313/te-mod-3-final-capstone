@@ -2,12 +2,12 @@
   <div class="pizza-view-container">
     <div class="pizza-view-components">
         <h2>Make your own pizza</h2>
-        <PizzaComponent v-bind:pizza="customPizza" />
+        <PizzaComponent v-bind:pizza="customPizza" :isCustom="true"/>
     </div>
     
     <h2>Specialty Pizzas</h2>
     <div v-for="(pizza, index) in allPizzas" v-bind:key="{ index }" class="pizza-view-components">
-      <PizzaComponent v-bind:pizza="pizza" />
+      <PizzaComponent v-bind:pizza="pizza" :isCustom="false"/>
     </div>
   </div>
 </template>
@@ -19,7 +19,7 @@ export default {
     data() {
         return {
             customPizza: {
-            name: "Custom",
+            description: "Custom Pizza- Make your own delicious pizza",
             price: "32.00",
             crust: "regular",
             sauce: "Alfredo"

@@ -6,6 +6,8 @@ const http = axios.create({
 
 export default {
     getProducts() {
-        return http.get('/menu')
+        return http.post('/menu', {
+          categories: []
+        })
     }
 }

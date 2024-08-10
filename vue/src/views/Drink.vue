@@ -93,6 +93,7 @@ export default {
         this.popUpVisible = false;
         this.toastMessage = 'Successfully added to your cart'
         this.showToast = true;
+        this.$store.commit("TOGGLE_CART", true);
         setTimeout(() => {
           this.showToast = false;
         }, 1500);

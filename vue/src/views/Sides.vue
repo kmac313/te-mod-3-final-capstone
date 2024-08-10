@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     addToCart(id) {
-      console.log(this.zipcode);
+      console.log(this.$store.state.isDelivery.zipcode);
       if (this.zipcode === null) {
         this.toastMessage =
           "Please add a zipcode, and choose carryout or delivery";
@@ -56,10 +56,14 @@ export default {
 
         // Add to local storage
         if (storedSide) {
+          console.log(storedSide)
           storedSide = JSON.parse(storedSide);
+          console.log(storedSide)
           storedSide.push(this.currSide);
-          localStorage.removeItem("sides");
-          localStorage.setItem("sides", JSON.stringify(this.storedSide));
+          console.log(storedSide)
+          localStorage.setItem("sides", JSON.stringify(storedSide));
+          const testing = localStorage.getItem('sides')
+          console.log(testing)
         } else {
           let side = [];
           side.push(this.currSide);
@@ -68,10 +72,10 @@ export default {
 
         // Add to other cart
         this.$store.commit("ADD_TO_OTHER_CART", this.currSide.productId);
-        console.log(this.$store.state.cart);
         this.popUpVisible = false;
         this.toastMessage = "Successfully added to your cart";
         this.showToast = true;
+        this.$store.commit("TOGGLE_CART", true);
         setTimeout(() => {
           this.showToast = false;
         }, 1500);

@@ -47,7 +47,7 @@
         
       </div>
     </div>
-    <ul class="header-nav-links hidden" id="header-nav-links">
+    <ul :class="['header-nav-links', 'hidden', { shrink: isShrunk }]" id="header-nav-links">
       
         <li @click.prevent="changePath('/pizza')">PIZZAS</li>      
       
@@ -214,7 +214,7 @@ nav {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: absolute;
+  position: fixed;
   top: 4.75em;
   left: 30em;
   list-style: none;
@@ -225,6 +225,10 @@ nav {
   visibility: hidden;
   transition: opacity 0.8s ease, transform 0.4s ease; 
   transform: translateY(-100px);
+}
+
+.header-nav-links.shrink {
+  top:2em; 
 }
 .show {
   visibility: visible;

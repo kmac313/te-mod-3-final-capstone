@@ -8,43 +8,7 @@ export function createStore(currentToken, currentUser) {
       user: currentUser || {},
       inventory: {
         specialtyPizza: [
-          {
-            name: "Hawaiian",
-            price: "32.00",
-            crust: "regular",
-            sauce: "Alfredo",
-            toppings: [],
-          },
-          {
-            name: "Buffalo Chicken",
-            price: "32.00",
-            crust: "regular",
-            sauce: "Alfredo"
-          },
-          {
-            name: "Double Pepperoni",
-            price: "32.00",
-            crust: "regular",
-            sauce: "Alfredo"
-          },
-          {
-            name: "Chicken Parmesan",
-            price: "32.00",
-            crust: "regular",
-            sauce: "Alfredo"
-          },
-          {
-            name: "Stuffed Crust",
-            price: "32.00",
-            crust: "regular",
-            sauce: "Alfredo"
-          },
-          {
-            name: "Garlic Bread",
-            price: "32.00",
-            crust: "regular",
-            sauce: "Alfredo"
-          },
+          
         ],
         size: [],
 
@@ -79,20 +43,15 @@ export function createStore(currentToken, currentUser) {
       },
       
       cart: {
-          pizza: [
+          pizza: [ 
 
           ],
           other: [
 
-          ]
+          ],
 
         },
-        invoice: {
-          creditcard: "", 
-          isDelivery: true,
-          address: "",
-          
-        },
+        
 
         allInvoices: [
 
@@ -121,12 +80,16 @@ export function createStore(currentToken, currentUser) {
       },
       ADD_TO_PIZZA_CART(state, pizza) {
         state.cart.pizza.push(pizza)
+        console.log(state.cart.pizza)
       },
       ADD_TO_OTHER_CART(state, item) {
         state.cart.other.push(item)
       },
       ADD_REGULAR_TOPPING(state, topping) {
         state.inventory.toppings.push(topping)
+      },
+      ADD_SPECIALTY_PIZZA(state, pizza) {
+        state.inventory.specialtyPizza.push(pizza)
       },
       ADD_PREMIUM_TOPPING(state, topping) {
         state.inventory.premiumToppings.push(topping)
@@ -152,9 +115,15 @@ export function createStore(currentToken, currentUser) {
       ADD_DRINK(state, drink) {
         state.inventory.drinks.push(drink)
       },
+      UPDATE_CREDIT_CARD(state, number) {
+        state.invoice.credit_card = number
+      },
+      UPDATE_INVOICE_ADDRESS(state, address) {
+        state.invoice.address = address
+      },
       UPDATE_ORDER_TYPE(state, orderType) {
         state.isDelivery.orderType = orderType
-        state.invoice.isDelivery = orderType === 'delivery' ? true : false
+        state.invoice.is_delivery = orderType === 'delivery' ? true : false
         localStorage.setItem('orderType', state.isDelivery.orderType)
       },
 
@@ -175,7 +144,26 @@ export function createStore(currentToken, currentUser) {
       },
       TOGGLE_CART(state, value) {
         state.showCart = value
-      }
+      },
+      REMOVE_FROM_CURRENT_ORDER(state, productId) {
+       const updatedCart = state.currentOrder.filter((item) => item.productId !== productId)
+       state.currentOrder = updatedCart
+      },
+      REMOVE_FROM_CART(state, item) {
+        const isPizza = state.cart.pizza.find((pizza) => pizza[0].id == item.id);
+        const isOther = state.cart.other.find((otherItem) => otherItem == item.productId);
+        console.log(isOther)
+        if(isPizza !== undefined) {
+          state.cart.pizza = state.cart.pizza.filter((pizza) => pizza[0].id !== item.id)
+        } else if (isOther !== undefined) {
+          const updatedCart = state.cart.other.filter((otherItem) => item.productId !== otherItem)
+          state.cart.other = updatedCart
+          console.log(state.cart)
+        }
+        
+        
+
+       }
     },
   });
   return store;

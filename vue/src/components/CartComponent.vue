@@ -62,7 +62,7 @@
         <h2>Your order:</h2>
         <h4>Total: ${{ finalPrice }}</h4>
         <div v-if="allItems.length == 0">
-            <p>Your cart is empty</p>
+          <p>Your cart is empty</p>
         </div>
 
         <!-- list all items -->
@@ -85,31 +85,20 @@
               {{ topping?.description }}
             </p>
           </div>
+          <div class="remove-from-cart-btn">
+            <button @click="removeFromCart(item)">Remove from cart</button>
+          </div>
         </div>
       </div>
 
       <!-- Payment info -->
-      <div class="payment-container" v-if="orderType !== '' && allItems.length > 0">
-        <h2>Payment method:</h2>
-        <div class="payment-radio-buttons">
-          <input
-            type="radio"
-            id="creditcard"
-            name="payment"
-            value="creditcard"
-            v-model="paymentmethod"
-          />
-          <label for="creditcard">Credit Card</label>
-          <input
-            type="radio"
-            id="cash"
-            name="payment"
-            value="cash"
-            v-model="paymentmethod"
-          />
-          <label for="cash">Cash</label>
-        </div>
-        <form v-if="paymentmethod == 'creditcard'">
+      <div
+        class="payment-container"
+        v-if="orderType !== '' && allItems.length > 0"
+      >
+        <h2>Payment</h2>
+
+        <form>
           <p>Please enter your credit card information:</p>
           <input
             required
@@ -131,7 +120,7 @@
             type="text"
             placeholder="Credit card number"
             name="cardnumber"
-            v-model="invoice.creditcard"
+            v-model="paymentmethod"
           />
           <div class="deliveryInformation" v-if="orderType == 'delivery'">
             <input
@@ -139,7 +128,7 @@
               type="text"
               placeholder="Street name"
               name="street"
-              v-model="invoice.street"
+              v-model="street"
             />
             <input
               required
@@ -153,85 +142,24 @@
               type="text"
               placeholder="State"
               name="state"
-              v-model="invoice.state"
+              v-model="state"
             />
             <input
               required
               type="text"
               placeholder="Zip code"
               name="zipcode"
-              v-model="invoice.zipcode"
             />
           </div>
           <button
             type="submit"
             @click="submitOrder"
-            v-if="orderType.length > 0 && paymentmethod.length > 0"
+            
           >
             Checkout
           </button>
         </form>
-        <form v-if="paymentmethod == 'cash'">
-          <p>Please enter your credit card information:</p>
-          <input
-            required
-            type="text"
-            placeholder="First name"
-            name="firstname"
-          />
-          <input required type="text" placeholder="Last name" name="lastname" />
-          <input required type="email" placeholder="Email" name="email" />
-          <input
-            required
-            type="tel"
-            placeholder="Phone number"
-            name="phone"
-            v-model="phoneNumber"
-          />
-          <div class="deliveryInformation" v-if="orderType == 'delivery'">
-            <input
-              required
-              type="text"
-              placeholder="Street name"
-              name="street"
-              v-model="invoice.street"
-            />
-            <input
-              required
-              type="text"
-              placeholder="City name"
-              name="city"
-              v-model="city"
-            />
-            <input
-              required
-              type="text"
-              placeholder="State"
-              name="state"
-              v-model="invoice.state"
-            />
-            <input
-              required
-              type="text"
-              placeholder="Zip code"
-              name="zipcode"
-              v-model="invoice.zipcode"
-            />
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              @click.prevent="submitOrder"
-              v-if="orderType.length > 0 && paymentmethod.length > 0"
-            >
-              Checkout
-            </button>
-          </div>
-        </form>
       </div>
-
-    
     </div>
     <Toast :message="toastMessage" v-if="showToast" />
   </div>
@@ -244,19 +172,13 @@ import invoiceService from "../services/InvoiceService";
 export default {
   data() {
     return {
-      selectedOption: '',
-      invoice: {
-        items: this.$store.state.cart,
-        creditcard: this.$store.state.invoice.creditcard,
-        isDelivery: this.$store.state.invoice.isDelivery,
-        address: this.$store.state.invoice.address,
-      },
-      eta: this.$store.state.isDelivery.eta,
-      address: this.$store.state.isDelivery.address,
+      selectedOption: "",
+      street: '',
+      city: '',
+      state: '',
       zipcode: this.$store.state.isDelivery.zipcode,
-      paymentmethod: "",
-      showToast: false,
-      toastMessage: "This has not been changed",
+      paymentmethod: '',
+      eta: '',
     };
   },
   components: {
@@ -264,7 +186,21 @@ export default {
   },
   methods: {
     submitOrder() {
-      const invoice = invoiceService.sendOrder(this.invoice).then((data) => {
+      let pizzaItems = this.$store.state.cart.pizza
+      if(pizzaItems.length > 0) {
+        for (let pizza in pizzaItems) {
+          pizza.shift;
+        }
+      }
+      
+      const delivery = this.$store.state.isDelivery.orderType == 'delivery' ? true : false
+      const newInvoice = {
+        "items": this.$store.state.cart,
+        "credit_card": this.paymentmethod,
+        "is_delivery": delivery,
+        "address": this.street + this.city + this.state + this.zipcode
+      }
+      const invoice = invoiceService.sendOrder(newInvoice).then((data) => {
         try {
           this.$store.commit("ADD_INVOICE", data.data);
           this.$store.commit("EMPTY_CART");
@@ -298,11 +234,14 @@ export default {
         }
       });
     },
+    updateOrder() {
+      this.$store.commit('UPDATE_ORDER_TYPE', this.selectedOption);
+      console.log(this.$store.state.isDelivery.orderType)
+    },
 
-    updateOrder(type) {
-      this.$store.commit("UPDATE_ORDER_TYPE", type);
-      localStorage.setItem('orderType', type)
-      console.log(this.$store.state.isDelivery.orderType);
+    updateAddress() {
+      this.$store.commit('UPDATE_ADDRESS', this.address)
+      console.log(this.$store.state.invoice.address)
     },
 
     setZipCode() {
@@ -325,29 +264,117 @@ export default {
       this.$store.commit("ADD_ZIPCODE", "");
       this.zipcode = null;
     },
+
+    // remove item from cart
+    removeFromCart(item) {
+      // remove from currentOrder
+      this.$store.commit("REMOVE_FROM_CURRENT_ORDER", item.productId);
+
+      // remove from cart
+      const isPizza = this.$store.state.cart.pizza.find(
+        (pizza) => pizza[0].id == item.id
+      );
+      console.log(isPizza);
+      const isOther = this.$store.state.cart.other.find(
+        (otherItem) => otherItem === item.productId
+      );
+     
+        this.$store.commit("REMOVE_FROM_CART", item);
+        console.log(this.$store.state.cart);
+      
+
+      // remove from localStorage
+      // Check if appetizer
+      if (item.productCategoryId == 7) {
+        let storedSide = localStorage.getItem('sides')
+        let objectSide = JSON.parse(storedSide)
+        let newObjectSide = objectSide.filter((side) => side.productId !== item.productId)
+        if(newObjectSide.length > 0) {
+          localStorage.setItem('sides', newObjectSide)
+        } else {
+          localStorage.removeItem('sides')
+        }
+      }
+      // Check if specialty pizza
+      else if (item.productCategoryId == 10) {
+        let storedSpecialtyPizza = localStorage.getItem('specialtypizza')
+        let objectSpecialtyPizza = JSON.parse(storedSpecialtyPizza)
+        let newObjectSpecialtyPizza = objectSpecialtyPizza.filter((pizza) => pizza.productId !== item.productId)
+        if(newObjectSpecialtyPizza.length > 0) {
+          localStorage.setItem('specialtypizza', newObjectSpecialtyPizza)
+        } else {
+          localStorage.removeItem('specialtypizza')
+        }
+      }
+      // Check if drink
+      else if (item.productCategoryId == 8) {
+        let storedDrink = localStorage.getItem('drink')
+        let objectDrink = JSON.parse(storedDrink)
+        let newObjectDrink = objectDrink.filter((drink) => drink.productId !== item.productId)
+        if(newObjectDrink.length > 0) {
+          localStorage.setItem('drink', newObjectDrink)
+        } else {
+          localStorage.removeItem('drink')
+        }
+      }
+
+      //  Check if dessert
+      else if (item.productCategoryId == 9) {
+        let storedDessert = localStorage.getItem('dessert')
+        let objectDessert = JSON.parse(storedDessert)
+        let newObjectDessert = objectDessert.filter((dessert) => dessert.productId !== item.productId)
+        if(newObjectDessert.length > 0) {
+          localStorage.setItem('dessert', newObjectDessert)
+        } else {
+          localStorage.removeItem('dessert')
+        }
+      }
+      // Check if salad
+      else if (item.productCategoryId == 6) {
+        let storedSalad = localStorage.getItem('salads')
+        let objectSalad = JSON.parse(storedSalad)
+        let newObjectSalad = objectSalad.filter((salad) => salad.productId !== item.productId)
+        if(newObjectSalad.length > 0) {
+          localStorage.setItem('salads', newObjectSalad)
+        } else {
+          localStorage.removeItem('salads')
+        }
+      } else {
+        let storedPizza = localStorage.getItem("pizza");
+        storedPizza = JSON.parse(storedPizza);
+        if (storedPizza) {
+          let newStoredPizza = storedPizza.filter(
+            (pizza) => pizza.id !== item.id
+          );
+          if (newStoredPizza.length > 0) {
+            localStorage.setItem("pizza", newStoredPizza);
+          } else {
+            localStorage.removeItem("pizza");
+          }
+        }
+      }
+    },
   },
 
   computed: {
     allItems() {
-        return this.$store.state.currentOrder
+      return this.$store.state.currentOrder;
     },
     orderType() {
-      return this.$store.state.isDelivery.orderType
+      return this.$store.state.isDelivery.orderType;
     },
     finalPrice() {
-      let allItems = this.$store.state.currentOrder
-      let total = 0.00
-      if(allItems.length > 0) {
-        for( let item of allItems) {
-          console.log(total)
-          total += parseFloat(item.price)
+      let allItems = this.$store.state.currentOrder;
+      let total = 0.0;
+      if (allItems.length > 0) {
+        for (let item of allItems) {
+          total += parseFloat(item.price);
         }
-      } 
-      
+      }
 
-      return total.toFixed(2)
-    }
-  }
+      return total.toFixed(2);
+    },
+  },
 };
 </script>
 
@@ -548,7 +575,8 @@ button[type="submit"]:hover {
   flex-direction: column;
 }
 
-.payment-container input {
+.payment-container input,
+.deliveryInformation input {
   display: flex;
   width: 80%;
   justify-content: center;
@@ -566,5 +594,18 @@ form {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.remove-from-cart-btn button {
+  background-color: #e61d25;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  padding: 5px 5px;
+  cursor: pointer;
+}
+
+.remove-from-cart-btn button:hover {
+  background-color: #740004;
 }
 </style>

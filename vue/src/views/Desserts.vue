@@ -21,23 +21,23 @@
 </template>
 
 <script>
-import DessertComponent from '../components/DessertComponent.vue'
-import Toast from '../components/Toast.vue'
+import DessertComponent from "../components/DessertComponent.vue";
+import Toast from "../components/Toast.vue";
 
 export default {
-    data() {
-        return {
-            toastMessage: '',
-            showToast: false,
-            zipcode: this.$store.state.isDelivery.zipcode,
-            allDesserts: this.$store.state.inventory.desserts,
-            currDessert: {}
-        }
-    },
-    methods: {
-        addToCart(id) {
-      console.log(this.zipcode);
-      if (this.zipcode === null) {
+  data() {
+    return {
+      toastMessage: "",
+      showToast: false,
+      zipcode: this.$store.state.isDelivery.zipcode,
+      allDesserts: this.$store.state.inventory.desserts,
+      currDessert: {},
+    };
+  },
+  methods: {
+    addToCart(id) {
+      console.log(this.$store.state.isDelivery.zipcode);
+      if (this.$store.state.isDelivery.zipcode === null) {
         this.toastMessage =
           "Please add a zipcode, and choose carryout or delivery";
 
@@ -46,48 +46,50 @@ export default {
         this.$store.commit("TOGGLE_CART", true);
         setTimeout(() => {
           this.showToast = false;
-        }, 2500);
+        }, 1500);
+        return;
       } else {
         // Add to current order in store
-        this.currDessert = this.allDesserts.find((dessert) => dessert.productId === id);
+        this.currDessert = this.allDesserts.find(
+          (dessert) => dessert.productId === id
+        );
         this.$store.commit("ADD_TO_CURR_ORDER", this.currDessert);
-        let storedDessert = localStorage.getItem('dessert')
+        let storedDessert = localStorage.getItem("dessert");
 
-      // Add to local storage
-      if(storedDessert) {
-        storedDessert = JSON.parse(storedDessert)
-        storedDessert.push(this.currDessert)
-        localStorage.removeItem('dessert')
-        localStorage.setItem('dessert', JSON.stringify(this.storedDessert))
-        
-      } else {
-        let dessert = []
-        dessert.push(this.currDessert)
-        localStorage.setItem('dessert', JSON.stringify(dessert))
-      }
+        // Add to local storage
+        if (storedDessert) {
+          storedDessert = JSON.parse(storedDessert);
+          storedDessert.push(this.currDessert);
+          localStorage.setItem("dessert", JSON.stringify(storedDessert));
+        } else {
+          let dessert = [];
+          dessert.push(this.currDessert);
+          localStorage.setItem("dessert", JSON.stringify(dessert));
+        }
 
         // Add to other cart
         this.$store.commit("ADD_TO_OTHER_CART", this.currDessert.productId);
         console.log(this.$store.state.cart);
         this.popUpVisible = false;
-        this.toastMessage = 'Successfully added to your cart'
+        this.toastMessage = "Successfully added to your cart";
         this.showToast = true;
+        this.$store.commit("TOGGLE_CART", true);
         setTimeout(() => {
           this.showToast = false;
         }, 1500);
       }
-    }
     },
-    components: {
-        DessertComponent,
-        Toast
+  },
+  components: {
+    DessertComponent,
+    Toast,
+  },
+  computed: {
+    getAllDesserts() {
+      return this.$store.state.inventory.desserts;
     },
-    computed: {
-        getAllDesserts() {
-            return this.$store.state.inventory.desserts
-        },
-    }
-}
+  },
+};
 </script>
 
 <style>

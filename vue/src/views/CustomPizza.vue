@@ -13,53 +13,52 @@
       >
     </div>
 
-    
-
     <!-- Crust list -->
-    
-    <div  v-if="customPizza.size !== null">
+
+    <div v-if="customPizza.size !== null">
       <h2>Crust</h2>
       <div class="crust-container">
         <CrustCardComponent
-        v-for="(crust, index) in crust"
-        v-bind:key="index"
-        v-bind:crust="crust"
-        @add-crust="addCrust(crust)"
-      ></CrustCardComponent>
+          v-for="(crust, index) in crust"
+          v-bind:key="index"
+          v-bind:crust="crust"
+          @add-crust="addCrust(crust)"
+        ></CrustCardComponent>
       </div>
-      
     </div>
 
     <!-- Sauce list -->
-    
-    <div  v-if="customPizza.crust !== null && customPizza.size !== null">
+
+    <div v-if="customPizza.crust !== null && customPizza.size !== null">
       <h2>Sauce</h2>
       <div class="sauce-container">
-        
         <SauceCardComponent
-        v-for="(sauce, index) in sauce"
-        v-bind:key="index"
-        v-bind:sauce="sauce"
-        @add-sauce="addSauce(sauce)"
-      ></SauceCardComponent>
+          v-for="(sauce, index) in sauce"
+          v-bind:key="index"
+          v-bind:sauce="sauce"
+          @add-sauce="addSauce(sauce)"
+        ></SauceCardComponent>
       </div>
-      
     </div>
 
     <!-- Toppings list -->
-    
-    <div  v-if="customPizza.sauce !== null && customPizza.crust !== null && customPizza.size !== null">
+
+    <div
+      v-if="
+        customPizza.sauce !== null &&
+        customPizza.crust !== null &&
+        customPizza.size !== null
+      "
+    >
       <h2>Toppings</h2>
       <div class="topping-container">
-        
         <ToppingCardComponent
-        v-for="(topping, index) in topping"
-        v-bind:key="index"
-        v-bind:topping="topping"
-        @add-topping="addTopping(topping)"
+          v-for="(topping, index) in topping"
+          v-bind:key="index"
+          v-bind:topping="topping"
+          @add-topping="addTopping(topping)"
         ></ToppingCardComponent>
       </div>
-      
     </div>
 
     <!-- Add to order btn -->
@@ -83,8 +82,8 @@ import Toast from "../components/Toast.vue";
 export default {
   data() {
     return {
-
       customPizza: {
+        id: this.$store.state.cart.pizza.length + 1,
         description: "",
         price: 0.0,
         crust: null,
@@ -94,7 +93,6 @@ export default {
       },
       allPizzas: this.$store.state.inventory.specialtyPizza,
       size: this.$store.state.inventory.size,
-
 
       crust: this.$store.state.inventory.crust,
       sauce: this.$store.state.inventory.sauce,
@@ -211,22 +209,19 @@ export default {
       // Add to current order in store
       this.$store.commit("ADD_TO_CURR_ORDER", this.customPizza);
 
-      let storedPizzas = localStorage.getItem('pizza')
+      let storedPizzas = localStorage.getItem("pizza");
 
       // Add to local storage
-      if(storedPizzas) {
-        storedPizzas = JSON.parse(storedPizzas)
-        storedPizzas.push(this.customPizza)
-        localStorage.removeItem('pizza')
-        localStorage.setItem('pizza', JSON.stringify(storedPizzas))
-        
+      if (storedPizzas) {
+        storedPizzas = JSON.parse(storedPizzas);
+        storedPizzas.push(this.customPizza);
+        localStorage.removeItem("pizza");
+        localStorage.setItem("pizza", JSON.stringify(storedPizzas));
       } else {
-        let pizzas = []
-        pizzas.push(this.customPizza)
-        localStorage.setItem('pizza', JSON.stringify(pizzas))
+        let pizzas = [];
+        pizzas.push(this.customPizza);
+        localStorage.setItem("pizza", JSON.stringify(pizzas));
       }
-      
-      
 
       // Add to cart in store
       const toppingsIdList = [];
@@ -234,6 +229,7 @@ export default {
         toppingsIdList.push(topping.productId);
       }
       const cartPizza = [
+        {id: this.$store.state.cart.pizza.length + 1},
         this.customPizza.size?.productId,
         this.customPizza.sauce?.productId,
         this.customPizza.crust?.productId,
@@ -273,21 +269,23 @@ export default {
     },
 
     zipcode() {
-      return this.$store.state.isDelivery.zipcode
+      return this.$store.state.isDelivery.zipcode;
     },
 
     topping() {
       return [
         ...this.$store.state.inventory.toppings,
         ...this.$store.state.inventory.premiumToppings,
-      ]
-    }
+      ];
+    },
   },
 };
 </script>
 
 <style>
-.topping-container, .crust-container, .sauce-container {
+.topping-container,
+.crust-container,
+.sauce-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   width: 80%;

@@ -58,8 +58,7 @@
           if (storedSalad) {
             storedSalad = JSON.parse(storedSalad);
             storedSalad.push(this.currSalad);
-            localStorage.removeItem("salads");
-            localStorage.setItem("salads", JSON.stringify(this.storedSalad));
+            localStorage.setItem("salads", JSON.stringify(storedSalad));
           } else {
             let salad = [];
             salad.push(this.currSalad);
@@ -71,6 +70,7 @@
           console.log(this.$store.state.cart);
           this.toastMessage = "Successfully added to your cart";
           this.showToast = true;
+          this.$store.commit("TOGGLE_CART", true);
           setTimeout(() => {
             this.showToast = false;
           }, 1500);

@@ -33,6 +33,7 @@ export default {
         for (let invoice of data.data) {
           this.$store.commit("ADD_INVOICE", invoice);
         }
+        
       });
 
       productService.getProducts().then((data) => {
@@ -45,7 +46,8 @@ export default {
           'Drink': 'ADD_DRINK',
           'Dessert': 'ADD_DESSERT',
           'Appetizer': 'ADD_APPETIZER',
-          'Salad': 'ADD_SALAD'
+          'Salad': 'ADD_SALAD',
+          'Specialty Pizza': 'ADD_SPECIALTY_PIZZA'
         };
 
         for (const [category, mutation] of Object.entries(categories)) {
@@ -63,6 +65,8 @@ export default {
         this.loadStoredItems('sides', 'ADD_TO_CURR_ORDER');
         this.loadStoredItems('dessert', 'ADD_TO_CURR_ORDER');
         this.loadStoredItems('salads', 'ADD_TO_CURR_ORDER');
+        this.loadStoredItems('specialtypizza', 'ADD_TO_CURR_ORDER');
+        
 
         
         this.loadStoredData('zipcode', 'ADD_ZIPCODE', true);
