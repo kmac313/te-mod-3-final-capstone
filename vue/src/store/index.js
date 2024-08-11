@@ -123,8 +123,8 @@ export function createStore(currentToken, currentUser) {
       },
       UPDATE_ORDER_TYPE(state, orderType) {
         state.isDelivery.orderType = orderType
-        state.invoice.is_delivery = orderType === 'delivery' ? true : false
-        localStorage.setItem('orderType', state.isDelivery.orderType)
+        
+       
       },
 
       ADD_ZIPCODE(state, zip) {

@@ -57,8 +57,8 @@ export default {
     },
 
     addToOrder() {
-      console.log(this.zipcode);
-      if (this.zipcode === null) {
+      const zip = localStorage.getItem('zipcode') || this.$store.state.isDelivery.zipcode
+      if (zip === null) {
         this.popUpVisible = false;
         this.toastMessage =
           "Please add a zipcode, and choose carryout or delivery";

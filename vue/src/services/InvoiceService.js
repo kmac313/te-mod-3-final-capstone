@@ -8,7 +8,14 @@ const token = localStorage.getItem('token')
 
 export default {
     sendOrder(order) {
-        return http.post('/invoices', order)
+      console.log(token)
+        return http.post('/invoices', 
+          order,
+          {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+    })
       },
 
     getOrders() {
@@ -26,4 +33,13 @@ export default {
         }
       })
     },
+    updateOrder(id, invoice) {
+      return http.put(`/invoices/${id}`, 
+        invoice, 
+        {
+          headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+    }
 }

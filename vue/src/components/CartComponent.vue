@@ -39,7 +39,7 @@
             <p class="order-type-text">
               <strong>{{ orderType }}</strong>
             </p>
-            <p class="change-order" @click="updateOrder('')">Change</p>
+            <p class="change-order" @click="setOrderToNull">Change</p>
           </div>
 
           <p class="eta">{{ eta }}</p>
@@ -49,7 +49,7 @@
         <select
           class="cart-select"
           v-model="selectedOption"
-          v-on:change="updateOrder(selectedOption)"
+          @change="updateOrder"
           v-if="orderType.length === 0"
         >
           <option value="carryout">Carryout</option>
@@ -121,6 +121,7 @@
             placeholder="Credit card number"
             name="cardnumber"
             v-model="paymentmethod"
+            @change="console.log(paymentmethod)"
           />
           <div class="deliveryInformation" v-if="orderType == 'delivery'">
             <input
@@ -153,7 +154,7 @@
           </div>
           <button
             type="submit"
-            @click="submitOrder"
+            @click.prevent="submitOrder"
             
           >
             Checkout
@@ -172,13 +173,15 @@ import invoiceService from "../services/InvoiceService";
 export default {
   data() {
     return {
-      selectedOption: "",
+      selectedOption: this.$store.state.isDelivery.orderType ? this.$store.state.isDelivery.orderType : ( localStorage.getItem('orderType') ? localStorage.getItem('orderType') : ""),
       street: '',
       city: '',
       state: '',
-      zipcode: this.$store.state.isDelivery.zipcode,
+      zipcode: localStorage.getItem('zipcode') ? localStorage.getItem('zipcode') : this.$store.state.isDelivery.zipcode,
       paymentmethod: '',
       eta: '',
+      showToast: false,
+      address: '123 Main St, Cleveland, Ohio 44108'
     };
   },
   components: {
@@ -188,8 +191,9 @@ export default {
     submitOrder() {
       let pizzaItems = this.$store.state.cart.pizza
       if(pizzaItems.length > 0) {
-        for (let pizza in pizzaItems) {
-          pizza.shift;
+        for (let pizza of pizzaItems) {
+          pizza.shift();
+          
         }
       }
       
@@ -198,8 +202,9 @@ export default {
         "items": this.$store.state.cart,
         "credit_card": this.paymentmethod,
         "is_delivery": delivery,
-        "address": this.street + this.city + this.state + this.zipcode
+        "address": this.street + " " + this.city + " " + this.state + " " + this.zipcode
       }
+      console.log(newInvoice)
       const invoice = invoiceService.sendOrder(newInvoice).then((data) => {
         try {
           this.$store.commit("ADD_INVOICE", data.data);
@@ -214,6 +219,7 @@ export default {
               this.$router.replace("/myOrders");
               this.$emit("close-cart");
             }, 2500);
+           
           } else {
             this.toastMessage =
               "We have received your order. Check you email for order information";
@@ -233,10 +239,18 @@ export default {
           }, 3500);
         }
       });
+
+      
     },
     updateOrder() {
+      localStorage.setItem('orderType', this.selectedOption)
       this.$store.commit('UPDATE_ORDER_TYPE', this.selectedOption);
       console.log(this.$store.state.isDelivery.orderType)
+    },
+
+    setOrderToNull() {
+      localStorage.setItem('orderType', '')
+      this.$store.commit('UPDATE_ORDER_TYPE', '');
     },
 
     updateAddress() {
@@ -251,6 +265,7 @@ export default {
       const pattern = /^\d{5}(?:-?\d{4})?$/;
       if (pattern.test(zip)) {
         this.$store.commit("ADD_ZIPCODE", zip);
+        localStorage.setItem('zipcode', zip)
         this.zipcode = zip;
       } else {
         this.toastMessage = "Invalid zipcode format";

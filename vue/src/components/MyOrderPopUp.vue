@@ -13,47 +13,48 @@
         </div>
         <div class="order-info">
           <p class="order-info-subheader">Status:</p>
-          <p>{{ order.invoice?.complete ? "Complete" : "In Progress" }}</p>
+          <p>{{ isComplete ? "Complete" : "In Progress" }}</p>
         </div>
         <div class="order-info">
           <p class="order-info-subheader">Order Type:</p>
           <p>{{ order.invoice?.delivery ? "Delivery" : "Carryout" }}</p>
         </div>
+        <div class="order-info">
+          <p class="order-info-subheader">Order Date:</p>
+          <p>{{ order.invoice?.timestamp.slice(0, 10) }}</p>
+        </div>
       </div>
-
+      <div v-if="isComplete == false">
+        <button @click="cancelOrder">Cancel Order</button>
+      </div>
       <!-- Order Items -->
       <div class="order-items-container">
         <div class="order-items">
           <h3>Items</h3>
-          <!-- Add items from invoice -->
+          <!-- Pizzas Section -->
           <div v-if="order?.pizzas?.length > 0">
-            <h3>Pizzas</h3>
             <div
               class="order-item"
-              v-for="(item, index) in order?.pizza"
+              v-for="(item, index) in order?.pizzas"
               :key="index"
             >
               <p>{{ item.pizzaName }}</p>
               <p>${{ item.total }}</p>
-              <!-- <p>
-                {{ item.description }}
-              </p> -->
             </div>
-            <div v-if="order?.other?.length > 0">
-              <h3>Additional items</h3>
-              <div
-                class="order-item"
-                v-for="(item, index) in order?.other"
-                :key="index"
-              >
-                <p>
-                  <strong>{{ item.description }}</strong>
-                </p>
-                <p>${{ item.price }}</p>
-                <p>
-                  {{ item.productCategoryDescription }}
-                </p>
-              </div>
+          </div>
+
+          <!-- Additional Items Section -->
+          <div v-if="order?.other?.length > 0">
+            <div
+              class="order-item"
+              v-for="(item, index) in order?.other"
+              :key="index"
+            >
+              <p>
+                <strong>{{ item.description }}</strong>
+              </p>
+              <p>${{ item.price }}</p>
+              <p>{{ item.productCategoryDescription }}</p>
             </div>
           </div>
         </div>
@@ -69,14 +70,34 @@
 </template>
 
 <script>
+import invoiceService from "../services/InvoiceService";
+
 export default {
   data() {
-    return {};
+    return {
+      isComplete: this.order?.invoice?.complete
+    };
   },
   props: {
     order: Object,
     showPopUp: Boolean,
   },
+  methods: {
+    cancelOrder() {
+      const newInvoice = {
+        ...this.order.invoice
+      };
+      newInvoice.complete = true;
+      this.isComplete = true;
+      console.log(newInvoice);
+      invoiceService
+        .updateOrder(newInvoice.invoiceId, newInvoice)
+        .then((data) => {
+          this.$router.replace('/myorders')
+        });
+    },
+  },
+  
 };
 </script>
 

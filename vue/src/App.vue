@@ -76,6 +76,7 @@ export default {
     
     loadStoredItems(storageKey, mutation) {
       let storedItems = localStorage.getItem(storageKey);
+      
       if (storedItems && storedItems !== 'undefined') {
         storedItems = JSON.parse(storedItems);
         if (Array.isArray(storedItems) && storedItems.length > 0) {
