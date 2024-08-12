@@ -80,5 +80,15 @@ export default {
         'Authorization': `Bearer ${token}`
       }
     })
-  }
+  },
+  updateProduct(product) {
+    return http.put(`/menu/${product.productId}`, {
+      product
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  },
 }

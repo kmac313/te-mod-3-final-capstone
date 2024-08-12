@@ -1,21 +1,24 @@
 <template>
     <div class="toppings-table-container">
       <div class="table-wrapper">
+        <button @click="updateProduct(20)" class="">Make Available</button>
+        <button @click="updateProduct(0)" class="">Make Unavailable</button>
         <table v-if="pizzas?.length > 0">
           <thead>
             <tr class="table-header">
               <th class="description-header">Description</th>
               <th class="price-header">Price</th>
               <th class="quantity-header">Quantity</th>
+              <th class="availability-header">Availability</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(pizza, index) in pizzas" :key="index">
-              <td>{{ pizza?.description }}</td>
-              <td>${{ pizza?.price.toFixed(2) }}</td>
-              <td>{{ pizza?.quantity }}</td>
+              <!-- <td>{{ pizza?.description }}</td>
+              <td>${{ pizza?.price.toFixed(2) }}</td> -->
+              <td>{{ pizza?.quantity > 0? 'Available' : 'Unavailable'}}</td>
+              <td><input v-on:change="addPizzaToUpdatingPizzas(pizza)" type="checkbox"></td>
             </tr>
-            
           </tbody>
         </table>
       </div>
@@ -28,6 +31,7 @@
     data() {
       return {
         pizzas: [],
+        updatingPizzas: [],
       };
     },
     methods: {
@@ -40,7 +44,23 @@
           console.log(this.pizzas)
         });
       },
-      
+      updateProduct(quantity) {
+        for (let pizza of this.updatingPizzas) {
+          pizza.quantity = quantity;
+          console.log(pizza);
+          productService.updateProduct(pizza).then((data) => console.log(data));
+        } 
+      },
+      addPizzaToUpdatingPizzas(pizza) {
+        const isChecked = this.updatingPizzas.find((item) => item.productId == pizza.productId);
+        console.log(isChecked);
+        if (isChecked == undefined) {
+          this.updatingPizzas.push(pizza);
+        } else {
+          this.updatingPizzas = this.updatingPizzas.filter((item) => item.productId !== pizza.productId);
+        }
+        console.log(this.updatingPizzas);
+      }
     },
     mounted() {
       this.allSpecialtyPizzas();
