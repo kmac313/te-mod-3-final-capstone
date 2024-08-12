@@ -1,10 +1,8 @@
 package com.techelevator.dao;
 
 import com.techelevator.model.Customer;
-import com.techelevator.model.User;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
-import java.security.Principal;
 import java.util.List;
 
 public interface CustomerDao {
@@ -14,6 +12,6 @@ public interface CustomerDao {
     Customer createCustomer(Customer customer);
     Customer updateCustomer(Customer customer);
     void deleteCustomerById(int id);
-    void deleteCustomerByUsername(String username);
+    void deleteCustomerByUserId(int userId);
     public Customer mapRowSet(SqlRowSet rowSet);
 }

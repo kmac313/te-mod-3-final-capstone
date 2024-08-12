@@ -22,7 +22,7 @@ public class CustomerController {
     }
 
     @RequestMapping(path = "/customer", method = RequestMethod.GET)
-    //TODO BONUS Use requestBody to hold all possible filters for customers (same for other controllers, too)
+    //TODO BONUS Use requestParams to include all possible filters for customers
     public ResponseEntity<List<Customer>> getCustomers(@RequestParam(defaultValue = "") String email){
         List<Customer> customers = new ArrayList<>();
         if (!email.equals("")){
@@ -40,7 +40,7 @@ public class CustomerController {
         return new ResponseEntity<Customer>(customerDao.getCustomerById(id), HttpStatus.OK);
     }
 
-
+    //TODO maybe getCustomerByUserId?
     @RequestMapping(path = "/customer", method = RequestMethod.POST)
     public ResponseEntity<Customer> createCustomer(@RequestBody Map<String, Object> newCustomer) {
 
@@ -134,13 +134,13 @@ public class CustomerController {
 
 
     @RequestMapping(path = "/customer/", method = RequestMethod.DELETE)
-    public void deleteCustomerByUsername(@RequestBody Map<String, Object> deletionDTO) {
+    public void deleteCustomerByUserId(@RequestBody Map<String, Object> deletionDTO) {
 
-        String username = (String)deletionDTO.get("username");
+        int userId = (int)deletionDTO.get("user_id");
         Boolean confirm = (Boolean)deletionDTO.get("confirm");
 
         if(confirm == true) {
-            customerDao.deleteCustomerByUsername(username);
+            customerDao.deleteCustomerByUserId(userId);
         }
     }
 

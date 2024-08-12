@@ -2,6 +2,7 @@ package com.techelevator.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -14,7 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*")
+@Service
 public class ApiController {
     private final String MAPBOX_TOKEN = "pk.eyJ1IjoiZGF3aWxsaWFtczA3MjciLCJhIjoiY2x6bXUyOHdzMGkxeDJtcHVvZGZrb2RkcyJ9.YuUmVJT4QerDA9k-Hz3t_A";
     private final String GEOCODE_TOKEN = "66b647062c5e6532299318zax27ff3d";

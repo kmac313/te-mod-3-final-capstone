@@ -9,7 +9,6 @@ import com.techelevator.model.Invoice;
 import com.techelevator.model.Pizza;
 import com.techelevator.model.Product;
 import com.techelevator.model.User;
-import org.apache.logging.log4j.spi.ObjectThreadContextMap;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +16,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 @RestController
 @CrossOrigin
 public class InvoiceController {
@@ -37,13 +34,29 @@ public class InvoiceController {
     }
 
     @RequestMapping(path = "/invoices", method = RequestMethod.GET)
+    //TODO BONUS Use requestParams to include all possible filters for invoices
     public ResponseEntity<List<Invoice>> getInvoices(@RequestParam(defaultValue = "0") String from,
                                                      @RequestParam(defaultValue = "0") String to,
+                                                     @RequestParam(defaultValue = "all") String status, //TODO add filter for user_id
                                                      Principal principal) {
 
         List<Invoice> invoices = null;
         User user = userDao.getUserByUsername(principal.getName());
         invoices = invoiceDao.getInvoices(from, to, user);
+        if (!status.equals("all")){
+            List<String> statusList = new ArrayList<>();
+            for (String s : status.split(",")){
+                statusList.add(s);
+            }
+            List<Invoice> statusFilteredInvoices = new ArrayList<>();
+            for (Invoice invoice : invoices){
+                if(statusList.contains(invoice.getStatus())){
+                    statusFilteredInvoices.add(invoice);
+                }
+            }
+            invoices = statusFilteredInvoices;
+
+        }
         return new ResponseEntity<List<Invoice>>(invoices, HttpStatus.OK);
     }
     @RequestMapping(path = "/invoices/{invoiceId}", method = RequestMethod.GET)
@@ -99,7 +112,7 @@ public class InvoiceController {
 
         Invoice invoice = new Invoice();
         invoice.setTotal(BigDecimal.ZERO);
-        invoice.setCustomerId(1); //TODO have invoice table reference userID and not customerID, change invoice model to reflect using userID
+        invoice.setUserId(1);
         invoice.setDelivery(isDelivery);
         invoice.setStatus("Pending");
         createdInvoice = invoiceDao.createInvoice(invoice);
@@ -160,8 +173,6 @@ public class InvoiceController {
             }
         }
         //TODO: Add authentication to ALL controllers
-        //TODO: Double Check that all methods that front end needs have been mapped
-
 
 
        //System.out.println(items + "\n" + creditCard + "\n" + isDelivery + "\n" + address);
@@ -182,10 +193,8 @@ public class InvoiceController {
         return new ResponseEntity<Invoice>(updatedInvoice, HttpStatus.OK);
     }
 
-
     @RequestMapping(path = "/invoices/{invoiceId}", method = RequestMethod.DELETE)
     public void deleteInvoice(@PathVariable int invoiceId) {
         invoiceDao.deleteInvoiceById(invoiceId);
     }
-
 }

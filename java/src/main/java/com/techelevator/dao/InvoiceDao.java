@@ -10,8 +10,6 @@ public interface InvoiceDao {
     Invoice getInvoiceById(int id);
     List<Invoice> getInvoicesByUserId(int id);
 
-    //TODO Change invoice authorization to be based on role and not username
-
     List<Invoice> getInvoices(String from, String to, User user);
     Invoice createInvoice(Invoice invoice);
     Invoice updateInvoice(Invoice invoice);

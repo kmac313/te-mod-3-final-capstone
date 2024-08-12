@@ -10,7 +10,8 @@ public class Customer {
     private String stateAbbreviation;
     private String phoneNumber;
     private String email;
-    private int user_id; //TODO make a User object at some point.
+    private int user_id;
+    private User user;
 
     public Customer() {}
 
@@ -106,5 +107,12 @@ public class Customer {
 
     public void setUser_id(int user_id) {
         this.user_id = user_id;
+    }
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

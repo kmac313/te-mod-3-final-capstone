@@ -137,10 +137,10 @@ public class JdbcCustomerDao implements CustomerDao{
     }
 
     @Override
-    public void deleteCustomerByUsername(String username) {
-        String sql = "DELETE FROM customer WHERE username = ?";
+    public void deleteCustomerByUserId(int userId) {
+        String sql = "DELETE FROM customer WHERE user_id = ?";
         try {
-            db.update(sql, username);
+            db.update(sql, userId);
         } catch (DataIntegrityViolationException dive) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
         } catch (CannotGetJdbcConnectionException cgjce) {
@@ -162,6 +162,8 @@ public class JdbcCustomerDao implements CustomerDao{
                 rowSet.getString("email"),
                 rowSet.getInt("user_id")
         );
+
+        mappedCustomer.setUser(userDao.getUserById(mappedCustomer.getUser_id()));
         return mappedCustomer;
     }
 }

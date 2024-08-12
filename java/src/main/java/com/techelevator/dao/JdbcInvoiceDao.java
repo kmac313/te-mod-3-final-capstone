@@ -12,7 +12,6 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -69,7 +68,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
         List<Invoice> invoices = new ArrayList<>();
         List<Integer> fromInts = new ArrayList<>();
         List<Integer> toInts = new ArrayList<>();
-        String sql = "SELECT invoice_id, invoice.user_id, total, is_delivery, status, timestamp, username" +
+        String sql = "SELECT invoice_id, invoice.user_id, total, is_delivery, status, timestamp" +
                 " FROM invoice " +
                 "JOIN customer c ON invoice.user_id = c.user_id ";
         if(!from.equals("0")) {
@@ -109,10 +108,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
                 for (Authority a: authorities){
                     authorityNames.add(a.getName());
                 }
-                //TODO check to see if this results in duplicate invoices returned
-                if (username.equals("admin")){
-                    invoices.add(mapRowSet(results));
-                }else if(authorityNames.contains("ROLE_ADMIN")){
+                if(authorityNames.contains("ROLE_ADMIN")){
                     invoices.add(mapRowSet(results));
                 } else {
                     if(results.getInt("user_id") == user.getId()){
@@ -135,7 +131,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
         int createdInvoiceId;
         try{
              createdInvoiceId = db.queryForObject(sql, int.class,
-                    invoice.getCustomerId(), invoice.getTotal(), invoice.isDelivery(), invoice.getStatus());
+                    invoice.getUserId(), invoice.getTotal(), invoice.isDelivery(), invoice.getStatus());
         } catch (DataIntegrityViolationException dive) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
         } catch (CannotGetJdbcConnectionException cgjce) {
@@ -151,7 +147,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
                 "WHERE invoice_id = ?";
         int numRowsAffected = 0;
         try {
-            numRowsAffected = db.update(sql, invoice.getCustomerId(), invoice.getTotal(),
+            numRowsAffected = db.update(sql, invoice.getUserId(), invoice.getTotal(),
                     invoice.isDelivery(), invoice.getStatus(), invoice.getTimestamp(), invoice.getInvoiceId());
             if (numRowsAffected == 0){
                 throw new DaoException("No matching Invoice found, check Invoice ID");
@@ -166,7 +162,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
 
     @Override
     public List<Invoice> getInvoiceByStatus(String status) {
-        //TODO Complete getInvoiceBYStatus method.
+
         String sql = "SELECT invoice_id, user_id, total, is_delivery, status, timestamp FROM invoice" +
                 "WHERE status = ?" +
                 " ORDER BY invoice_id";

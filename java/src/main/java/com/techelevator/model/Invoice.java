@@ -7,17 +7,17 @@ public class Invoice {
     private int invoiceId;
     private BigDecimal total;
     private boolean isDelivery;
-    private int customerId;
-    private String status; //TODO change to String status
+    private int userId;
+    private String status;
     private Timestamp timestamp;
 
     public Invoice() {}
-    public Invoice(int invoiceId, int customerId, BigDecimal total, boolean isDelivery,
+    public Invoice(int invoiceId, int userId, BigDecimal total, boolean isDelivery,
                    String status, Timestamp timestamp) {
         this.invoiceId = invoiceId;
         this.total = total;
         this.isDelivery = isDelivery;
-        this.customerId = customerId;
+        this.userId = userId;
         this.status = status;
         this.timestamp = timestamp;
     }
@@ -46,12 +46,12 @@ public class Invoice {
         isDelivery = delivery;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getStatus() {
