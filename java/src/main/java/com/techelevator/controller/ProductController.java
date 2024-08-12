@@ -83,7 +83,7 @@ public class ProductController {
     public ResponseEntity<Product> getProductById(@PathVariable int productId) {
         return new ResponseEntity<Product>(productDao.getProductById(productId), HttpStatus.OK);
     }
-    @PreAuthorize("")
+    @PreAuthorize("permitAll")
     @RequestMapping(path = "/menu/{invoiceId}/invoices", method = RequestMethod.GET)
     public ResponseEntity<List<Product>> getProductsByInvoiceId(@PathVariable int invoiceId) {
         List<Product> products = productDao.getProductsByInvoiceId(invoiceId);
