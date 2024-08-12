@@ -2,6 +2,7 @@ package com.techelevator.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
@@ -13,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 @RestController
 @CrossOrigin(origins = "*")
 @Service
@@ -38,6 +38,7 @@ public class ApiController {
      * @param addresses: the addresses
      * @return the converted coordinates
      * */
+
     public List<Map<String, String>> convertAddressToCoordinates(List<Map<String, String>> addresses){
         List<Map<String,String>> convertedCoordinates = new ArrayList<>();
         System.out.println("Created New list to hold cnverted coordinates");
@@ -72,6 +73,7 @@ public class ApiController {
         }
         return convertedCoordinates;
     }
+
     @RequestMapping(path = "/validate", method=RequestMethod.POST)
     public ResponseEntity<Boolean> validateAddress(@RequestBody List<Map<String, String>> addresses){
     /* EXAMPLE FORMAT FOR REQUEST BODY

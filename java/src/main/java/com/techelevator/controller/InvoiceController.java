@@ -11,13 +11,14 @@ import com.techelevator.model.Product;
 import com.techelevator.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.*;
-
+@PreAuthorize("isAuthenticated()")
 @RestController
 @CrossOrigin
 public class InvoiceController {
@@ -60,7 +61,19 @@ public class InvoiceController {
         return new ResponseEntity<List<Invoice>>(invoices, HttpStatus.OK);
     }
     @RequestMapping(path = "/invoices/{invoiceId}", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, Object>> getInvoiceById(@PathVariable int invoiceId) {
+    public ResponseEntity<Map<String, Object>> getInvoiceById(@PathVariable int invoiceId, Principal principal) {
+        int loggedInUserId = userDao.getUserByUsername(principal.getName()).getId();
+        User loggedInUser = userDao.getUserByUsername(principal.getName());
+        List<Invoice>customerInvoices = invoiceDao.getInvoices("0","0",loggedInUser);
+        List<Integer>customerInvoiceIds = new ArrayList<>();
+        for(Invoice invoice : customerInvoices){
+            customerInvoiceIds.add(invoice.getInvoiceId());
+        }
+        if(!customerInvoiceIds.contains(invoiceId)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to view this" +
+                    "invoice");
+        }
+
         Invoice invoice = invoiceDao.getInvoiceById(invoiceId);
         List<Pizza> pizzas = pizzaDao.getPizzasByInvoiceId(invoiceId);
         List<Product> products = productDao.getProductsByInvoiceId(invoiceId);
@@ -71,17 +84,8 @@ public class InvoiceController {
         response.put("other", filtered);
 
 
-        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
-    }
 
-    @RequestMapping(path = "/invoices/{invoiceId}/pizzas", method = RequestMethod.GET)
-    public ResponseEntity<List<Pizza>> getPizzasByInvoiceId(@PathVariable int invoiceId){
-        List<Pizza> pizzas = pizzaDao.getPizzasByInvoiceId(invoiceId);
-        return new ResponseEntity<>(pizzas, HttpStatus.OK);
-    }
-    @RequestMapping(path = "/invoices/{invoiceId}/products", method = RequestMethod.GET)
-    public ResponseEntity<List<Product>> getProductsByInvoiceId(@PathVariable int invoiceId){
-        return new ResponseEntity<>(productDao.getProductsByInvoiceId(invoiceId), HttpStatus.OK);
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
     }
 
     @RequestMapping(path = "/invoices", method = RequestMethod.POST)
@@ -181,9 +185,21 @@ public class InvoiceController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(path = "/invoices/{invoiceId}", method = RequestMethod.PUT)
-    public ResponseEntity<Invoice>updateInvoice (@RequestBody Invoice invoice,  @PathVariable int invoiceId) {
-        invoice.setInvoiceId(invoiceId);
+    @RequestMapping(path = "/invoices/", method = RequestMethod.PUT)
+    public ResponseEntity<Invoice>updateInvoice (@RequestBody Invoice invoice,  Principal principal) {
+        int invoiceId = invoice.getInvoiceId();
+        int loggedInUserId = userDao.getUserByUsername(principal.getName()).getId();
+        User loggedInUser = userDao.getUserByUsername(principal.getName());
+        List<Invoice>customerInvoices = invoiceDao.getInvoices("0","0",loggedInUser);
+        List<Integer>customerInvoiceIds = new ArrayList<>();
+        for(Invoice i : customerInvoices){
+            customerInvoiceIds.add(i.getInvoiceId());
+        }
+        if(!customerInvoiceIds.contains(invoiceId)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to update this" +
+                    "invoice");
+        }
+
         Invoice updatedInvoice = null;
         try {
             updatedInvoice = invoiceDao.updateInvoice(invoice);
@@ -193,6 +209,7 @@ public class InvoiceController {
         return new ResponseEntity<Invoice>(updatedInvoice, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('Admin')")
     @RequestMapping(path = "/invoices/{invoiceId}", method = RequestMethod.DELETE)
     public void deleteInvoice(@PathVariable int invoiceId) {
         invoiceDao.deleteInvoiceById(invoiceId);

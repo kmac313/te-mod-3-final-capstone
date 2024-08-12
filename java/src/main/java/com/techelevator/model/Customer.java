@@ -5,29 +5,30 @@ public class Customer {
     private String firstName;
     private String lastName;
     private String streetAddress;
-    private String City;
+    private String city;
     private int zipcode;
     private String stateAbbreviation;
     private String phoneNumber;
     private String email;
-    private int user_id;
+    private int userId;
     private User user;
 
     public Customer() {}
 
     public Customer(int customerId, String firstName, String lastName, String streetAddress,
-                    String city, int zipcode, String stateAbbreviation, String phoneNumber, String email, int user_id) {
+                    String city, int zipcode, String stateAbbreviation, String phoneNumber, String email, int userId) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.streetAddress = streetAddress;
-        City = city;
+        this.city = city;
         this.zipcode = zipcode;
         this.stateAbbreviation = stateAbbreviation;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.user_id = user_id;
+        this.userId = userId;
     }
+
 
     public int getCustomerId() {
         return customerId;
@@ -62,11 +63,11 @@ public class Customer {
     }
 
     public String getCity() {
-        return City;
+        return city;
     }
 
     public void setCity(String city) {
-        City = city;
+        this.city = city;
     }
 
     public int getZipcode() {
@@ -101,12 +102,12 @@ public class Customer {
         this.email = email;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
     public User getUser() {
         return user;

@@ -86,7 +86,7 @@ public class JdbcCustomerDao implements CustomerDao{
                     customer.getFirstName(), customer.getLastName(), customer.getStreetAddress(),
                     customer.getCity(), customer.getZipcode(), customer.getStateAbbreviation(),
                     Long.parseLong(customer.getPhoneNumber()),
-                    customer.getEmail(), customer.getUser_id());
+                    customer.getEmail(), customer.getUserId());
 
         } catch (DataIntegrityViolationException dive) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
@@ -109,7 +109,7 @@ public class JdbcCustomerDao implements CustomerDao{
         try {
             int rowsAffected = db.update(sql, customer.getFirstName(), customer.getLastName(), customer.getStreetAddress(),
                     customer.getCity(), customer.getZipcode(), customer.getStateAbbreviation(), customer.getPhoneNumber(),
-                    customer.getEmail(), customer.getUser_id(), customer.getCustomerId());
+                    customer.getEmail(), customer.getUserId(), customer.getCustomerId());
 
             if (rowsAffected == 0) {
                 throw new DaoException("Zero rows affected, expected at least one");
@@ -163,7 +163,7 @@ public class JdbcCustomerDao implements CustomerDao{
                 rowSet.getInt("user_id")
         );
 
-        mappedCustomer.setUser(userDao.getUserById(mappedCustomer.getUser_id()));
+        mappedCustomer.setUser(userDao.getUserById(mappedCustomer.getUserId()));
         return mappedCustomer;
     }
 }

@@ -1,26 +1,31 @@
 package com.techelevator.controller;
 
 import com.techelevator.dao.CustomerDao;
+import com.techelevator.dao.UserDao;
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Customer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+@PreAuthorize("isAuthenticated()")
 @RestController
 @CrossOrigin
 public class CustomerController {
     private CustomerDao customerDao;
 
-    public CustomerController(CustomerDao customerDao) {
-        this.customerDao = customerDao;
-    }
+    private UserDao userDao;
 
+    public CustomerController(CustomerDao customerDao, UserDao userDao) {
+        this.customerDao = customerDao;
+        this.userDao = userDao;
+    }
+    @PreAuthorize("hasRole('Admin')")
     @RequestMapping(path = "/customer", method = RequestMethod.GET)
     //TODO BONUS Use requestParams to include all possible filters for customers
     public ResponseEntity<List<Customer>> getCustomers(@RequestParam(defaultValue = "") String email){
@@ -34,6 +39,7 @@ public class CustomerController {
     }
 
     //TODO BONUS roll getCustomersById into get Customers (see getCustomers TODO)
+    @PreAuthorize("hasRole('Admin')")
 
     @RequestMapping(path = "/customer/{customerId}", method = RequestMethod.GET)
     public ResponseEntity<Customer> getCustomersById(@PathVariable int id){
@@ -41,6 +47,8 @@ public class CustomerController {
     }
 
     //TODO maybe getCustomerByUserId?
+    @PreAuthorize("isAuthenticated()")
+
     @RequestMapping(path = "/customer", method = RequestMethod.POST)
     public ResponseEntity<Customer> createCustomer(@RequestBody Map<String, Object> newCustomer) {
 
@@ -86,7 +94,7 @@ public class CustomerController {
             }
         }
         String email = (String)newCustomer.get("email");
-        int username = (int)newCustomer.get("user_id");
+        int userId = (int)newCustomer.get("user_id");
 
         Customer createdCustomer;
 
@@ -100,7 +108,8 @@ public class CustomerController {
         customer.setStateAbbreviation(stateAbbreviation);
         customer.setPhoneNumber(phoneNumber);
         customer.setEmail(email);
-        customer.setUser_id(username);
+        customer.setUserId(userId);
+        customer.setUser(userDao.getUserById(customer.getUserId()));
         createdCustomer = customerDao.createCustomer(customer);
 
 
@@ -110,6 +119,7 @@ public class CustomerController {
     }
 
 
+    //TODO Update so that only logged in customer or admins
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/customer/{customerId}", method = RequestMethod.PUT)
@@ -126,6 +136,7 @@ public class CustomerController {
 
 
 
+    @PreAuthorize("hasRole('Admin')")
     @RequestMapping(path = "/customer/{customerId}", method = RequestMethod.DELETE)
     public void deleteCustomer(@PathVariable int id) {
         customerDao.deleteCustomerById(id);
@@ -133,6 +144,7 @@ public class CustomerController {
 
 
 
+    @PreAuthorize("hasRole('Admin')")
     @RequestMapping(path = "/customer/", method = RequestMethod.DELETE)
     public void deleteCustomerByUserId(@RequestBody Map<String, Object> deletionDTO) {
 

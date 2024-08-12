@@ -9,6 +9,7 @@ import com.techelevator.model.Product;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,6 +22,7 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin
+@PreAuthorize("isAuthenticated()")
 public class ProductController {
     private ProductDao productDao;
 
@@ -30,6 +32,7 @@ public class ProductController {
 
     }
 
+    @PreAuthorize("permitAll")
     @RequestMapping(path = "/menu", method = RequestMethod.POST)
     public ResponseEntity<Map<String, List<Product>>> getMenu(@RequestHeader Map<String, String> header,
                                                               @RequestBody Map<String, List<String>> requestObject) {
@@ -56,6 +59,7 @@ public class ProductController {
         return new ResponseEntity<>(menuObject, HttpStatus.OK);
     }
 
+    @PreAuthorize("permitAll")
 
     @RequestMapping(path = "/menu/pizza", method = RequestMethod.GET)
     public ResponseEntity<Map<String, List<Product>>> getPizzaMenu() {
@@ -74,24 +78,25 @@ public class ProductController {
     }
 
 
-
+    @PreAuthorize("permitAll")
     @RequestMapping(path = "/menu/{productId}", method = RequestMethod.GET)
     public ResponseEntity<Product> getProductById(@PathVariable int productId) {
         return new ResponseEntity<Product>(productDao.getProductById(productId), HttpStatus.OK);
     }
-
+    @PreAuthorize("")
     @RequestMapping(path = "/menu/{invoiceId}/invoices", method = RequestMethod.GET)
     public ResponseEntity<List<Product>> getProductsByInvoiceId(@PathVariable int invoiceId) {
         List<Product> products = productDao.getProductsByInvoiceId(invoiceId);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-
+    @PreAuthorize("hasRole('Admin')")
     @RequestMapping(path = "/menu/{productId}", method = RequestMethod.DELETE)
     public void deleteProduct(@PathVariable int productId) {
         productDao.deleteProductById(productId);
     }
 
+    @PreAuthorize("hasRole('Admin')")
     @RequestMapping(path = "/product", method = RequestMethod.POST)
     public ResponseEntity<Product> createProduct(@RequestBody Map<String, Object> newProduct) {
 
@@ -126,6 +131,7 @@ public class ProductController {
         return new ResponseEntity<Product>(createdProduct, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('Admin')")
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/menu/{productId}", method = RequestMethod.PUT)
     public ResponseEntity<Product>updateProduct (@RequestBody Product product,  @PathVariable int productId) {

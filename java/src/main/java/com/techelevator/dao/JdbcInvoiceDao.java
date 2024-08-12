@@ -44,7 +44,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
 
     @Override
     public List<Invoice> getInvoicesByUserId(int id) {
-        String sql = "SELECT invoice_id, user_id, total, is_delivery, status, timestamp FROM invoice" +
+        String sql = "SELECT invoice_id, user_id, total, is_delivery, status, timestamp FROM invoice " +
                 "WHERE user_id = ?" +
                 " ORDER BY invoice_id";
         List<Invoice> customerInvoices = new ArrayList<>();
