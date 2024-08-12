@@ -1,8 +1,9 @@
 <template>
     <div class="toppings-table-container">
+        <button @click="updateProduct(20)" :class="{'disabled': updatingPizzas.length == 0}" :disabled="updatingPizzas.length == 0">Make Available</button>
+        <button @click="updateProduct(0)" :class="{'disabled': updatingPizzas.length == 0}" :disabled="updatingPizzas.length == 0">Make Unavailable</button>
       <div class="table-wrapper">
-        <button @click="updateProduct(20)" class="">Make Available</button>
-        <button @click="updateProduct(0)" class="">Make Unavailable</button>
+
         <table v-if="pizzas?.length > 0">
           <thead>
             <tr class="table-header">
@@ -47,9 +48,15 @@
       updateProduct(quantity) {
         for (let pizza of this.updatingPizzas) {
           pizza.quantity = quantity;
-          console.log(pizza);
           productService.updateProduct(pizza).then((data) => console.log(data));
         } 
+
+        this.updatingPizzas = [];
+
+        const allInputs = document.getElementsByTagName('input')
+        for(let input of allInputs) {
+            input.checked = false
+        }
       },
       addPizzaToUpdatingPizzas(pizza) {
         const isChecked = this.updatingPizzas.find((item) => item.productId == pizza.productId);
@@ -110,6 +117,15 @@
     padding: 12px;
     border-bottom: 2px solid #e61d25; 
     text-transform: uppercase;
+  }
+
+  button.disabled {
+    background-color: #c2c2c2
+  }
+
+  button.disabled:hover {
+    background-color: #c2c2c2;
+    cursor:default;
   }
   
   .toppings-table-container tbody tr {

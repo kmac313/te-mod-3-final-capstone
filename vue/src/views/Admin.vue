@@ -61,13 +61,13 @@ export default {
     display: flex;
     height: 90vh;
     width: 95vw;
+    margin-bottom: 300px;
 }
 
 .admin-content-container {
     margin-top: 50px;
     margin-left: 320px;
     width: 100%;
-    margin-bottom: 100px;
 }
 
 .admin-table-heading {
