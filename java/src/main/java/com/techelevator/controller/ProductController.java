@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -29,7 +30,6 @@ public class ProductController {
 
     public ProductController(ProductDao productDao) {
         this.productDao = productDao;
-
     }
 
     @PreAuthorize("permitAll")
@@ -58,9 +58,8 @@ public class ProductController {
         }
         return new ResponseEntity<>(menuObject, HttpStatus.OK);
     }
-
+    //TODO change requestbody for things to requestparams that is a CSV. example ?categories=Drink,Salad,Dessert
     @PreAuthorize("permitAll")
-
     @RequestMapping(path = "/menu/pizza", method = RequestMethod.GET)
     public ResponseEntity<Map<String, List<Product>>> getPizzaMenu() {
         List<String> pizzaComponentCategories = new ArrayList<>();
@@ -83,55 +82,44 @@ public class ProductController {
     public ResponseEntity<Product> getProductById(@PathVariable int productId) {
         return new ResponseEntity<Product>(productDao.getProductById(productId), HttpStatus.OK);
     }
-    @PreAuthorize("permitAll")
-    @RequestMapping(path = "/menu/{invoiceId}/invoices", method = RequestMethod.GET)
-    public ResponseEntity<List<Product>> getProductsByInvoiceId(@PathVariable int invoiceId) {
-        List<Product> products = productDao.getProductsByInvoiceId(invoiceId);
-        return new ResponseEntity<>(products, HttpStatus.OK);
-    }
 
-    @PreAuthorize("hasRole('Admin')")
+
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(path = "/menu/{productId}", method = RequestMethod.DELETE)
     public void deleteProduct(@PathVariable int productId) {
         productDao.deleteProductById(productId);
     }
 
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(path = "/product", method = RequestMethod.POST)
     public ResponseEntity<Product> createProduct(@RequestBody Map<String, Object> newProduct) {
-
+        Product createdProduct;
          /* Object Structure for the product
          {
             "productId" : null
-            "productCategoryId" : 2
-            "productCategoryDescription" : "3"
+            "productCategoryDescription" : "Drink"
             "price" : 0.75
             "description" : "Extra Cheese"
             "quantity" : 10
         }
         */
 
-        int productCategoryId = (int)newProduct.get("productCategoryId");
-        String productCategoryDescription = (String)newProduct.get("productCategoryDescription");
+        String productCategoryDescription = (String)newProduct.get("product_category_description");
         BigDecimal price = BigDecimal.valueOf((Double)newProduct.get("price"));
         String description = (String)newProduct.get("description");
         int quantity = (int)newProduct.get("quantity");
 
-        Product createdProduct;
-
-
         Product product = new Product();
-        product.setProductCategoryId(productCategoryId);
         product.setProductCategoryDescription(productCategoryDescription);
         product.setPrice(price);
         product.setDescription(description);
         product.setQuantity(quantity);
         createdProduct = productDao.addProduct(product);
-
+        //TODO make sure all json objects are in snake case from front end
         return new ResponseEntity<Product>(createdProduct, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/menu/{productId}", method = RequestMethod.PUT)
     public ResponseEntity<Product>updateProduct (@RequestBody Product product,  @PathVariable int productId) {
@@ -145,3 +133,4 @@ public class ProductController {
         return new ResponseEntity<Product>(updatedProduct, HttpStatus.OK);
     }
     }
+    //TODO with front end present, enforce logical consistency across endpoint paths.

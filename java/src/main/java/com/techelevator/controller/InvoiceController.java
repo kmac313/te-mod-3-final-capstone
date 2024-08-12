@@ -5,10 +5,7 @@ import com.techelevator.dao.PizzaDao;
 import com.techelevator.dao.ProductDao;
 import com.techelevator.dao.UserDao;
 import com.techelevator.exception.DaoException;
-import com.techelevator.model.Invoice;
-import com.techelevator.model.Pizza;
-import com.techelevator.model.Product;
-import com.techelevator.model.User;
+import com.techelevator.model.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -71,7 +68,7 @@ public class InvoiceController {
         }
         if(!customerInvoiceIds.contains(invoiceId)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to view this" +
-                    "invoice");
+                    " invoice");
         }
 
         Invoice invoice = invoiceDao.getInvoiceById(invoiceId);
@@ -184,22 +181,31 @@ public class InvoiceController {
         return new ResponseEntity<Invoice>(invoiceDao.updateInvoice(createdInvoice), HttpStatus.CREATED);
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(path = "/invoices/", method = RequestMethod.PUT)
+
+    @RequestMapping(path = "/invoices", method = RequestMethod.PUT)
     public ResponseEntity<Invoice>updateInvoice (@RequestBody Invoice invoice,  Principal principal) {
-        int invoiceId = invoice.getInvoiceId();
+        int invoiceId = invoice.getInvoiceId(); //invoiceId of invoice to be updated
         int loggedInUserId = userDao.getUserByUsername(principal.getName()).getId();
         User loggedInUser = userDao.getUserByUsername(principal.getName());
         List<Invoice>customerInvoices = invoiceDao.getInvoices("0","0",loggedInUser);
         List<Integer>customerInvoiceIds = new ArrayList<>();
-        for(Invoice i : customerInvoices){
+        for(Invoice i : customerInvoices){ //populates all invoiceIds belong to a user
             customerInvoiceIds.add(i.getInvoiceId());
         }
-        if(!customerInvoiceIds.contains(invoiceId)){
+        if(!customerInvoiceIds.contains(invoiceId)){ //Denies customers from accessing an invoice that isn't theirs.
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to update this" +
                     "invoice");
         }
-
+        Invoice oldInvoice = invoiceDao.getInvoiceById(invoiceId);
+        if (!loggedInUser.getAuthorities().contains(new Authority("ROLE_ADMIN"))){
+            if (!oldInvoice.getTimestamp().equals(invoice.getTimestamp()) ||
+                    oldInvoice.isDelivery() != invoice.isDelivery() ||
+                    oldInvoice.getTotal().compareTo(invoice.getTotal()) != 0){
+               throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are only permitted to cancel this order");
+            } else if (!oldInvoice.getStatus().equals(invoice.getStatus()) && !invoice.getStatus().equals("Cancelled")){
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are only permitted to cancel this order");
+            }
+        }
         Invoice updatedInvoice = null;
         try {
             updatedInvoice = invoiceDao.updateInvoice(invoice);
@@ -209,7 +215,8 @@ public class InvoiceController {
         return new ResponseEntity<Invoice>(updatedInvoice, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/invoices/{invoiceId}", method = RequestMethod.DELETE)
     public void deleteInvoice(@PathVariable int invoiceId) {
         invoiceDao.deleteInvoiceById(invoiceId);

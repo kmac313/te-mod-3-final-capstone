@@ -178,12 +178,13 @@ public class jdbcProductDao implements ProductDao{
     @Override
     public Product addProduct(Product product) {
         String sql = "INSERT INTO product (product_category_id, price, description, quantity) " +
-                "VALUES (?, ?, ?, ?) RETURNING product_id";
+                "VALUES ((SELECT product_category_id FROM product_category WHERE product_category_description = ?), " +
+                "?, ?, ?) RETURNING product_id";
         int createdProductId = 0;
 
         try{
             createdProductId=db.queryForObject(sql,int.class,
-                    product.getProductCategoryId(), product.getPrice(), product.getDescription(), product.getQuantity()
+                    product.getProductCategoryDescription(), product.getPrice(), product.getDescription(), product.getQuantity()
                     );
         } catch (DataIntegrityViolationException dive) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());

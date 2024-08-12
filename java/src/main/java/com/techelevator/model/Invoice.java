@@ -1,12 +1,17 @@
 package com.techelevator.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 public class Invoice {
+    @JsonProperty("invoice_id")
     private int invoiceId;
     private BigDecimal total;
+    @JsonProperty("is_delivery")
     private boolean isDelivery;
+    @JsonProperty("user_id")
     private int userId;
     private String status;
     private Timestamp timestamp;

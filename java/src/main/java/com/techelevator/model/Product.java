@@ -1,10 +1,14 @@
 package com.techelevator.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 
 public class Product {
     private int productId;
+    @JsonProperty("product_category_id")
     private int productCategoryId;
+    @JsonProperty("product_category_description")
     private String productCategoryDescription;
     private BigDecimal price;
     private String description;

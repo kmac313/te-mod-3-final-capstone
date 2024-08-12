@@ -1,15 +1,21 @@
 package com.techelevator.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class Pizza {
+    @JsonProperty("pizza_id")
     private int pizzaId;
+    @JsonProperty("invoice_id")
     private int invoiceId;
+    @JsonProperty("pizza_name")
     private String pizzaName;
     private BigDecimal total;
+    @JsonProperty("additional_instructions")
     private String additionalInstructions;
     private List<Product> components = new ArrayList<>();
 

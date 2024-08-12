@@ -1,15 +1,25 @@
 package com.techelevator.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Customer {
+    @JsonProperty("customer_id")
     private int customerId;
+    @JsonProperty("first_name")
     private String firstName;
+    @JsonProperty("last_name")
     private String lastName;
+    @JsonProperty("street_address")
     private String streetAddress;
     private String city;
+    @JsonProperty("zip_code")
     private int zipcode;
+    @JsonProperty("state_abbreviation")
     private String stateAbbreviation;
+    @JsonProperty("phone_number")
     private String phoneNumber;
     private String email;
+    @JsonProperty("user_id")
     private int userId;
     private User user;
 

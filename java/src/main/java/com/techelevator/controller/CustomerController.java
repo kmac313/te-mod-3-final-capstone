@@ -145,7 +145,7 @@ public class CustomerController {
 
 
     @PreAuthorize("hasRole('Admin')")
-    @RequestMapping(path = "/customer/", method = RequestMethod.DELETE)
+    @RequestMapping(path = "/customer", method = RequestMethod.DELETE)
     public void deleteCustomerByUserId(@RequestBody Map<String, Object> deletionDTO) {
 
         int userId = (int)deletionDTO.get("user_id");
