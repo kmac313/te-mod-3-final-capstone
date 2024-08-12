@@ -20,7 +20,7 @@
             :key="index"
             @click="showOrderPopUp(order)"
           >
-            <td>{{ order?.customerId }}</td>
+            <td>{{ order?.userId }}</td>
             <td>${{ order?.total.toFixed(2) }}</td>
             <td>{{ order?.delivery ? "Delivery" : "Carryout" }}</td>
             <td>{{ order?.status }}</td>
