@@ -1,10 +1,11 @@
 <template>
     <div class="topping-card-container">
+      
       <div class="crust-card-text-container">
         <p class="topping-card-description">
           {{ crust.description}}
         </p>
-        <input type="checkbox" class="crust-checkbox" :id="'crust-' + crust.productId" :value="1" v-on:click="$emit('add-crust')" />
+        <input type="checkbox" class="crust-checkbox" :id="'crust-' + crust.productId" :value="1" v-on:click="$emit('add-crust')" :disabled="crust.quantity == 0"/>
       </div>
   </div>
 </template>

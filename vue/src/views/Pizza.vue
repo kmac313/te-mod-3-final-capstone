@@ -22,7 +22,8 @@ export default {
             description: "Custom Pizza- Make your own delicious pizza",
             price: "32.00",
             crust: "regular",
-            sauce: "Alfredo"
+            sauce: "Alfredo",
+            quantity: 100
             },
             allPizzas: this.$store.state.inventory.specialtyPizza,
         }

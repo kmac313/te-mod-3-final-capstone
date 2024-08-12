@@ -127,6 +127,14 @@ export function createStore(currentToken, currentUser) {
        
       },
 
+      UPDATE_ORDER(state, newInvoice, isComplete) {
+        for(let invoice of state.allInvoices) {
+          if(invoice?.invoice?.invoiceId == newInvoice?.invoice?.invoiceId) {
+            invoice.invoice.complete = isComplete;
+          }
+        }
+      },
+
       ADD_ZIPCODE(state, zip) {
         state.isDelivery.zipcode = zip
         localStorage.setItem('zipcode', zip)
@@ -139,8 +147,15 @@ export function createStore(currentToken, currentUser) {
         state.cart = {
           pizza: [],
           other: []
-        };
+        },
         state.currentOrder = [];
+        localStorage.removeItem('pizza')
+        localStorage.removeItem('drink')
+        localStorage.removeItem('size')
+        localStorage.removeItem('salads')
+        localStorage.removeItem('desserts')
+        localStorage.removeItem('specialtypizza')
+
       },
       TOGGLE_CART(state, value) {
         state.showCart = value

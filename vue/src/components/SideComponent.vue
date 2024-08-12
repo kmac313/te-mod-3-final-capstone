@@ -9,8 +9,11 @@
         </p>
       </div>
 
-      <button class="add-to-cart-btn" v-on:click="$emit('add-to-cart')" >
+      <button v-if="side?.quantity > 0" class="add-to-cart-btn" v-on:click="$emit('add-to-cart')" >
           Add to Cart
+      </button>
+      <button v-if="side?.quantity == 0" disabled class="out-of-stock-btn">
+        OUT OF STOCK
       </button>
     </div>
   </div>
@@ -91,6 +94,10 @@ export default {
   font-size: 1.8em;
   color: #333;
   font-size: large;
+}
+
+.out-of-stock-btn {
+  margin-right: 40px
 }
 
 .side-card-details .side-card-description {

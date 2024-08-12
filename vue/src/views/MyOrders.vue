@@ -21,7 +21,7 @@
       </tr>
     </table>
     <!-- Order PopUp -->
-    <MyOrderPopUp :showPopUp="showOrder" :order="currOrder" @hide-popup="hideOrderPopUp()" />
+    <MyOrderPopUp :showPopUp="showOrder" :order="currOrder" @hide-popup="hideOrderPopUp()" @update-order="updateOrder" />
   </div>
 </template>
 
@@ -57,6 +57,11 @@ export default {
       }) 
       
       
+    },
+
+    updateOrder(newInvoice) {
+      this.$store.commit('UPDATE_ORDER', newInvoice, true)
+      window.location.reload();
     }
   },
 

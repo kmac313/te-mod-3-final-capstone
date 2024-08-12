@@ -233,7 +233,7 @@ export default {
         this.customPizza.size?.productId,
         this.customPizza.sauce?.productId,
         this.customPizza.crust?.productId,
-        toppingsIdList,
+        ...toppingsIdList,
       ];
       this.$store.commit("ADD_TO_PIZZA_CART", cartPizza);
       console.log(this.$store.state.cart);

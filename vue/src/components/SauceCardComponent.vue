@@ -10,7 +10,7 @@
           </p>
         </div>
         
-        <input type="checkbox" class="sauce-checkbox" :id="'sauce-' + sauce.productId" :value="1" v-on:click="$emit('add-sauce')"/>
+        <input type="checkbox" class="sauce-checkbox" :id="'sauce-' + sauce.productId" :value="1" v-on:click="$emit('add-sauce')" :disabled="sauce.quantity == 0"/>
       </div>
   </div>
 </template>

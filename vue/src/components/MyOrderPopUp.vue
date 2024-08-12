@@ -3,8 +3,13 @@
     class="drink-size-pop-up-container"
     v-bind:class="{ 'popup-hidden': showPopUp === false }"
   >
+    
     <div class="drink-size-option-container">
+      <div v-if="isComplete == false" class="cancel-order">
+        <button @click="cancelOrder">Cancel Order</button>
+      </div>
       <h2>Order Information</h2>
+      
 
       <div class="order-info-container">
         <div class="order-info">
@@ -24,9 +29,7 @@
           <p>{{ order.invoice?.timestamp.slice(0, 10) }}</p>
         </div>
       </div>
-      <div v-if="isComplete == false">
-        <button @click="cancelOrder">Cancel Order</button>
-      </div>
+      
       <!-- Order Items -->
       <div class="order-items-container">
         <div class="order-items">
@@ -38,8 +41,15 @@
               v-for="(item, index) in order?.pizzas"
               :key="index"
             >
-              <p>{{ item.pizzaName }}</p>
+              <p>{{ item.pizzaName.length > 0 ? item.pizzaName : 'Custom Pizza' }}</p>
               <p>${{ item.total }}</p>
+              <p>Size: {{ item.components[0].description }}</p>
+              <p>Sauce: {{ item.components[1].description.split('-')[0] }}</p>
+              <p>Crust: {{ item.components[2].description.split('-')[0] }}</p>
+              <p>Toppings: </p>
+              <p v-for="(topping,index) in toppings" :key="index">
+                {{ topping.description }}
+              </p>
             </div>
           </div>
 
@@ -75,7 +85,7 @@ import invoiceService from "../services/InvoiceService";
 export default {
   data() {
     return {
-      isComplete: this.order?.invoice?.complete
+      
     };
   },
   props: {
@@ -93,10 +103,26 @@ export default {
       invoiceService
         .updateOrder(newInvoice.invoiceId, newInvoice)
         .then((data) => {
+          this.$emit('update-order', {
+            pizza: [...this.order.pizzas],
+            other: [...this.order.other],
+            invoice: newInvoice, 
+          });
+          this.$emit('hide-popup');
           this.$router.replace('/myorders')
         });
     },
   },
+  computed: {
+    isComplete() {
+    console.log("Is Complete:", this.order?.invoice?.complete);
+    return this.order?.invoice?.complete;
+  },
+  toppings() {
+    const getAllToppingsFromOrder = [...this.order.pizzas.components].slice(3)
+    return getAllToppingsFromOrder;
+  }
+  }
   
 };
 </script>
@@ -150,13 +176,34 @@ export default {
   cursor: pointer;
 }
 
-.cancel-drink-size {
+.cancel-order {
+  width: 90%;
+  display: flex;
+  justify-content: end;
+  
+}
+
+.cancel-drink-size:hover {
   color: #e61d25;
   border: 1px solid #000;
   background-color: #fff;
 }
 
-.cancel-drink-size:hover {
+.cancel-drink-size {
+  background-color: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.cancel-order button {
+  background-color: #e61d25;
+  border: 1px solid #000;
+  color: #fff;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.cancel-order button:hover {
   background-color: #000;
   color: #fff;
   border-color: #000;
@@ -165,7 +212,7 @@ export default {
 .order-info {
   display: flex;
   justify-content: center;
-  width: 30%;
+  width: 20%;
   text-align: left;
 }
 
@@ -186,7 +233,7 @@ export default {
   padding: 5px 15px;
   margin-left: 45px;
   border: 1px solid #dcdcdc;
-  width: 60%;
+  width: 90%;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
   margin: 5px 20px;
 }

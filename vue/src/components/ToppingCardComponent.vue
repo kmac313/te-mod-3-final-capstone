@@ -5,7 +5,7 @@
             {{ topping.description }} &nbsp;
             ${{ topping.price.toFixed(2) }}
           </p>
-          <input type="checkbox" class="topping-checkbox" :id="'topping-' + topping.productId" :value="1" v-on:click="$emit('add-topping')"/>
+          <input type="checkbox" class="topping-checkbox" :id="'topping-' + topping.productId" :value="1" v-on:click="$emit('add-topping')" :disabled="topping.quantity == 0"/>
         </div>
     </div>
 </template>

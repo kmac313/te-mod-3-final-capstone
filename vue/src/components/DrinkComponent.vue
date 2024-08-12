@@ -9,8 +9,11 @@
         </p>
       </div>
 
-      <button class="add-to-cart-btn" v-on:click="$emit('show-popup')" >
+      <button v-if="drink?.quantity > 0" class="add-to-cart-btn" v-on:click="$emit('show-popup')" >
           Add to Cart
+      </button>
+      <button v-if="drink?.quantity == 0" disabled class="out-of-stock-btn">
+        OUT OF STOCK
       </button>
     </div>
   </div>
@@ -115,6 +118,10 @@ export default {
 .drink-card-text-container {
   width: 70%;
   padding: 0px 10px;
+}
+
+.out-of-stock-btn {
+  margin-right: 40px
 }
 
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="all-pizza-card-container">
+  <div class="all-pizza-card-container" v-if="pizza?.quantity > 0">
     <div class="pizza-card" :style="pizzaStyle"></div>
     <div class="featured-pizza-card-details">
       <div class="featured-pizza-card-text-container">
@@ -10,9 +10,10 @@
         </p>
       </div>
 
-      <button class="add-to-cart-btn" v-on:click="addToPizzaCart">
+      <button  class="add-to-cart-btn" v-on:click="addToPizzaCart">
         Add to Cart
       </button>
+
     </div>
     <Toast :message="toastMessage" v-if="showToast" />
   </div>

@@ -9,8 +9,11 @@
         </p>
       </div>
 
-      <button class="add-to-cart-btn" v-on:click="$emit('add-to-cart')" >
+      <button v-if="salad?.quantity > 0" class="add-to-cart-btn" v-on:click="$emit('add-to-cart')" >
           Add to Cart
+      </button>
+      <button v-if="salad?.quantity == 0" disabled class="out-of-stock-btn">
+        OUT OF STOCK
       </button>
     </div>
   </div>
@@ -46,6 +49,10 @@ export default {
   margin-top: 20px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   width: 100%;
+}
+
+.out-of-stock-btn {
+  margin-right: 40px
 }
 
 
