@@ -140,6 +140,7 @@ const routes = [
   // ADMIN DASHBOARD
     // create /admin path - general overview
     // /myOrders
+    // TODO: Admins only requirement must be added
     {
       path: "/admin",
       name: "admin",

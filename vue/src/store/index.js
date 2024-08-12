@@ -31,10 +31,12 @@ export function createStore(currentToken, currentUser) {
         
       },
       showCart: false,
+      // What is currently in the cart component - front end
       currentOrder: [
         
       ],
 
+      
       isDelivery: {
         orderType: '',
         address: "123 Main Street",
@@ -42,6 +44,7 @@ export function createStore(currentToken, currentUser) {
         zipcode: null
       },
       
+      // What is sent to backend
       cart: {
           pizza: [ 
 

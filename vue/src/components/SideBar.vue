@@ -1,9 +1,9 @@
 <template>
     <div class="sidebar-container">
       <ul>
-        <li>Inventory</li>
-        <li>Orders</li>
-        <li>Specialty Items</li>
+        <li v-on:click="$emit('change-table-inventory')">Inventory</li>
+        <li v-on:click="$emit('change-table-order')">Orders</li>
+        <li v-on:click="$emit('change-table-specialty')">Specialty Items</li>
       </ul>
     </div>
   </template>

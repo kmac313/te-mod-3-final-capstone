@@ -16,7 +16,7 @@
       
       <tr v-for="(invoice, index) in allInvoices" :key="index" @click="showOrderPopUp(invoice)">
         <td>${{ invoice.total.toFixed(2) }}</td>
-        <td>{{ invoice.complete ? 'Complete' : 'In Progress' }}</td>
+        <td>{{ invoice.status }}</td>
         <td>{{ invoice.delivery ? 'Delivery' : 'Carryout' }}</td>
       </tr>
     </table>

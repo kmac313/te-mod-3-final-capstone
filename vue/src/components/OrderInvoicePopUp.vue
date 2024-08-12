@@ -3,14 +3,20 @@
     class="drink-size-pop-up-container"
     v-bind:class="{ 'popup-hidden': showPopUp === false }"
   >
-    
     <div class="drink-size-option-container">
-      <div v-if="order.invoice?.status == 'Pending'" class="cancel-order">
-        <button @click="cancelOrder">Cancel Order</button>
+      <div class="modify-order-btns">
+        <div v-if="order.invoice?.status == 'Pending'" class="cancel-order">
+          <button @click="cancelOrder">Cancel Order</button>
+        </div>
+        <div v-if="order.invoice?.status == 'Pending'" class="cancel-order">
+          <button @click="completeOrder">Complete Order</button>
+        </div>
+        <div v-if="order.invoice?.status == 'Pending'" class="cancel-order">
+          <button @click="readyOrder">Ready Order</button>
+        </div>
       </div>
-      
+
       <h2>Order Information</h2>
-      
 
       <div class="order-info-container">
         <div class="order-info">
@@ -30,7 +36,7 @@
           <p>{{ order.invoice?.timestamp.slice(0, 10) }}</p>
         </div>
       </div>
-      
+
       <!-- Order Items -->
       <div class="order-items-container">
         <div class="order-items">
@@ -42,11 +48,15 @@
               v-for="(item, index) in order?.pizzas"
               :key="index"
             >
-              <p>{{ item.pizzaName.length > 0 ? item.pizzaName : 'Custom Pizza' }}</p>
+              <p>
+                {{
+                  item.pizzaName.length > 0 ? item.pizzaName : "Custom Pizza"
+                }}
+              </p>
               <p>${{ item.total }}</p>
               <p>Size: {{ item.components[0]?.description }}</p>
-              <p>Sauce: {{ item.components[1]?.description.split('-')[0] }}</p>
-              <p>Crust: {{ item.components[2]?.description.split('-')[0] }}</p>
+              <p>Sauce: {{ item.components[1]?.description.split("-")[0] }}</p>
+              <p>Crust: {{ item.components[2]?.description.split("-")[0] }}</p>
               <!-- Fix toppings list display -->
               <!-- <p>Toppings: </p>
               <p v-for="(topping,index) in toppings" :key="index">
@@ -86,9 +96,7 @@ import invoiceService from "../services/InvoiceService";
 
 export default {
   data() {
-    return {
-      
-    };
+    return {};
   },
   props: {
     order: Object,
@@ -97,44 +105,80 @@ export default {
   methods: {
     cancelOrder() {
       const newInvoice = {
-        ...this.order.invoice
+        ...this.order.invoice,
       };
-      newInvoice.status = 'Cancelled';
-      this.isComplete = 'Cancelled';
+      newInvoice.status = "Cancelled";
+      this.isComplete = "Cancelled";
       console.log(newInvoice);
       invoiceService
         .updateOrder(newInvoice.invoiceId, newInvoice)
         .then((data) => {
-          this.$emit('update-order', {
+          this.$emit("update-order", {
             pizza: [...this.order.pizzas],
             other: [...this.order.other],
-            invoice: newInvoice, 
+            invoice: newInvoice,
           });
-          this.$emit('hide-popup');
-          this.$router.replace('/myorders')
+          this.$emit("hide-popup");
+          this.$router.replace("/myorders");
         });
     },
 
-    
+    completeOrder() {
+      const newInvoice = {
+        ...this.order.invoice,
+      };
+      newInvoice.status = "Complete";
+      this.isComplete = "Complete";
+      console.log(newInvoice);
+      invoiceService
+        .updateOrder(newInvoice.invoiceId, newInvoice)
+        .then((data) => {
+          this.$emit("update-order", {
+            pizza: [...this.order.pizzas],
+            other: [...this.order.other],
+            invoice: newInvoice,
+          });
+          this.$emit("hide-popup");
+          this.$router.replace("/myorders");
+        });
+    },
+    readyOrder() {
+      const newInvoice = {
+        ...this.order.invoice,
+      };
+      newInvoice.status = "Ready";
+      this.isComplete = "Ready";
+      console.log(newInvoice);
+      invoiceService
+        .updateOrder(newInvoice.invoiceId, newInvoice)
+        .then((data) => {
+          this.$emit("update-order", {
+            pizza: [...this.order.pizzas],
+            other: [...this.order.other],
+            invoice: newInvoice,
+          });
+          this.$emit("hide-popup");
+          this.$router.replace("/myorders");
+        });
+    },
   },
   computed: {
     isComplete() {
-    console.log("Is Complete:", this.order?.invoice?.complete);
-    return this.order?.invoice?.status;
-  },
+      console.log("Is Complete:", this.order?.invoice?.complete);
+      return this.order?.invoice?.status;
+    },
 
-  // Fix toppings list
-  toppings() {
-    const getAllToppingsFromOrder = [...this.order.pizzas]
-    const allToppings = [];
-    for(let topping of getAllToppingsFromOrder) {
-      console.log(allToppings)
-      allToppings.push(topping)
-    }
-    return allToppings;
-  }
-  }
-  
+    // Fix toppings list
+    toppings() {
+      const getAllToppingsFromOrder = [...this.order.pizzas];
+      const allToppings = [];
+      for (let topping of getAllToppingsFromOrder) {
+        console.log(allToppings);
+        allToppings.push(topping);
+      }
+      return allToppings;
+    },
+  },
 };
 </script>
 
@@ -191,7 +235,6 @@ export default {
   width: 90%;
   display: flex;
   justify-content: end;
-  
 }
 
 .cancel-drink-size:hover {
@@ -253,5 +296,10 @@ export default {
   text-align: center;
   font-size: 2em;
   margin: 5px;
+}
+
+.modify-order-btns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
 }
 </style>

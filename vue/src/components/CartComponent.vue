@@ -222,7 +222,7 @@ export default {
            
           } else {
             this.toastMessage =
-              "We have received your order. Check you email for order information";
+              "We have received your order. Check your email for order information";
             this.showToast = true;
             setTimeout(() => {
               this.showToast = false;

@@ -17,5 +17,68 @@ export default {
         }
       }
     );
+  },
+
+  getAllToppings() {
+    return http.post('/menu', {
+      categories: ["Regular Topping", "Premium Topping"]
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  },
+
+  getAllDrinks() {
+    return http.post('/menu', {
+      categories: ["Drink"]
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  },
+
+  getAllDesserts() {
+    return http.post('/menu', {
+      categories: ["Dessert"]
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  },
+  getAllAppetizers() {
+    return http.post('/menu', {
+      categories: ["Appetizer"]
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  },
+  getAllSalads() {
+    return http.post('/menu', {
+      categories: ["Salad"]
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  },
+  getAllSpecialtyPizzas() {
+    return http.post('/menu', {
+      categories: ["Specialty Pizza"]
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
   }
 }
