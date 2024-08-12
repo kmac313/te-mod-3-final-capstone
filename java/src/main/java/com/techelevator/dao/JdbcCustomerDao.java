@@ -2,7 +2,6 @@ package com.techelevator.dao;
 
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Customer;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
@@ -11,18 +10,19 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class JdbcCustomerDao implements CustomerDao{
     private final JdbcTemplate db;
+    private final UserDao userDao;
     private final String SELECT_SQL_BASE = "SELECT customer_id, first_name, last_name, street_address, city, zip_code, " +
             " state_abbreviation, phone_number, email, username FROM customer ";
 
-    public JdbcCustomerDao(JdbcTemplate jdbcTemplate) {
+    public JdbcCustomerDao(JdbcTemplate jdbcTemplate, UserDao userDao) {
         this.db = jdbcTemplate;
+        this.userDao = userDao;
     }
     @Override
     public List<Customer> getCustomers() {
@@ -86,7 +86,7 @@ public class JdbcCustomerDao implements CustomerDao{
                     customer.getFirstName(), customer.getLastName(), customer.getStreetAddress(),
                     customer.getCity(), customer.getZipcode(), customer.getStateAbbreviation(),
                     Long.parseLong(customer.getPhoneNumber()),
-                    customer.getEmail(), customer.getUsername());
+                    customer.getEmail(), customer.getUser_id());
 
         } catch (DataIntegrityViolationException dive) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
@@ -109,7 +109,7 @@ public class JdbcCustomerDao implements CustomerDao{
         try {
             int rowsAffected = db.update(sql, customer.getFirstName(), customer.getLastName(), customer.getStreetAddress(),
                     customer.getCity(), customer.getZipcode(), customer.getStateAbbreviation(), customer.getPhoneNumber(),
-                    customer.getEmail(), customer.getUsername(), customer.getCustomerId());
+                    customer.getEmail(), customer.getUser_id(), customer.getCustomerId());
 
             if (rowsAffected == 0) {
                 throw new DaoException("Zero rows affected, expected at least one");
@@ -160,7 +160,7 @@ public class JdbcCustomerDao implements CustomerDao{
                 rowSet.getString("state_abbreviation"),
                 rowSet.getString("phone_number"),
                 rowSet.getString("email"),
-                rowSet.getString("username")
+                rowSet.getInt("user_id")
         );
         return mappedCustomer;
     }

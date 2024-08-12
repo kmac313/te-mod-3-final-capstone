@@ -10,12 +10,12 @@ public class Customer {
     private String stateAbbreviation;
     private String phoneNumber;
     private String email;
-    private String username;
+    private int user_id;
 
     public Customer() {}
 
     public Customer(int customerId, String firstName, String lastName, String streetAddress,
-                    String city, int zipcode, String stateAbbreviation, String phoneNumber, String email, String username) {
+                    String city, int zipcode, String stateAbbreviation, String phoneNumber, String email, int user_id) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -25,7 +25,7 @@ public class Customer {
         this.stateAbbreviation = stateAbbreviation;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.username = username;
+        this.user_id = user_id;
     }
 
     public int getCustomerId() {
@@ -100,11 +100,11 @@ public class Customer {
         this.email = email;
     }
 
-    public String getUsername() {
-        return username;
+    public int getUser_id() {
+        return user_id;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 }

@@ -22,7 +22,8 @@ CREATE TABLE users (
 	user_id SERIAL,
 	username varchar(50) NOT NULL UNIQUE,
 	password_hash varchar(200) NOT NULL,
-	role varchar(50) NOT NULL
+	role varchar(50) NOT NULL,
+	CONSTRAINT PK_user_id PRIMARY KEY (user_id)
 );
 
 CREATE TABLE customer(
@@ -35,16 +36,16 @@ CREATE TABLE customer(
 	state_abbreviation char(2),
 	phone_number numeric(10,0) NOT NULL,
 	email varchar(50) NOT NULL,
-	username varchar(50), --NOT NULL--
+	user_id int, --NOT NULL--
 	CONSTRAINT PK_customer_id  PRIMARY KEY (customer_id)
 );
 
 CREATE TABLE invoice (
 	invoice_id SERIAL,
-	customer_id int NOT NULL, 
+	user_id int NOT NULL, 
 	total numeric(5,2) NOT NULL,
 	is_delivery boolean NOT NULL,
-	is_complete boolean NOT NULL,
+	status varchar(50) NOT NULL,
 	timestamp timestamp DEFAULT current_timestamp, 
 	CONSTRAINT PK_invoice_id PRIMARY KEY (invoice_id)
 );
@@ -85,7 +86,7 @@ ALTER TABLE pizza
 ;
 
 AlTER TABLE invoice 
-	ADD CONSTRAINT FK_invoice_customer FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE
+	ADD CONSTRAINT FK_invoice_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 ;
 
 ALTER TABLE product
@@ -98,6 +99,6 @@ ALTER TABLE invoice_product
 ;
 
 ALTER TABLE customer
-	ADD CONSTRAINT FK_customer_user_username FOREIGN KEY (username) REFERENCES users(username)
+	ADD CONSTRAINT FK_customer_user_userid FOREIGN KEY (user_id) REFERENCES users(user_id)
 ;
 --ROLLBACK TRANSACTION;

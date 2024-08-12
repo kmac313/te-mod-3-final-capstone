@@ -16,6 +16,8 @@ public interface InvoiceDao {
     List<Invoice> getInvoices(String from, String to, User user);
     Invoice createInvoice(Invoice invoice);
     Invoice updateInvoice(Invoice invoice);
+
+    List<Invoice> getInvoiceByStatus(String status);
     void createInvoiceProduct(int invoiceId, int productId);
     void deleteInvoiceById(int id);
     void deleteInvoicesByCustomerId(int id);

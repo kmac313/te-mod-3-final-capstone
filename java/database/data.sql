@@ -90,52 +90,52 @@ INSERT INTO product (product_category_id, price, description, quantity)
 ((SELECT product_category_id FROM product_category WHERE product_category_description = 'Specialty Pizza'), 16.99, 'Hawaiian Pizza - Ham, pineapple, and mozzarella cheese.', 8);
 ;
 
-INSERT INTO customer(first_name, last_name, street_address, city, zip_code, state_abbreviation, phone_number, email, username)
+INSERT INTO customer(first_name, last_name, street_address, city, zip_code, state_abbreviation, phone_number, email, user_id)
 VALUES
-  ('Christen','Allen','2247 Ultrices, Av.','Columbus','11911','GA','1122537848','ligula.consectetuer.rhoncus@aol.couk','1'),
-  ('Kane','Santos','Ap #984-6233 Justo Avenue','Rochester','67832','MN','5721723281','non.enim@outlook.couk','2'),
-  ('Margaret','Kidd','Ap #237-3935 Molestie Road','Newark','72181','DE','5419438506','turpis.non@outlook.couk','3'),
-  ('Molly','Fitzpatrick','788-2105 Nulla Rd.','Honolulu','96433','HI','6273616656','porttitor.interdum@yahoo.com','4'),
-  ('Lane','Dean','9512 Commodo Ave','Lafayette','37660','LA','1575319229','interdum.sed.auctor@yahoo.edu','5'),
-  ('Benedict','Savage','P.O. Box 717, 9204 Metus. Av.','Chandler','85126','AZ','5622864289','egestas@aol.com','6'),
-  ('Urielle','Dodson','Ap #152-1135 Vitae Rd.','Grand Rapids','36238','MI','8758145014','praesent.luctus.curabitur@yahoo.com','7'),
-  ('Troy','Jensen','Ap #517-703 Nec, Street','Akron','98045','OH','6529485741','facilisis@outlook.edu','8'),
-  ('Yuli','Espinoza','Ap #333-353 Nulla. Ave','Salem','38762','OR','8275065667','nam.porttitor.scelerisque@outlook.edu','9'),
-  ('Barclay','Guy','263-1235 Eros. Avenue','New Haven','67758','CT','3617524327','sed.pharetra@hotmail.ca','10')
+  ('Christen','Allen','2247 Ultrices, Av.','Columbus','11911','GA','1122537848','ligula.consectetuer.rhoncus@aol.couk',(SELECT user_id FROM users WHERE username = '1')),
+  ('Kane','Santos','Ap #984-6233 Justo Avenue','Rochester','67832','MN','5721723281','non.enim@outlook.couk',(SELECT user_id FROM users WHERE username = '2')),
+  ('Margaret','Kidd','Ap #237-3935 Molestie Road','Newark','72181','DE','5419438506','turpis.non@outlook.couk',(SELECT user_id FROM users WHERE username = '3')),
+  ('Molly','Fitzpatrick','788-2105 Nulla Rd.','Honolulu','96433','HI','6273616656','porttitor.interdum@yahoo.com',(SELECT user_id FROM users WHERE username = '4')),
+  ('Lane','Dean','9512 Commodo Ave','Lafayette','37660','LA','1575319229','interdum.sed.auctor@yahoo.edu',(SELECT user_id FROM users WHERE username = '5')),
+  ('Benedict','Savage','P.O. Box 717, 9204 Metus. Av.','Chandler','85126','AZ','5622864289','egestas@aol.com',(SELECT user_id FROM users WHERE username = '6')),
+  ('Urielle','Dodson','Ap #152-1135 Vitae Rd.','Grand Rapids','36238','MI','8758145014','praesent.luctus.curabitur@yahoo.com',(SELECT user_id FROM users WHERE username = '7')),
+  ('Troy','Jensen','Ap #517-703 Nec, Street','Akron','98045','OH','6529485741','facilisis@outlook.edu',(SELECT user_id FROM users WHERE username = '8')),
+  ('Yuli','Espinoza','Ap #333-353 Nulla. Ave','Salem','38762','OR','8275065667','nam.porttitor.scelerisque@outlook.edu',(SELECT user_id FROM users WHERE username = '9')),
+  ('Barclay','Guy','263-1235 Eros. Avenue','New Haven','67758','CT','3617524327','sed.pharetra@hotmail.ca',(SELECT user_id FROM users WHERE username = '10'))
 ;
 
-INSERT INTO invoice (customer_id, total, is_delivery, is_complete, timestamp) 
+INSERT INTO invoice (user_id, total, is_delivery, status, timestamp) 
 	VALUES
-		(1, 150.75, true, false, '2022-01-15 10:30:00'),
-		(2, 200.50, false, true, '2022-02-20 11:45:00'),
-		(3, 75.00, true, true, '2022-03-25 14:20:00'),
-		(4, 120.00, false, false, '2022-04-10 09:15:00'),
-		(5, 300.25, true, true, '2022-05-05 16:00:00'),
-		(6, 50.00, false, true, '2022-06-12 12:30:00'),
-		(7, 180.00, true, false, '2022-07-18 13:45:00'),
-		(8, 220.75, false, true, '2022-08-22 15:00:00'),
-		(9, 90.50, true, true, '2022-09-30 17:30:00'),
-		(10, 110.00, false, false, '2022-10-10 08:45:00'),
-		(1, 130.75, true, true, '2022-11-15 10:30:00'),
-		(2, 210.50, false, false, '2022-12-20 11:45:00'),
-		(3, 85.00, true, true, '2023-01-25 14:20:00'),
-		(4, 140.00, false, false, '2023-02-10 09:15:00'),
-		(5, 310.25, true, true, '2023-03-05 16:00:00'),
-		(6, 60.00, false, true, '2023-04-12 12:30:00'),
-		(7, 190.00, true, false, '2023-05-18 13:45:00'),
-		(8, 230.75, false, true, '2023-06-22 15:00:00'),
-		(9, 100.50, true, true, '2023-07-30 17:30:00'),
-		(10, 120.00, false, false, '2023-08-10 08:45:00'),
-		(1, 140.75, true, true, '2023-09-15 10:30:00'),
-		(2, 220.50, false, false, '2023-10-20 11:45:00'),
-		(3, 95.00, true, true, '2023-11-25 14:20:00'),
-		(4, 160.00, false, false, '2023-12-10 09:15:00'),
-		(5, 320.25, true, true, '2023-12-25 16:00:00'),
-		(6, 70.00, false, true, '2024-01-12 12:30:00'),
-		(7, 200.00, true, false, '2024-02-18 13:45:00'),
-		(8, 240.75, false, true, '2024-03-22 15:00:00'),
-		(9, 110.50, true, true, '2024-04-30 17:30:00'),
-		(10, 130.00, false, false, '2024-05-10 08:45:00')
+		((SELECT user_id FROM users WHERE username = '1'), 150.75, true, 'Pending', '2022-01-15 10:30:00'),
+		((SELECT user_id FROM users WHERE username = '2'), 200.50, false, 'Complete', '2022-02-20 11:45:00'),
+		((SELECT user_id FROM users WHERE username = '3'), 75.00, true, 'Cancelled', '2022-03-25 14:20:00'),
+		((SELECT user_id FROM users WHERE username = '4'), 120.00, false, 'Ready', '2022-04-10 09:15:00'),
+		((SELECT user_id FROM users WHERE username = '5'), 300.25, true, 'Cancelled', '2022-05-05 16:00:00'),
+		((SELECT user_id FROM users WHERE username = '6'), 50.00, false, 'Ready', '2022-06-12 12:30:00'),
+		((SELECT user_id FROM users WHERE username = '7'), 180.00, true, 'Ready', '2022-07-18 13:45:00'),
+		((SELECT user_id FROM users WHERE username = '8'), 220.75, false, 'Pending', '2022-08-22 15:00:00'),
+		((SELECT user_id FROM users WHERE username = '9'), 90.50, true, 'Complete', '2022-09-30 17:30:00'),
+		((SELECT user_id FROM users WHERE username = '10'), 110.00, false, 'Cancelled', '2022-10-10 08:45:00'),
+		((SELECT user_id FROM users WHERE username = '1'), 130.75, true, 'Ready', '2022-11-15 10:30:00'),
+		((SELECT user_id FROM users WHERE username = '2'), 210.50, false, 'Pending', '2022-12-20 11:45:00'),
+		((SELECT user_id FROM users WHERE username = '3'), 85.00, true, 'Complete', '2023-01-25 14:20:00'),
+		((SELECT user_id FROM users WHERE username = '4'), 140.00, false, 'Ready', '2023-02-10 09:15:00'),
+		((SELECT user_id FROM users WHERE username = '5'), 310.25, true, 'Pending', '2023-03-05 16:00:00'),
+		((SELECT user_id FROM users WHERE username = '6'), 60.00, false, 'Complete', '2023-04-12 12:30:00'),
+		((SELECT user_id FROM users WHERE username = '7'), 190.00, true, 'Cancelled', '2023-05-18 13:45:00'),
+		((SELECT user_id FROM users WHERE username = '8'), 230.75, false, 'Pending', '2023-06-22 15:00:00'),
+		((SELECT user_id FROM users WHERE username = '9'), 100.50, true, 'Complete', '2023-07-30 17:30:00'),
+		((SELECT user_id FROM users WHERE username = '10'), 120.00, false, 'Ready', '2023-08-10 08:45:00'),
+		((SELECT user_id FROM users WHERE username = '1'), 140.75, true, 'Pending', '2023-09-15 10:30:00'),
+		((SELECT user_id FROM users WHERE username = '2'), 220.50, false, 'Complete', '2023-10-20 11:45:00'),
+		((SELECT user_id FROM users WHERE username = '3'), 95.00, true, 'Cancelled', '2023-11-25 14:20:00'),
+		((SELECT user_id FROM users WHERE username = '4'), 160.00, false, 'Pending', '2023-12-10 09:15:00'),
+		((SELECT user_id FROM users WHERE username = '5'), 320.25, true, 'Complete', '2023-12-25 16:00:00'),
+		((SELECT user_id FROM users WHERE username = '6'), 70.00, false, 'Cancelled', '2024-01-12 12:30:00'),
+		((SELECT user_id FROM users WHERE username = '7'), 200.00, true, 'Pending', '2024-02-18 13:45:00'),
+		((SELECT user_id FROM users WHERE username = '8'), 240.75, false, 'Complete', '2024-03-22 15:00:00'),
+		((SELECT user_id FROM users WHERE username = '9'), 110.50, true, 'Ready', '2024-04-30 17:30:00'),
+		((SELECT user_id FROM users WHERE username = '10'), 130.00, false, 'Pending', '2024-05-10 08:45:00')
 ;
 
 INSERT INTO invoice_product (invoice_id, product_id) 

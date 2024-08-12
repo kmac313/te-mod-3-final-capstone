@@ -1,10 +1,6 @@
 package com.techelevator.model;
 
-import org.apache.tomcat.jni.Time;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.Timestamp;
 
 public class Invoice {
@@ -12,17 +8,17 @@ public class Invoice {
     private BigDecimal total;
     private boolean isDelivery;
     private int customerId;
-    private boolean isComplete;
+    private String status; //TODO change to String status
     private Timestamp timestamp;
 
     public Invoice() {}
     public Invoice(int invoiceId, int customerId, BigDecimal total, boolean isDelivery,
-                   boolean isComplete, Timestamp timestamp) {
+                   String status, Timestamp timestamp) {
         this.invoiceId = invoiceId;
         this.total = total;
         this.isDelivery = isDelivery;
         this.customerId = customerId;
-        this.isComplete = isComplete;
+        this.status = status;
         this.timestamp = timestamp;
     }
 
@@ -58,12 +54,12 @@ public class Invoice {
         this.customerId = customerId;
     }
 
-    public boolean isComplete() {
-        return isComplete;
+    public String getStatus() {
+        return status;
     }
 
-    public void setComplete(boolean complete) {
-        isComplete = complete;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Timestamp getTimestamp() {

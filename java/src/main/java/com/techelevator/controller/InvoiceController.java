@@ -99,9 +99,9 @@ public class InvoiceController {
 
         Invoice invoice = new Invoice();
         invoice.setTotal(BigDecimal.ZERO);
-        invoice.setCustomerId(1);
+        invoice.setCustomerId(1); //TODO have invoice table reference userID and not customerID, change invoice model to reflect using userID
         invoice.setDelivery(isDelivery);
-        invoice.setComplete(false);
+        invoice.setStatus("Pending");
         createdInvoice = invoiceDao.createInvoice(invoice);
 
         /* Object Structure for the invoice

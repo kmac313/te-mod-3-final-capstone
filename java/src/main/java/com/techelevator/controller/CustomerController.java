@@ -3,8 +3,6 @@ package com.techelevator.controller;
 import com.techelevator.dao.CustomerDao;
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.Customer;
-import com.techelevator.model.Invoice;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -88,7 +86,7 @@ public class CustomerController {
             }
         }
         String email = (String)newCustomer.get("email");
-        String username = (String)newCustomer.get("username");
+        int username = (int)newCustomer.get("user_id");
 
         Customer createdCustomer;
 
@@ -102,7 +100,7 @@ public class CustomerController {
         customer.setStateAbbreviation(stateAbbreviation);
         customer.setPhoneNumber(phoneNumber);
         customer.setEmail(email);
-        customer.setUsername(username);
+        customer.setUser_id(username);
         createdCustomer = customerDao.createCustomer(customer);
 
 

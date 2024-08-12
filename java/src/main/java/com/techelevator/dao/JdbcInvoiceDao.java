@@ -115,7 +115,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
                 }else if(authorityNames.contains("ROLE_ADMIN")){
                     invoices.add(mapRowSet(results));
                 } else {
-                    if(results.getString("username").equals(username)){
+                    if(results.getInt("user_id") == user.getId()){
                         invoices.add(mapRowSet(results));
                     }
                 }
@@ -135,7 +135,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
         int createdInvoiceId;
         try{
              createdInvoiceId = db.queryForObject(sql, int.class,
-                    invoice.getCustomerId(), invoice.getTotal(), invoice.isDelivery(), invoice.isComplete());
+                    invoice.getCustomerId(), invoice.getTotal(), invoice.isDelivery(), invoice.getStatus());
         } catch (DataIntegrityViolationException dive) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
         } catch (CannotGetJdbcConnectionException cgjce) {
@@ -152,7 +152,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
         int numRowsAffected = 0;
         try {
             numRowsAffected = db.update(sql, invoice.getCustomerId(), invoice.getTotal(),
-                    invoice.isDelivery(), invoice.isComplete(), invoice.getTimestamp(), invoice.getInvoiceId());
+                    invoice.isDelivery(), invoice.getStatus(), invoice.getTimestamp(), invoice.getInvoiceId());
             if (numRowsAffected == 0){
                 throw new DaoException("No matching Invoice found, check Invoice ID");
             }
@@ -162,6 +162,12 @@ public class JdbcInvoiceDao implements InvoiceDao{
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
         return getInvoiceById(invoice.getInvoiceId());
+    }
+
+    @Override
+    public List<Invoice> getInvoiceByStatus(String status) {
+        //TODO Complete getInvoiceBYStatus method.
+        return null;
     }
 
     @Override
@@ -210,7 +216,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
                 rowSet.getInt("customer_id"),
                 rowSet.getBigDecimal("total"),
                 rowSet.getBoolean("is_delivery"),
-                rowSet.getBoolean("is_complete"),
+                rowSet.getString("status"),
                 rowSet.getTimestamp("timestamp")
         );
     }

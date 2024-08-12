@@ -30,7 +30,7 @@ public class ProductController {
 
     }
 
-    @RequestMapping(path = "/menu", method = RequestMethod.GET)
+    @RequestMapping(path = "/menu", method = RequestMethod.POST)
     public ResponseEntity<Map<String, List<Product>>> getMenu(@RequestHeader Map<String, String> header,
                                                               @RequestBody Map<String, List<String>> requestObject) {
         List<String> requestedCategories = requestObject.get("categories");
@@ -92,7 +92,7 @@ public class ProductController {
         productDao.deleteProductById(productId);
     }
 
-    @RequestMapping(path = "/menu", method = RequestMethod.POST)
+    @RequestMapping(path = "/product", method = RequestMethod.POST)
     public ResponseEntity<Product> createProduct(@RequestBody Map<String, Object> newProduct) {
 
          /* Object Structure for the product
