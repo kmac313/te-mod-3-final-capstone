@@ -208,14 +208,15 @@ public class jdbcProductDao implements ProductDao{
 
     @Override
     public Product updateProduct(Product product) {
-        String sql = "UPDATE product SET product_category_id = ?, price = ?, description = ?, quantity = ?" +
+        String sql = "UPDATE product SET price = ?, description = ?, quantity = ?" +
                 "WHERE product_id = ?";
         int numRowsAffected = 0;
         Product updatedProduct = null;
-
+        System.out.println(product.getDescription());
+        System.out.println(product.getPrice());
         try{
             numRowsAffected=db.update(sql,
-                    product.getProductCategoryId(), product.getPrice(), product.getDescription(), product.getQuantity(),
+                    product.getPrice(), product.getDescription(), product.getQuantity(),
                     product.getProductId()
             );
             if (numRowsAffected == 0 ){
@@ -229,6 +230,8 @@ public class jdbcProductDao implements ProductDao{
         } catch (CannotGetJdbcConnectionException cgjce) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
+        System.out.println(updatedProduct.getDescription());
+        System.out.println(updatedProduct.getPrice());
         return updatedProduct;
 
     }

@@ -64,6 +64,7 @@ export default {
             getOrders = getOrders.filter((item) => item.status == 'Pending')
         }
         this.orders = getOrders;
+        console.log(this.orders)
         console.log(this.orders);
       });
     },

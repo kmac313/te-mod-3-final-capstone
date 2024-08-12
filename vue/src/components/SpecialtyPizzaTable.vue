@@ -14,9 +14,9 @@
           </thead>
           <tbody>
             <tr v-for="(pizza, index) in pizzas" :key="index">
-              <!-- <td>{{ pizza?.description }}</td>
-              <td>${{ pizza?.price.toFixed(2) }}</td> -->
-              <td>{{ pizza?.quantity > 0? 'Available' : 'Unavailable'}}</td>
+              <td>{{ pizza?.description }}</td>
+              <td>${{ pizza?.price && pizza?.price.toFixed(2) }}</td>
+              <td>{{ pizza?.quantity > 0 ? 'Available' : 'Unavailable'}}</td>
               <td><input v-on:change="addPizzaToUpdatingPizzas(pizza)" type="checkbox"></td>
             </tr>
           </tbody>
@@ -61,6 +61,12 @@
         }
         console.log(this.updatingPizzas);
       }
+    },
+    computed: {
+        pizzaQuantity(pizza) {
+            let currentQuantity = pizza.quantity > 0 ? 'Available' : 'Unavailable'
+            return currentQuantity
+        }
     },
     mounted() {
       this.allSpecialtyPizzas();
