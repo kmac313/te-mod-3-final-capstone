@@ -27,7 +27,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
 
     @Override
     public Invoice getInvoiceById(int id) {
-        String sql = "SELECT invoice_id, customer_id, total, is_delivery, is_complete, timestamp FROM invoice " +
+        String sql = "SELECT invoice_id, user_id, total, is_delivery, status, timestamp FROM invoice " +
                 "WHERE invoice_id = ?";
         Invoice invoice = null;
         try{
@@ -44,13 +44,13 @@ public class JdbcInvoiceDao implements InvoiceDao{
     }
 
     @Override
-    public List<Invoice> getInvoicesByCustomerId(int id) {
-        String sql = "SELECT invoice_id, customer_id, total, is_delivery, is_complete, timestamp FROM invoice" +
-                "WHERE customer_id = ?" +
+    public List<Invoice> getInvoicesByUserId(int id) {
+        String sql = "SELECT invoice_id, user_id, total, is_delivery, status, timestamp FROM invoice" +
+                "WHERE user_id = ?" +
                 " ORDER BY invoice_id";
         List<Invoice> customerInvoices = new ArrayList<>();
         try{
-            SqlRowSet results = db.queryForRowSet(sql);
+            SqlRowSet results = db.queryForRowSet(sql, id);
             while (results.next()){
                 customerInvoices.add(mapRowSet(results));
             }
@@ -69,9 +69,9 @@ public class JdbcInvoiceDao implements InvoiceDao{
         List<Invoice> invoices = new ArrayList<>();
         List<Integer> fromInts = new ArrayList<>();
         List<Integer> toInts = new ArrayList<>();
-        String sql = "SELECT invoice_id, invoice.customer_id, total, is_delivery, is_complete, timestamp, username" +
+        String sql = "SELECT invoice_id, invoice.user_id, total, is_delivery, status, timestamp, username" +
                 " FROM invoice " +
-                "JOIN customer c ON invoice.customer_id = c.customer_id ";
+                "JOIN customer c ON invoice.user_id = c.user_id ";
         if(!from.equals("0")) {
             for (String s : from.split("-")) {
                 fromInts.add(Integer.parseInt(s));
@@ -130,7 +130,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
 
     @Override
     public Invoice createInvoice(Invoice invoice) {
-        String sql = "INSERT INTO invoice (customer_id, total, is_delivery, is_complete) " +
+        String sql = "INSERT INTO invoice (user_id, total, is_delivery, status) " +
                 "VALUES (?, ?, ?, ?) RETURNING invoice_id";
         int createdInvoiceId;
         try{
@@ -147,7 +147,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
     @Override
     public Invoice updateInvoice(Invoice invoice) {
         String sql = "UPDATE invoice " +
-                "SET customer_id = ?, total = ?, is_delivery = ?, is_complete = ?, timestamp = ? " +
+                "SET user_id = ?, total = ?, is_delivery = ?, status = ?, timestamp = ? " +
                 "WHERE invoice_id = ?";
         int numRowsAffected = 0;
         try {
@@ -167,7 +167,21 @@ public class JdbcInvoiceDao implements InvoiceDao{
     @Override
     public List<Invoice> getInvoiceByStatus(String status) {
         //TODO Complete getInvoiceBYStatus method.
-        return null;
+        String sql = "SELECT invoice_id, user_id, total, is_delivery, status, timestamp FROM invoice" +
+                "WHERE status = ?" +
+                " ORDER BY invoice_id";
+        List<Invoice> statusInvoices = new ArrayList<>();
+        try{
+            SqlRowSet results = db.queryForRowSet(sql, status);
+            while (results.next()){
+                statusInvoices.add(mapRowSet(results));
+            }
+        } catch (DataIntegrityViolationException dive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
+        } catch (CannotGetJdbcConnectionException cgjce) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
+        }
+        return statusInvoices;
     }
 
     @Override
@@ -198,7 +212,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
 
     @Override
     public void deleteInvoicesByCustomerId(int id) {
-        String sql = "DELETE FROM invoice WHERE customer_id = ?";
+        String sql = "DELETE FROM invoice WHERE user_id = ?";
         try{
             db.update(sql, id);
         } catch (DataIntegrityViolationException dive) {
@@ -213,7 +227,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
     public Invoice mapRowSet(SqlRowSet rowSet) {
         return new Invoice(
                 rowSet.getInt("invoice_id"),
-                rowSet.getInt("customer_id"),
+                rowSet.getInt("user_id"),
                 rowSet.getBigDecimal("total"),
                 rowSet.getBoolean("is_delivery"),
                 rowSet.getString("status"),

@@ -10,7 +10,7 @@ public class Customer {
     private String stateAbbreviation;
     private String phoneNumber;
     private String email;
-    private int user_id;
+    private int user_id; //TODO make a User object at some point.
 
     public Customer() {}
 

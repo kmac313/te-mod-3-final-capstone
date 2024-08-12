@@ -4,12 +4,11 @@ import com.techelevator.model.Invoice;
 import com.techelevator.model.User;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
-import java.security.Principal;
 import java.util.List;
 
 public interface InvoiceDao {
     Invoice getInvoiceById(int id);
-    List<Invoice> getInvoicesByCustomerId(int id);
+    List<Invoice> getInvoicesByUserId(int id);
 
     //TODO Change invoice authorization to be based on role and not username
 
