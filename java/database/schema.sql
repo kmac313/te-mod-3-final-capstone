@@ -36,7 +36,7 @@ CREATE TABLE customer(
 	state_abbreviation char(2),
 	phone_number numeric(10,0) NOT NULL,
 	email varchar(50) NOT NULL,
-	user_id int, --NOT NULL--
+	user_id int UNIQUE, --NOT NULL--
 	CONSTRAINT PK_customer_id  PRIMARY KEY (customer_id)
 );
 
@@ -69,8 +69,8 @@ CREATE TABLE invoice_product(
 CREATE TABLE pizza_product (
 	pizza_id int NOT NULL,
 	product_id int NOT NULL,
-	CONSTRAINT FK_pizza_product_pizza_id FOREIGN KEY (pizza_id) REFERENCES pizza(pizza_id),
-	CONSTRAINT FK_pizza_product_product_id FOREIGN KEY (product_id) REFERENCES product(product_id)
+	CONSTRAINT FK_pizza_product_pizza_id FOREIGN KEY (pizza_id) REFERENCES pizza(pizza_id) ON DELETE CASCADE,
+	CONSTRAINT FK_pizza_product_product_id FOREIGN KEY (product_id) REFERENCES product(product_id) ON DELETE CASCADE
 
 );
 

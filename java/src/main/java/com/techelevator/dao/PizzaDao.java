@@ -13,7 +13,7 @@ public interface PizzaDao {
     Pizza createPizza(Pizza pizza);
     void createPizzaProduct(int pizzaId, int productId);
     Pizza updatePizza(Pizza pizza);
-    void deletePizzaById(int id);
+    int deletePizzaById(int id);
     Pizza updatePizzaComponents(Pizza pizza);
     public Pizza mapRowSet(SqlRowSet rowSet);
 }

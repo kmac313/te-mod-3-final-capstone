@@ -20,5 +20,8 @@ public class JdbcProductDaoTests extends BaseDaoTests {
         NamedParameterJdbcTemplate newParameter = new NamedParameterJdbcTemplate(dataSource);
         sut = new JdbcProductDao(jdbcTemplate, newParameter);
     }
-
+    @Test
+    public void test(){
+        System.out.println(sut.getCategories());
+    }
 }

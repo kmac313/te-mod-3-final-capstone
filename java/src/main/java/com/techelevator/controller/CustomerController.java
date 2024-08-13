@@ -25,7 +25,7 @@ public class CustomerController {
         this.customerDao = customerDao;
         this.userDao = userDao;
     }
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(path = "/customer", method = RequestMethod.GET)
     public ResponseEntity<List<Customer>> getCustomers(@RequestParam(defaultValue = "") String email){
         List<Customer> customers = new ArrayList<>();
@@ -38,14 +38,14 @@ public class CustomerController {
     }
 
  
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasRole('ADMIN')")
 
-    @RequestMapping(path = "/customer/{customerId}", method = RequestMethod.GET)
+    @RequestMapping(path = "/customer/{id}", method = RequestMethod.GET)
     public ResponseEntity<Customer> getCustomersById(@PathVariable int id){
         return new ResponseEntity<Customer>(customerDao.getCustomerById(id), HttpStatus.OK);
     }
 
-    @PreAuthorize("isAuthenticated()")
+
 
     @RequestMapping(path = "/customer", method = RequestMethod.POST)
     public ResponseEntity<Customer> createCustomer(@RequestBody Map<String, Object> newCustomer) {
@@ -133,7 +133,7 @@ public class CustomerController {
 
 
 
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(path = "/customer/{customerId}", method = RequestMethod.DELETE)
     public void deleteCustomer(@PathVariable int id) {
         customerDao.deleteCustomerById(id);
@@ -141,7 +141,7 @@ public class CustomerController {
 
 
 
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(path = "/customer", method = RequestMethod.DELETE)
     public void deleteCustomerByUserId(@RequestBody Map<String, Object> deletionDTO) {
 
