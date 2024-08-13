@@ -137,7 +137,7 @@ public class JdbcPizzaDao implements PizzaDao{
         } catch (CannotGetJdbcConnectionException cgjce) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
-        return null;
+        return getPizzaById(pizza.getPizzaId());
     }
 
     @Override
@@ -159,7 +159,7 @@ public class JdbcPizzaDao implements PizzaDao{
 
     @Override
     public Pizza updatePizzaComponents(Pizza pizza) {
-        String sql = "SELECT product_id FROM pizza_product" +
+        String sql = "SELECT product_id FROM pizza_product " +
                 "WHERE pizza_id = ?";
 
         try {
