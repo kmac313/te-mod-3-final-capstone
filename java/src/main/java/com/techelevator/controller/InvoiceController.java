@@ -35,7 +35,7 @@ public class InvoiceController {
     //TODO BONUS Use requestParams to include all possible filters for invoices
     public ResponseEntity<List<Invoice>> getInvoices(@RequestParam(defaultValue = "0") String from,
                                                      @RequestParam(defaultValue = "0") String to,
-                                                     @RequestParam(defaultValue = "all") String status, //TODO add filter for user_id
+                                                     @RequestParam(defaultValue = "all") String status,
                                                      Principal principal) {
 
         List<Invoice> invoices = null;
@@ -173,8 +173,6 @@ public class InvoiceController {
                     break;
             }
         }
-        //TODO: Add authentication to ALL controllers
-
 
        //System.out.println(items + "\n" + creditCard + "\n" + isDelivery + "\n" + address);
 

@@ -27,7 +27,6 @@ public class CustomerController {
     }
     @PreAuthorize("hasRole('Admin')")
     @RequestMapping(path = "/customer", method = RequestMethod.GET)
-    //TODO BONUS Use requestParams to include all possible filters for customers
     public ResponseEntity<List<Customer>> getCustomers(@RequestParam(defaultValue = "") String email){
         List<Customer> customers = new ArrayList<>();
         if (!email.equals("")){
@@ -38,7 +37,7 @@ public class CustomerController {
         return new ResponseEntity<List<Customer>>(customers, HttpStatus.OK);
     }
 
-    //TODO BONUS roll getCustomersById into get Customers (see getCustomers TODO)
+ 
     @PreAuthorize("hasRole('Admin')")
 
     @RequestMapping(path = "/customer/{customerId}", method = RequestMethod.GET)
@@ -46,7 +45,6 @@ public class CustomerController {
         return new ResponseEntity<Customer>(customerDao.getCustomerById(id), HttpStatus.OK);
     }
 
-    //TODO maybe getCustomerByUserId?
     @PreAuthorize("isAuthenticated()")
 
     @RequestMapping(path = "/customer", method = RequestMethod.POST)
@@ -119,7 +117,6 @@ public class CustomerController {
     }
 
 
-    //TODO Update so that only logged in customer or admins
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/customer/{customerId}", method = RequestMethod.PUT)
@@ -155,7 +152,7 @@ public class CustomerController {
             customerDao.deleteCustomerByUserId(userId);
         }
     }
-
+    //TODO BONUS customer should be able to change some things about themselves, but not everything.
 
 
 

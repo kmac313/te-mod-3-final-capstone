@@ -58,7 +58,7 @@ public class ProductController {
         }
         return new ResponseEntity<>(menuObject, HttpStatus.OK);
     }
-    //TODO change requestbody for things to requestparams that is a CSV. example ?categories=Drink,Salad,Dessert
+
     @PreAuthorize("permitAll")
     @RequestMapping(path = "/menu/pizza", method = RequestMethod.GET)
     public ResponseEntity<Map<String, List<Product>>> getPizzaMenu() {
@@ -115,7 +115,6 @@ public class ProductController {
         product.setDescription(description);
         product.setQuantity(quantity);
         createdProduct = productDao.addProduct(product);
-        //TODO make sure all json objects are in snake case from front end
         return new ResponseEntity<Product>(createdProduct, HttpStatus.CREATED);
     }
 
