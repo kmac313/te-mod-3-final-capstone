@@ -20,7 +20,7 @@
             :key="index"
             @click="showOrderPopUp(order)"
           >
-            <td>{{ order?.userId }}</td>
+            <td>{{ order?.user_id }}</td>
             <td>${{ order?.total.toFixed(2) }}</td>
             <td>{{ order?.delivery ? "Delivery" : "Carryout" }}</td>
             <td>{{ order?.status }}</td>
@@ -49,7 +49,7 @@ export default {
       orders: [],
       currOrder: {},
       showOrder: false,
-      isPending: true
+      isPending: false
     };
   },
   components: {
@@ -64,6 +64,7 @@ export default {
             getOrders = getOrders.filter((item) => item.status == 'Pending')
         }
         this.orders = getOrders;
+        console.log(this.orders)
         console.log(this.orders);
       });
     },

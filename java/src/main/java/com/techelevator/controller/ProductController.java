@@ -122,6 +122,8 @@ public class ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/menu/{productId}", method = RequestMethod.PUT)
     public ResponseEntity<Product>updateProduct (@RequestBody Product product,  @PathVariable int productId) {
+        System.out.println(product.getDescription());
+        System.out.println(product.getPrice());
         product.setProductId(productId);
         Product updatedProduct = null;
         try {

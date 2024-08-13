@@ -82,9 +82,10 @@ export default {
     })
   },
   updateProduct(product) {
-    return http.put(`/menu/${product.productId}`, {
+    console.log(product)
+    return http.put(`/menu/${product.productId}`, 
       product
-    },
+    ,
     {
       headers: {
         'Authorization': `Bearer ${token}`

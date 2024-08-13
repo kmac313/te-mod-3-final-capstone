@@ -12,31 +12,31 @@
           </thead>
           <tbody>
             <tr v-for="(topping, index) in toppings" :key="index">
-              <td>{{ topping?.productCategoryDescription }}</td>
+              <td>{{ topping?.product_category_description }}</td>
               <td>{{ topping?.description }}</td>
               <td>${{ topping?.price.toFixed(2) }}</td>
               <td>{{ topping?.quantity }}</td>
             </tr>
             <tr v-for="(drink, index) in drinks" :key="index">
-              <td>{{ drink?.productCategoryDescription }}</td>
+              <td>{{ drink?.product_category_description }}</td>
               <td>{{ drink?.description }}</td>
               <td>${{ drink?.price.toFixed(2) }}</td>
               <td>{{ drink?.quantity }}</td>
             </tr>
             <tr v-for="(dessert, index) in desserts" :key="index">
-              <td>{{ dessert?.productCategoryDescription }}</td>
+              <td>{{ dessert?.product_category_description }}</td>
               <td>{{ dessert?.description }}</td>
               <td>${{ dessert?.price.toFixed(2) }}</td>
               <td>{{ dessert?.quantity }}</td>
             </tr>
             <tr v-for="(appetizer, index) in appetizers" :key="index">
-              <td>{{ appetizer?.productCategoryDescription }}</td>
+              <td>{{ appetizer?.product_category_description }}</td>
               <td>{{ appetizer?.description }}</td>
               <td>${{ appetizer?.price.toFixed(2) }}</td>
               <td>{{ appetizer?.quantity }}</td>
             </tr>
             <tr v-for="(salad, index) in salads" :key="index">
-              <td>{{ salad?.productCategoryDescription }}</td>
+              <td>{{ salad?.product_category_description }}</td>
               <td>{{ salad?.description }}</td>
               <td>${{ salad?.price.toFixed(2) }}</td>
               <td>{{ salad?.quantity }}</td>
