@@ -105,9 +105,22 @@
             type="text"
             placeholder="First name"
             name="firstname"
+            v-model="firstName"
           />
-          <input required type="text" placeholder="Last name" name="lastname" />
-          <input required type="email" placeholder="Email" name="email" />
+          <input
+            required
+            type="text"
+            placeholder="Last name"
+            name="lastname"
+            v-model="lastName"
+          />
+          <input
+            required
+            type="email"
+            placeholder="Email"
+            name="email"
+            v-model="email"
+          />
           <input
             required
             type="tel"
@@ -145,20 +158,9 @@
               name="state"
               v-model="state"
             />
-            <input
-              required
-              type="text"
-              placeholder="Zip code"
-              name="zipcode"
-            />
+            <input required type="text" placeholder="Zip code" name="zipcode" />
           </div>
-          <button
-            type="submit"
-            @click.prevent="submitOrder"
-            
-          >
-            Checkout
-          </button>
+          <button type="submit" @click.prevent="submitOrder">Checkout</button>
         </form>
       </div>
     </div>
@@ -168,20 +170,32 @@
 
 <script>
 import Toast from "../components/Toast.vue";
+import customerService from "../services/CustomerService";
 import invoiceService from "../services/InvoiceService";
 
 export default {
   data() {
     return {
-      selectedOption: this.$store.state.isDelivery.orderType ? this.$store.state.isDelivery.orderType : ( localStorage.getItem('orderType') ? localStorage.getItem('orderType') : ""),
-      street: '',
-      city: '',
-      state: '',
-      zipcode: localStorage.getItem('zipcode') ? localStorage.getItem('zipcode') : this.$store.state.isDelivery.zipcode,
-      paymentmethod: '',
-      eta: '',
+      selectedOption: this.$store.state.isDelivery.orderType
+        ? this.$store.state.isDelivery.orderType
+        : localStorage.getItem("orderType")
+        ? localStorage.getItem("orderType")
+        : "",
+      street: "",
+      city: "",
+      state: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      phoneNumber: "",
+      username: localStorage.getItem("user"),
+      zipcode: localStorage.getItem("zipcode")
+        ? localStorage.getItem("zipcode")
+        : this.$store.state.isDelivery.zipcode,
+      paymentmethod: "",
+      eta: "",
       showToast: false,
-      address: '123 Main St, Cleveland, Ohio 44108'
+      address: "123 Main St, Cleveland, Ohio 44108",
     };
   },
   components: {
@@ -189,23 +203,26 @@ export default {
   },
   methods: {
     submitOrder() {
-      let pizzaItems = this.$store.state.cart.pizza
-      if(pizzaItems.length > 0) {
+      let pizzaItems = this.$store.state.cart.pizza;
+      if (pizzaItems.length > 0) {
         for (let pizza of pizzaItems) {
           pizza.shift();
-          
         }
       }
-      
-      const delivery = this.$store.state.isDelivery.orderType == 'delivery' ? true : false
+
+      const delivery =
+        this.$store.state.isDelivery.orderType == "delivery" ? true : false;
       const newInvoice = {
-        "items": this.$store.state.cart,
-        "credit_card": this.paymentmethod,
-        "is_delivery": delivery,
-        "address": this.street + " " + this.city + " " + this.state + " " + this.zipcode
-      }
-      console.log(newInvoice)
-      const invoice = invoiceService.sendOrder(newInvoice).then((data) => {
+        items: this.$store.state.cart,
+        credit_card: this.paymentmethod,
+        is_delivery: delivery,
+        address:
+          this.street + " " + this.city + " " + this.state + " " + this.zipcode,
+      };
+      console.log(newInvoice);
+      let responseInvoice = {};
+      invoiceService.sendOrder(newInvoice).then((data) => {
+        responseInvoice = data.data;
         try {
           this.$store.commit("ADD_INVOICE", data.data);
           this.$store.commit("EMPTY_CART");
@@ -216,10 +233,9 @@ export default {
             this.showToast = true;
             setTimeout(() => {
               this.showToast = false;
-              this.$router.replace("/myOrders");
+              // this.$router.replace("/myOrders");
               this.$emit("close-cart");
             }, 2500);
-           
           } else {
             this.toastMessage =
               "We have received your order. Check your email for order information";
@@ -239,23 +255,50 @@ export default {
           }, 3500);
         }
       });
+      if (responseInvoice) {
+        let userInfo = JSON.parse(this.username);
+        console.log(userInfo);
+        let response = customerService.getCustomer(userInfo.id).then((data) => {
+          if (data) {
+            let newCustomer = {
+              firstName: this.firstName,
+              lastName: this.lastName,
+              streetAddress: this.street,
+              city: this.city,
+              zipcode: parseInt(this.zipcode),
+              stateAbbreviation: this.state,
+              phoneNumber: this.phoneNumber,
+              email: this.email,
+              user_id: userInfo.id
+            };
 
-      
+            customerService.addCustomer(newCustomer).then((data) => {
+              console.log('Added customer')
+              this.$router.replace('/myorders')
+            })
+          } else {
+            this.$router.replace('/myorders')
+          }
+        });
+        
+
+        // console.log(newCustomer)
+      }
     },
     updateOrder() {
-      localStorage.setItem('orderType', this.selectedOption)
-      this.$store.commit('UPDATE_ORDER_TYPE', this.selectedOption);
-      console.log(this.$store.state.isDelivery.orderType)
+      localStorage.setItem("orderType", this.selectedOption);
+      this.$store.commit("UPDATE_ORDER_TYPE", this.selectedOption);
+      console.log(this.$store.state.isDelivery.orderType);
     },
 
     setOrderToNull() {
-      localStorage.setItem('orderType', '')
-      this.$store.commit('UPDATE_ORDER_TYPE', '');
+      localStorage.setItem("orderType", "");
+      this.$store.commit("UPDATE_ORDER_TYPE", "");
     },
 
     updateAddress() {
-      this.$store.commit('UPDATE_ADDRESS', this.address)
-      console.log(this.$store.state.invoice.address)
+      this.$store.commit("UPDATE_ADDRESS", this.address);
+      console.log(this.$store.state.invoice.address);
     },
 
     setZipCode() {
@@ -265,7 +308,7 @@ export default {
       const pattern = /^\d{5}(?:-?\d{4})?$/;
       if (pattern.test(zip)) {
         this.$store.commit("ADD_ZIPCODE", zip);
-        localStorage.setItem('zipcode', zip)
+        localStorage.setItem("zipcode", zip);
         this.zipcode = zip;
       } else {
         this.toastMessage = "Invalid zipcode format";
@@ -293,66 +336,75 @@ export default {
       const isOther = this.$store.state.cart.other.find(
         (otherItem) => otherItem === item.productId
       );
-     
-        this.$store.commit("REMOVE_FROM_CART", item);
-        console.log(this.$store.state.cart);
-      
+
+      this.$store.commit("REMOVE_FROM_CART", item);
+      console.log(this.$store.state.cart);
 
       // remove from localStorage
       // Check if appetizer
       if (item.productCategoryId == 7) {
-        let storedSide = localStorage.getItem('sides')
-        let objectSide = JSON.parse(storedSide)
-        let newObjectSide = objectSide.filter((side) => side.productId !== item.productId)
-        if(newObjectSide.length > 0) {
-          localStorage.setItem('sides', newObjectSide)
+        let storedSide = localStorage.getItem("sides");
+        let objectSide = JSON.parse(storedSide);
+        let newObjectSide = objectSide.filter(
+          (side) => side.productId !== item.productId
+        );
+        if (newObjectSide.length > 0) {
+          localStorage.setItem("sides", newObjectSide);
         } else {
-          localStorage.removeItem('sides')
+          localStorage.removeItem("sides");
         }
       }
       // Check if specialty pizza
       else if (item.productCategoryId == 10) {
-        let storedSpecialtyPizza = localStorage.getItem('specialtypizza')
-        let objectSpecialtyPizza = JSON.parse(storedSpecialtyPizza)
-        let newObjectSpecialtyPizza = objectSpecialtyPizza.filter((pizza) => pizza.productId !== item.productId)
-        if(newObjectSpecialtyPizza.length > 0) {
-          localStorage.setItem('specialtypizza', newObjectSpecialtyPizza)
+        let storedSpecialtyPizza = localStorage.getItem("specialtypizza");
+        let objectSpecialtyPizza = JSON.parse(storedSpecialtyPizza);
+        let newObjectSpecialtyPizza = objectSpecialtyPizza.filter(
+          (pizza) => pizza.productId !== item.productId
+        );
+        if (newObjectSpecialtyPizza.length > 0) {
+          localStorage.setItem("specialtypizza", newObjectSpecialtyPizza);
         } else {
-          localStorage.removeItem('specialtypizza')
+          localStorage.removeItem("specialtypizza");
         }
       }
       // Check if drink
       else if (item.productCategoryId == 8) {
-        let storedDrink = localStorage.getItem('drink')
-        let objectDrink = JSON.parse(storedDrink)
-        let newObjectDrink = objectDrink.filter((drink) => drink.productId !== item.productId)
-        if(newObjectDrink.length > 0) {
-          localStorage.setItem('drink', newObjectDrink)
+        let storedDrink = localStorage.getItem("drink");
+        let objectDrink = JSON.parse(storedDrink);
+        let newObjectDrink = objectDrink.filter(
+          (drink) => drink.productId !== item.productId
+        );
+        if (newObjectDrink.length > 0) {
+          localStorage.setItem("drink", newObjectDrink);
         } else {
-          localStorage.removeItem('drink')
+          localStorage.removeItem("drink");
         }
       }
 
       //  Check if dessert
       else if (item.productCategoryId == 9) {
-        let storedDessert = localStorage.getItem('dessert')
-        let objectDessert = JSON.parse(storedDessert)
-        let newObjectDessert = objectDessert.filter((dessert) => dessert.productId !== item.productId)
-        if(newObjectDessert.length > 0) {
-          localStorage.setItem('dessert', newObjectDessert)
+        let storedDessert = localStorage.getItem("dessert");
+        let objectDessert = JSON.parse(storedDessert);
+        let newObjectDessert = objectDessert.filter(
+          (dessert) => dessert.productId !== item.productId
+        );
+        if (newObjectDessert.length > 0) {
+          localStorage.setItem("dessert", newObjectDessert);
         } else {
-          localStorage.removeItem('dessert')
+          localStorage.removeItem("dessert");
         }
       }
       // Check if salad
       else if (item.productCategoryId == 6) {
-        let storedSalad = localStorage.getItem('salads')
-        let objectSalad = JSON.parse(storedSalad)
-        let newObjectSalad = objectSalad.filter((salad) => salad.productId !== item.productId)
-        if(newObjectSalad.length > 0) {
-          localStorage.setItem('salads', newObjectSalad)
+        let storedSalad = localStorage.getItem("salads");
+        let objectSalad = JSON.parse(storedSalad);
+        let newObjectSalad = objectSalad.filter(
+          (salad) => salad.productId !== item.productId
+        );
+        if (newObjectSalad.length > 0) {
+          localStorage.setItem("salads", newObjectSalad);
         } else {
-          localStorage.removeItem('salads')
+          localStorage.removeItem("salads");
         }
       } else {
         let storedPizza = localStorage.getItem("pizza");

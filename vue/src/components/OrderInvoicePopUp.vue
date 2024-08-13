@@ -50,7 +50,7 @@
             >
               <p>
                 {{
-                  item.pizzaName.length > 0 ? item.pizzaName : "Custom Pizza"
+                  item.pizza_name.length > 0 ? item.pizza_name : "Custom Pizza"
                 }}
               </p>
               <p>${{ item.total }}</p>
@@ -73,10 +73,10 @@
               :key="index"
             >
               <p>
-                <strong>{{ item.description }}</strong>
+                <strong>{{ item?.description }}</strong>
               </p>
-              <p>${{ item.price }}</p>
-              <p>{{ item.productCategoryDescription }}</p>
+              <p>${{ item?.price }}</p>
+              <p>{{ item?.product_category_description }}</p>
             </div>
           </div>
         </div>

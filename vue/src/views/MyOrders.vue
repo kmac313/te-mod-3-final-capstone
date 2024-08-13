@@ -50,7 +50,7 @@ export default {
       this.showOrder = false;
     },
     showOrderPopUp(invoice) {
-      const fullInvoice = invoiceService.getOrderByInvoiceId(invoice.invoiceId).then((data) => {
+      const fullInvoice = invoiceService.getOrderByInvoiceId(invoice.invoice_id).then((data) => {
         console.log(data.data)
         this.currOrder = data.data;
         this.showOrder = true;

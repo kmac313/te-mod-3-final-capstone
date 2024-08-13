@@ -132,8 +132,8 @@ export function createStore(currentToken, currentUser) {
 
       UPDATE_ORDER(state, newInvoice, isComplete) {
         for(let invoice of state.allInvoices) {
-          if(invoice?.invoice?.invoiceId == newInvoice?.invoice?.invoiceId) {
-            invoice.invoice.complete = isComplete;
+          if(invoice?.invoice?.invoice_id == newInvoice?.invoice?.invoice_id) {
+            invoice.invoice.status = isComplete;
           }
         }
       },

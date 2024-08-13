@@ -42,7 +42,7 @@
               v-for="(item, index) in order?.pizzas"
               :key="index"
             >
-              <p>{{ item.pizzaName.length > 0 ? item.pizzaName : 'Custom Pizza' }}</p>
+              <p>{{ item.pizza_name.length > 0 ? item.pizzaName : 'Custom Pizza' }}</p>
               <p>${{ item.total }}</p>
               <p>Size: {{ item.components[0]?.description }}</p>
               <p>Sauce: {{ item.components[1]?.description.split('-')[0] }}</p>
@@ -103,8 +103,9 @@ export default {
       this.isComplete = 'Cancelled';
       console.log(newInvoice);
       invoiceService
-        .updateOrder(newInvoice.invoiceId, newInvoice)
+        .updateOrder(newInvoice.invoice_id, newInvoice)
         .then((data) => {
+          console.log(data)
           this.$emit('update-order', {
             pizza: [...this.order.pizzas],
             other: [...this.order.other],

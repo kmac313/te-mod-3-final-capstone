@@ -73,7 +73,7 @@ export default {
     },
     showOrderPopUp(invoice) {
       const fullInvoice = invoiceService
-        .getOrderByInvoiceId(invoice.invoiceId)
+        .getOrderByInvoiceId(invoice.invoice_id)
         .then((data) => {
           console.log(data.data);
           this.currOrder = data.data;
@@ -111,7 +111,6 @@ export default {
 }
 
 .table-wrapper {
-  max-height: 400px;
   overflow-y: auto;
   width: 100%;
   text-align: center;

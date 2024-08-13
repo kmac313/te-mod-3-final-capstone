@@ -34,7 +34,8 @@ export default {
       })
     },
     updateOrder(id, invoice) {
-      return http.put(`/invoices/${id}`, 
+      console.log(token)
+      return http.put(`/invoices`, 
         invoice, 
         {
           headers: {

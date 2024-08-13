@@ -53,6 +53,15 @@ export default {
     SpecialtyPizzaTable,
     OrdersTable
   },
+  mounted() {
+    let user = localStorage.getItem('user')
+    user = JSON.parse(user)
+    let role = user?.authorities[0]?.name
+
+    if(role !== 'ROLE_ADMIN') {
+      this.$router.replace('/myorders')
+    }
+  }
 };
 </script>
 
