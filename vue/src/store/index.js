@@ -74,6 +74,15 @@ export function createStore(currentToken, currentUser) {
       LOGOUT(state) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        localStorage.removeItem('sides');
+        localStorage.removeItem('salads');
+        localStorage.removeItem('dessert');
+        localStorage.removeItem('drink');
+        localStorage.removeItem('pizza');
+        localStorage.removeItem('specialtypizza');
+        state.currentOrder = [];
+        state.cart.other = [];
+        state.cart.pizza = [];
         state.token = '';
         state.user = {};
         axios.defaults.headers.common = {};

@@ -172,6 +172,7 @@
 import Toast from "../components/Toast.vue";
 import customerService from "../services/CustomerService";
 import invoiceService from "../services/InvoiceService";
+import productService from "../services/ProductService";
 
 export default {
   data() {
@@ -225,6 +226,21 @@ export default {
         responseInvoice = data.data;
         try {
           this.$store.commit("ADD_INVOICE", data.data);
+          let otherItems = this.$store.state?.cart?.other;
+          let pizza = this.$store.state?.cart?.pizza;
+          if (otherItems.length > 0) {
+            for (let item of otherItems) {
+              let newItem = {};
+              productService.getProductById(item).then((data) => {
+                newItem = data.data;
+                console.log(data);
+                newItem.quantity = newItem.quantity-1;
+                newItem.product_id = newItem.productId;
+                console.log(newItem);
+                productService.updateProduct(newItem).then((data) => console.log(data));
+              });
+            }
+          }
           this.$store.commit("EMPTY_CART");
           if (this.$store.state.token.length > 0) {
             this.toastMessage =
@@ -247,7 +263,7 @@ export default {
             }, 2500);
           }
         } catch (err) {
-          console.log("error");
+          console.log(err);
           this.toastMessage = "Unable to process, your order. Please try again";
           this.showToast = true;
           setTimeout(() => {
@@ -257,10 +273,9 @@ export default {
       });
       if (responseInvoice) {
         let userInfo = JSON.parse(this.username);
+        try {
         console.log(userInfo);
-        let response = customerService.getCustomer(userInfo.id).then((data) => {
-          if (data) {
-            let newCustomer = {
+        let newCustomer = {
               firstName: this.firstName,
               lastName: this.lastName,
               streetAddress: this.street,
@@ -275,12 +290,12 @@ export default {
             customerService.addCustomer(newCustomer).then((data) => {
               console.log('Added customer')
               this.$router.replace('/myorders')
-            })
-          } else {
-            this.$router.replace('/myorders')
+            });
+
+          } catch(error) {
+            console.log('This customer already exists');
           }
-        });
-        
+          this.$router.replace('/myorders')
 
         // console.log(newCustomer)
       }

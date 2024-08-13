@@ -101,5 +101,14 @@ export default {
         'Authorization': `Bearer ${token}`
       }
     })
+  },
+  getProductById(id) {
+    console.log(id)
+    return http.get(`/menu/${id}`,
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
   }
 }
