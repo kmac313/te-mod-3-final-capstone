@@ -24,8 +24,8 @@ import Toast from './Toast.vue';
 export default {
   data() {
     return {
-      pizzaName: this.pizza?.description.split("-")[0],
-      pizzaDescription: this.pizza?.description.split("-")[1],
+      pizzaName: this.pizza?.description?.split("-")[0],
+      pizzaDescription: this.pizza?.description?.split("-")[1],
       toastMessage: '',
       showToast: false
     };
