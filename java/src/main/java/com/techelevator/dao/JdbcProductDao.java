@@ -17,11 +17,11 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.*;
 
 @Component
-public class jdbcProductDao implements ProductDao{
+public class JdbcProductDao implements ProductDao{
     private JdbcTemplate db;
     private NamedParameterJdbcTemplate namedDb;
 
-    public jdbcProductDao(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate template) {
+    public JdbcProductDao(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate template) {
         this.db = jdbcTemplate;
         this.namedDb = template;
     }
