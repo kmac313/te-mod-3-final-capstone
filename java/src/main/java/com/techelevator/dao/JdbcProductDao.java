@@ -176,7 +176,7 @@ public class JdbcProductDao implements ProductDao{
     }
 
     @Override
-    public Product addProduct(Product product) {
+    public Product createProduct(Product product) {
         String sql = "INSERT INTO product (product_category_id, price, description, quantity) " +
                 "VALUES ((SELECT product_category_id FROM product_category WHERE product_category_description = ?), " +
                 "?, ?, ?) RETURNING product_id";
@@ -195,20 +195,27 @@ public class JdbcProductDao implements ProductDao{
     }
 
     @Override
-    public void deleteProductById(int productId) {
+    public int deleteProductById(int productId) {
         String sql = "DELETE FROM product WHERE product_id = ?";
+        int numRowsAffected = 0;
+
         try{
-            db.update(sql, productId);
+            numRowsAffected = db.update(sql, productId);
+            if(numRowsAffected == 0){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Product Not Found");
+            }
         } catch (DataIntegrityViolationException dive) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
         } catch (CannotGetJdbcConnectionException cgjce) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
+        return numRowsAffected;
     }
 
     @Override
     public Product updateProduct(Product product) {
-        String sql = "UPDATE product SET price = ?, description = ?, quantity = ?" +
+        String sql = "UPDATE product SET price = ?, description = ?, quantity = ?, " +
+                "product_category_id = (SELECT product_category_id FROM product_category WHERE product_category_description = ?)" +
                 "WHERE product_id = ?";
         int numRowsAffected = 0;
         Product updatedProduct = null;
@@ -216,7 +223,7 @@ public class JdbcProductDao implements ProductDao{
         System.out.println(product.getPrice());
         try{
             numRowsAffected=db.update(sql,
-                    product.getPrice(), product.getDescription(), product.getQuantity(),
+                    product.getPrice(), product.getDescription(), product.getQuantity(), product.getProductCategoryDescription(),
                     product.getProductId()
             );
             if (numRowsAffected == 0 ){

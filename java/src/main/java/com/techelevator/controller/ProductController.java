@@ -1,21 +1,15 @@
 package com.techelevator.controller;
 
-import com.techelevator.dao.InvoiceDao;
 import com.techelevator.dao.ProductDao;
 import com.techelevator.exception.DaoException;
-import com.techelevator.model.Customer;
-import com.techelevator.model.Invoice;
 import com.techelevator.model.Product;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -114,7 +108,7 @@ public class ProductController {
         product.setPrice(price);
         product.setDescription(description);
         product.setQuantity(quantity);
-        createdProduct = productDao.addProduct(product);
+        createdProduct = productDao.createProduct(product);
         return new ResponseEntity<Product>(createdProduct, HttpStatus.CREATED);
     }
 

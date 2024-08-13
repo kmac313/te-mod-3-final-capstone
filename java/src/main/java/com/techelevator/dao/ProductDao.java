@@ -16,8 +16,8 @@ public interface ProductDao {
     List<Product> filterOutPizzaProducts(List<Product> productList, List<Pizza> pizzaList);
     List<Product> getProductsByCategoryIds(int[] categoryIds);
     List<Product> getProductsByCategoryDescription(List<String> categoryDescriptions);
-    Product addProduct(Product product);
-    void deleteProductById(int productId);
+    Product createProduct(Product product);
+    int deleteProductById(int productId);
     Product updateProduct (Product product);
 
 

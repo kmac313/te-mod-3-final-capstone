@@ -99,6 +99,7 @@ public class JdbcPizzaDaoTests extends BaseDaoTests {
     public void t07_deletePizza_returns_correct_number_of_rows_affected_with_valid_id(){
         int testId = 100;
         Assert.assertEquals(1, sut.deletePizzaById(testId));
+        Assert.assertNull(sut.getPizzaById(testId));
     }
     @Test
     public void t08_updatePizza_returns_correct_number_of_rows_affected_with_valid_pizza(){
