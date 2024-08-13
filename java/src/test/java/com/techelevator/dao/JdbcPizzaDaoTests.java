@@ -103,13 +103,19 @@ public class JdbcPizzaDaoTests extends BaseDaoTests {
     @Test
     public void t08_updatePizza_returns_correct_number_of_rows_affected_with_valid_pizza(){
         Pizza pizza = sut.getPizzaById(100);
+        System.out.println(pizza);
         pizza.setTotal(BigDecimal.ZERO);
         pizza.setAdditionalInstructions("None");
         pizza.setInvoiceId(2);
         pizza.setPizzaName("A boring pizza");
         Pizza updatedPizza = sut.updatePizza(pizza);
+        System.out.println(updatedPizza);
 
-        Assert.assertEquals(0, );
+        Assert.assertEquals(0, updatedPizza.getTotal().compareTo(pizza.getTotal()));
+        Assert.assertTrue(pizza.getInvoiceId() == updatedPizza.getInvoiceId());
+        Assert.assertTrue(pizza.getPizzaId() == updatedPizza.getPizzaId());
+        Assert.assertTrue(pizza.getPizzaName().equals(updatedPizza.getPizzaName()));
+
     }
 
 
