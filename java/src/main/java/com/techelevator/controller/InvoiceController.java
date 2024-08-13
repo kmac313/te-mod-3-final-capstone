@@ -86,7 +86,7 @@ public class InvoiceController {
     }
 
     @RequestMapping(path = "/invoices", method = RequestMethod.POST)
-    public ResponseEntity<Invoice> createInvoice(@RequestBody Map<String, Object> placedOrder) {
+    public ResponseEntity<Invoice> createInvoice(@RequestBody Map<String, Object> placedOrder, Principal principal) {
         Invoice createdInvoice = null;
         Map<String, int[]> items = null;
         String creditCard = "";
@@ -113,7 +113,7 @@ public class InvoiceController {
 
         Invoice invoice = new Invoice();
         invoice.setTotal(BigDecimal.ZERO);
-        invoice.setUserId(1);
+        invoice.setUserId(userDao.getUserByUsername(principal.getName()).getId());
         invoice.setDelivery(isDelivery);
         invoice.setStatus("Pending");
         createdInvoice = invoiceDao.createInvoice(invoice);
@@ -196,8 +196,7 @@ public class InvoiceController {
         }
         Invoice oldInvoice = invoiceDao.getInvoiceById(invoiceId);
         if (!loggedInUser.getAuthorities().contains(new Authority("ROLE_ADMIN"))){
-            if (!oldInvoice.getTimestamp().equals(invoice.getTimestamp()) ||
-                    oldInvoice.isDelivery() != invoice.isDelivery() ||
+            if (oldInvoice.isDelivery() != invoice.isDelivery() ||
                     oldInvoice.getTotal().compareTo(invoice.getTotal()) != 0){
                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are only permitted to cancel this order");
             } else if (!oldInvoice.getStatus().equals(invoice.getStatus()) && !invoice.getStatus().equals("Cancelled")){

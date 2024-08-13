@@ -18,7 +18,7 @@ public class JdbcCustomerDao implements CustomerDao{
     private final JdbcTemplate db;
     private final UserDao userDao;
     private final String SELECT_SQL_BASE = "SELECT customer_id, first_name, last_name, street_address, city, zip_code, " +
-            " state_abbreviation, phone_number, email, username FROM customer ";
+            " state_abbreviation, phone_number, email, user_id FROM customer ";
 
     public JdbcCustomerDao(JdbcTemplate jdbcTemplate, UserDao userDao) {
         this.db = jdbcTemplate;
@@ -79,7 +79,7 @@ public class JdbcCustomerDao implements CustomerDao{
     public Customer createCustomer(Customer customer) {
         int newCustomerId = 0;
         String sql = "INSERT INTO customer (first_name, last_name, street_address, city, " +
-                "zip_code, state_abbreviation, phone_number, email, username) " +
+                "zip_code, state_abbreviation, phone_number, email, user_id) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING customer_id";
         try {
             newCustomerId = db.queryForObject(sql, int.class,
@@ -104,7 +104,7 @@ public class JdbcCustomerDao implements CustomerDao{
         Customer updatedCustomer = null;
         String sql = "UPDATE customer " +
                 "SET first_name = ?, last_name = ?, street_address = ?, city = ?, zip_code = ?, " +
-                "state_abbreviation = ?, phone_number = ?, email = ?, username = ? " +
+                "state_abbreviation = ?, phone_number = ?, email = ?, user_id = ? " +
                 "WHERE customer_id = ?";
         try {
             int rowsAffected = db.update(sql, customer.getFirstName(), customer.getLastName(), customer.getStreetAddress(),

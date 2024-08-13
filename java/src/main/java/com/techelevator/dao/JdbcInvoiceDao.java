@@ -163,7 +163,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
     @Override
     public List<Invoice> getInvoiceByStatus(String status) {
 
-        String sql = "SELECT invoice_id, user_id, total, is_delivery, status, timestamp FROM invoice" +
+        String sql = "SELECT invoice_id, user_id, total, is_delivery, status, timestamp FROM invoice " +
                 "WHERE status = ?" +
                 " ORDER BY invoice_id";
         List<Invoice> statusInvoices = new ArrayList<>();
@@ -207,7 +207,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
     }
 
     @Override
-    public void deleteInvoicesByCustomerId(int id) {
+    public void deleteInvoicesByUserId(int id) {
         String sql = "DELETE FROM invoice WHERE user_id = ?";
         try{
             db.update(sql, id);
