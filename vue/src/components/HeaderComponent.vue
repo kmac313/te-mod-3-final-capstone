@@ -33,10 +33,7 @@
         <router-link
           class="login-div-btn"
           v-bind:to="{ name: 'myOrders' }"
-          v-if="
-            $store.state.token !== '' &&
-            $store.state.user?.authorities[0].name !== 'ROLE_ADMIN'
-          "
+          v-if="!isAdmin"
           >My Orders</router-link
         >
         <router-link
@@ -134,9 +131,7 @@ export default {
     return {
       showToast: false,
       isShrunk: false,
-      isAdmin: localStorage.getItem("user")
-        ? this.$store.state.user?.authorities[0]?.name == "ROLE_ADMIN"
-        : null,
+      isAdmin: false,
     };
   },
 
@@ -190,6 +185,13 @@ export default {
     },
   },
   computed: {
+
+    adminUser() {
+      return localStorage.getItem("user")
+        ? this.$store.state.user?.authorities[0]?.name == "ROLE_ADMIN"
+        : null;
+    },
+
     storeShowCart() {
       return this.$store.state.showCart;
     },
@@ -203,6 +205,12 @@ export default {
 
   beforeUnmount() {
     window.removeEventListener("scroll", this.handleScroll);
+  },
+
+  updated() {
+    this.isAdmin =  localStorage.getItem("user")
+        ? this.$store.state.user?.authorities[0]?.name == "ROLE_ADMIN"
+        : null;
   },
 };
 </script>
