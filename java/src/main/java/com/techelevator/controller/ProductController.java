@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
@@ -98,17 +100,21 @@ public class ProductController {
         }
         */
 
-        String productCategoryDescription = (String)newProduct.get("product_category_description");
-        BigDecimal price = BigDecimal.valueOf((Double)newProduct.get("price"));
-        String description = (String)newProduct.get("description");
-        int quantity = (int)newProduct.get("quantity");
+        try {
+            String productCategoryDescription = (String)newProduct.get("product_category_description");
+            BigDecimal price = BigDecimal.valueOf((Double) newProduct.get("price"));
+            String description = (String)newProduct.get("description");
+            int quantity = (int)newProduct.get("quantity");
 
-        Product product = new Product();
-        product.setProductCategoryDescription(productCategoryDescription);
-        product.setPrice(price);
-        product.setDescription(description);
-        product.setQuantity(quantity);
-        createdProduct = productDao.createProduct(product);
+            Product product = new Product();
+            product.setProductCategoryDescription(productCategoryDescription);
+            product.setPrice(price);
+            product.setDescription(description);
+            product.setQuantity(quantity);
+            createdProduct = productDao.createProduct(product);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Product");
+        }
         return new ResponseEntity<Product>(createdProduct, HttpStatus.CREATED);
     }
 
