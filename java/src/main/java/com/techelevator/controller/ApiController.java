@@ -135,7 +135,7 @@ public class ApiController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "INVALID ADDRESSES");
         }
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>( inRange? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
     @RequestMapping(path = "/test", method = RequestMethod.GET)
     public ResponseEntity<Object> test (){
