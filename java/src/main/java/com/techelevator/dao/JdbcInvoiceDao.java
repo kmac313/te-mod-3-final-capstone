@@ -70,8 +70,7 @@ public class JdbcInvoiceDao implements InvoiceDao{
         List<Integer> toInts = new ArrayList<>();
         String sql = "SELECT invoice_id, invoice.user_id, total, is_delivery, status, timestamp" +
                 " FROM invoice " +
-                "JOIN customer c ON invoice.user_id = c.user_id " +
-                "ORDER BY invoice_id;";
+                "JOIN customer c ON invoice.user_id = c.user_id ";
         if(!from.equals("0")) {
             for (String s : from.split("-")) {
                 fromInts.add(Integer.parseInt(s));
@@ -87,19 +86,20 @@ public class JdbcInvoiceDao implements InvoiceDao{
         try{
 
             if(!from.equals("0") && !to.equals("0")){
-                sql+="WHERE timestamp BETWEEN make_date(?,?,?) AND make_date(?,?,?) ";
+                sql+="WHERE timestamp BETWEEN make_date(?,?,?) AND make_date(?,?,?) ORDER BY invoice_id DESC, status DESC;";
                 results = db.queryForRowSet(sql,
                         fromInts.get(0),fromInts.get(1),fromInts.get(2),
                         toInts.get(0), toInts.get(1), toInts.get(2));
             } else if (!from.equals("0") && to.equals("0")) {
-                sql += "WHERE timestamp >= make_date(?,?,?) ";
+                sql += "WHERE timestamp >= make_date(?,?,?) ORDER BY invoice_id DESC, status DESC;";
                 results = db.queryForRowSet(sql,
                         fromInts.get(0),fromInts.get(1),fromInts.get(2));
             }else if (from.equals("0") && !to.equals("0")){
-                sql += "WHERE timestamp <= make_date(?,?,?) ";
+                sql += "WHERE timestamp <= make_date(?,?,?) ORDER BY invoice_id DESC, status DESC;";
                 results = db.queryForRowSet(sql,
                         toInts.get(0), toInts.get(1), toInts.get(2));
             } else {
+                sql += " ORDER BY invoice_id DESC, status DESC;";
                 results = db.queryForRowSet(sql);
             }
 

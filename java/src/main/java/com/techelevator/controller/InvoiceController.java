@@ -40,7 +40,11 @@ public class InvoiceController {
 
         List<Invoice> invoices = null;
         User user = userDao.getUserByUsername(principal.getName());
-        invoices = invoiceDao.getInvoices(from, to, user);
+        try {
+            invoices = invoiceDao.getInvoices(from, to, user);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad Parameters");
+        }
         if (!status.equals("all")){
             List<String> statusList = new ArrayList<>();
             for (String s : status.split(",")){
