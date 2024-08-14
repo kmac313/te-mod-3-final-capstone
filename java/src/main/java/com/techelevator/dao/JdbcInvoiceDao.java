@@ -27,7 +27,8 @@ public class JdbcInvoiceDao implements InvoiceDao{
     @Override
     public Invoice getInvoiceById(int id) {
         String sql = "SELECT invoice_id, user_id, total, is_delivery, status, timestamp FROM invoice " +
-                "WHERE invoice_id = ?";
+                "WHERE invoice_id = ? " +
+                "ORDER BY status DESC, invoice_id DESC";
         Invoice invoice = null;
         try{
             SqlRowSet result = db.queryForRowSet(sql, id);
@@ -45,8 +46,8 @@ public class JdbcInvoiceDao implements InvoiceDao{
     @Override
     public List<Invoice> getInvoicesByUserId(int id) {
         String sql = "SELECT invoice_id, user_id, total, is_delivery, status, timestamp FROM invoice " +
-                "WHERE user_id = ?" +
-                " ORDER BY invoice_id";
+                "WHERE user_id = ? " +
+                "ORDER BY status DESC, invoice_id DESC";
         List<Invoice> customerInvoices = new ArrayList<>();
         try{
             SqlRowSet results = db.queryForRowSet(sql, id);
@@ -70,12 +71,13 @@ public class JdbcInvoiceDao implements InvoiceDao{
         List<Integer> toInts = new ArrayList<>();
         String sql = "SELECT invoice_id, invoice.user_id, total, is_delivery, status, timestamp" +
                 " FROM invoice " +
-                "JOIN customer c ON invoice.user_id = c.user_id ";
+                "JOIN customer c ON invoice.user_id = c.user_id " +
+                "ORDER BY status DESC, invoice_id DESC";
         if(!from.equals("0")) {
             for (String s : from.split("-")) {
                 fromInts.add(Integer.parseInt(s));
             }
-        }
+        }//TODO order by  on everything
         if (!to.equals("0")) {
             for (String s : to.split("-")) {
                 toInts.add(Integer.parseInt(s));
@@ -95,10 +97,12 @@ public class JdbcInvoiceDao implements InvoiceDao{
                 results = db.queryForRowSet(sql,
                         fromInts.get(0),fromInts.get(1),fromInts.get(2));
             }else if (from.equals("0") && !to.equals("0")){
-                sql += "WHERE timestamp <= make_date(?,?,?) ";
+                sql += "WHERE timestamp <= make_date(?,?,?) " +
+                        "ORDER BY status DESC, invoice_id DESC";
                 results = db.queryForRowSet(sql,
                         toInts.get(0), toInts.get(1), toInts.get(2));
             } else {
+                sql += " ORDER BY status DESC, invoice_id DESC";
                 results = db.queryForRowSet(sql);
             }
 
@@ -164,8 +168,8 @@ public class JdbcInvoiceDao implements InvoiceDao{
     public List<Invoice> getInvoiceByStatus(String status) {
 
         String sql = "SELECT invoice_id, user_id, total, is_delivery, status, timestamp FROM invoice " +
-                "WHERE status = ?" +
-                " ORDER BY invoice_id";
+                "WHERE status = ? " +
+                "ORDER BY status DESC, invoice_id DESC";
         List<Invoice> statusInvoices = new ArrayList<>();
         try{
             SqlRowSet results = db.queryForRowSet(sql, status);

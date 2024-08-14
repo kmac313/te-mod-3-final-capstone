@@ -51,4 +51,5 @@ public class InvoiceControllerTests {
         }
         Assert.assertTrue(invoices.size() > 0);
     }
+
 }

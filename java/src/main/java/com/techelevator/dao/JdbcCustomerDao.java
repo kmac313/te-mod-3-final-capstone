@@ -27,7 +27,7 @@ public class JdbcCustomerDao implements CustomerDao{
     @Override
     public List<Customer> getCustomers() {
         List<Customer> allCustomers = new ArrayList<>();
-        String sql = SELECT_SQL_BASE;
+        String sql = SELECT_SQL_BASE + " ORDER BY first_name";
         try {
             SqlRowSet results = db.queryForRowSet(sql);
             while (results.next()){

@@ -24,7 +24,8 @@ public class JdbcPizzaDao implements PizzaDao{
     }
     @Override
     public List<Pizza> getPizzas() {
-        String sql = "SELECT invoice_id, pizza_id, pizza_name, total, additional_instructions FROM pizza pi ";
+        String sql = "SELECT invoice_id, pizza_id, pizza_name, total, additional_instructions FROM pizza pi " +
+                "ORDER BY pizza_id";
         /*String sql = "SELECT p.product_id, p.product_category_id, pc.product_category_description,p.price, " +
                 "p.description, pi.pizza_id, pi.invoice_id,pi.pizza_name, pi.total, pi.additional_instructions, p.quantity " +
                 "FROM pizza pi " +
@@ -73,7 +74,8 @@ public class JdbcPizzaDao implements PizzaDao{
         List<Pizza> pizzas = new ArrayList<>();
         String sql = "SELECT pi.pizza_id, pi.invoice_id, " +
                 "pi.pizza_name, pi.total, pi.additional_instructions FROM pizza pi " +
-                "WHERE invoice_id = ? ";
+                "WHERE invoice_id = ? " +
+                "ORDER BY pizza_id";
         try{
             SqlRowSet results = db.queryForRowSet(sql, invoiceId);
             while(results.next()){
