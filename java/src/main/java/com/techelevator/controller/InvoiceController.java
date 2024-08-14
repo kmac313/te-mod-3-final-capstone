@@ -31,7 +31,7 @@ public class InvoiceController {
         this.userDao = userDao;
     }
 
-    @RequestMapping(path = "/invoices", method = RequestMethod.GET)
+    @RequestMapping(path = "/invoice", method = RequestMethod.GET)
     //TODO BONUS Use requestParams to include all possible filters for invoices
     public ResponseEntity<List<Invoice>> getInvoices(@RequestParam(defaultValue = "0") String from,
                                                      @RequestParam(defaultValue = "0") String to,
@@ -57,7 +57,7 @@ public class InvoiceController {
         }
         return new ResponseEntity<List<Invoice>>(invoices, HttpStatus.OK);
     }
-    @RequestMapping(path = "/invoices/{invoiceId}", method = RequestMethod.GET)
+    @RequestMapping(path = "/invoice/{invoiceId}", method = RequestMethod.GET)
     public ResponseEntity<Map<String, Object>> getInvoiceById(@PathVariable int invoiceId, Principal principal) {
         int loggedInUserId = userDao.getUserByUsername(principal.getName()).getId();
         User loggedInUser = userDao.getUserByUsername(principal.getName());
@@ -85,7 +85,7 @@ public class InvoiceController {
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/invoices", method = RequestMethod.POST)
+    @RequestMapping(path = "/invoice", method = RequestMethod.POST)
     public ResponseEntity<Invoice> createInvoice(@RequestBody Map<String, Object> placedOrder, Principal principal) {
         Invoice createdInvoice = null;
         Map<String, int[]> items = null;
@@ -180,9 +180,10 @@ public class InvoiceController {
     }
 
 
-    @RequestMapping(path = "/invoices", method = RequestMethod.PUT)
-    public ResponseEntity<Invoice>updateInvoice (@RequestBody Invoice invoice,  Principal principal) {
-        int invoiceId = invoice.getInvoiceId(); //invoiceId of invoice to be updated
+    @RequestMapping(path = "/invoice/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Invoice>updateInvoice (@RequestBody Invoice invoice, @PathVariable int id,
+                                                 Principal principal) {
+        int invoiceId = id; //invoiceId of invoice to be updated
         int loggedInUserId = userDao.getUserByUsername(principal.getName()).getId();
         User loggedInUser = userDao.getUserByUsername(principal.getName());
         List<Invoice>customerInvoices = invoiceDao.getInvoices("0","0",loggedInUser);

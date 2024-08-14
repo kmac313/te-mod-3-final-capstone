@@ -85,7 +85,7 @@ public class ProductController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @RequestMapping(path = "/product", method = RequestMethod.POST)
+    @RequestMapping(path = "/menu/add", method = RequestMethod.POST)
     public ResponseEntity<Product> createProduct(@RequestBody Map<String, Object> newProduct) {
         Product createdProduct;
          /* Object Structure for the product
@@ -128,4 +128,3 @@ public class ProductController {
         return new ResponseEntity<Product>(updatedProduct, HttpStatus.OK);
     }
     }
-    //TODO with front end present, enforce logical consistency across endpoint paths.
