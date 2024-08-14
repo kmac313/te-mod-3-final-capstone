@@ -33,13 +33,13 @@
         <router-link
           class="login-div-btn"
           v-bind:to="{ name: 'myOrders' }"
-          v-if="!isAdmin"
+          v-if="role == 'ROLE_USER'"
           >My Orders</router-link
         >
         <router-link
           class="login-div-btn"
           v-bind:to="{ name: 'admin' }"
-          v-if="isAdmin"
+          v-if="role == 'ROLE_ADMIN'"
           >Admin Dashboard</router-link
         >
 
@@ -94,11 +94,11 @@
         "
         @click="toggleMobileMenu"
       >
-        <router-link class="login-div-btn" v-bind:to="{ name: 'myOrders' }"
+        <router-link v-if="role == 'ROLE_USER'" class="login-div-btn" v-bind:to="{ name: 'myOrders' }"
           >My Orders</router-link
         >
       </li>
-      <li v-if="isAdmin" @click="toggleMobileMenu">
+      <li v-if="role == 'ROLE_ADMIN'" @click="toggleMobileMenu">
         <router-link class="login-div-btn" v-bind:to="{ name: 'admin' }"
           >Admin Dashboard</router-link
         >
@@ -131,7 +131,7 @@ export default {
     return {
       showToast: false,
       isShrunk: false,
-      isAdmin: false,
+      role: null
     };
   },
 
@@ -208,9 +208,11 @@ export default {
   },
 
   updated() {
-    this.isAdmin =  localStorage.getItem("user")
-        ? this.$store.state.user?.authorities[0]?.name == "ROLE_ADMIN"
-        : null;
+    if(localStorage.getItem("user")) {
+      this.role = JSON.parse(localStorage.getItem("user")).authorities[0].name
+    } else {
+      this.role = null
+    }
   },
 };
 </script>

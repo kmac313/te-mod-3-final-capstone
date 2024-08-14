@@ -163,28 +163,34 @@ export default {
   padding: 10px 20px;
   font-size: 1em;
   cursor: pointer;
-  background-color: #e61d25; /* Red color for the button */
-  color: white; /* White text color */
-  border: none; /* Remove default border */
-  border-radius: 25px; /* Rounded corners */
-  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  background-color: #e61d25; 
+  color: white; 
+  border: none; 
+  border-radius: 25px; 
+  transition: background-color 0.3s ease; 
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
 }
 
-/* Hover Effect */
+
 .toppings-table-container button:hover {
-  background-color: #c51b20; /* Slightly darker red on hover */
+  background-color: #c51b20; 
 }
 
-/* Active/Pressed Effect */
+
 .toppings-table-container button:active {
-  background-color: #a31418; /* Even darker red when the button is pressed */
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Reduced shadow on press */
+  background-color: #a31418; 
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); 
 }
 
-/* Focus Effect for Accessibility */
+
 .toppings-table-container button:focus {
-  outline: none; /* Remove default focus outline */
-  box-shadow: 0 0 0 3px rgba(230, 29, 37, 0.4); /* Add a focus ring for accessibility */
+  outline: none; 
+  box-shadow: 0 0 0 3px rgba(230, 29, 37, 0.4); 
+}
+
+@media screen and (max-width: 890px) {
+  .toppings-table-container table {
+    overflow-x: scroll;
+  }
 }
 </style>

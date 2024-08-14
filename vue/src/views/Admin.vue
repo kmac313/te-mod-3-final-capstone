@@ -88,21 +88,12 @@ export default {
   text-align: center;
 }
 
-/* Media Queries for responsiveness */
-/* @media (max-width: 1024px) and (min-width: 891px) {
-  .admin-content-container {
-    margin-left: 20px; 
-    width: calc(100% - 20px); 
-  }
 
-  .admin-container {
-    flex-direction: column;
-  }
-} */
 
 @media (max-width: 890px) {
   .admin-container {
     flex-direction: column; 
+    width: 100vw;
   }
   
   .admin-content-container {

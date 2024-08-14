@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Choose a Start and End date</h2>
+    <h2 class="dates-header">Choose a Start and End date</h2>
     <div class="search-dates-container">
         
       <div>
@@ -284,7 +284,7 @@ export default {
 }
 
 table {
-  width: 100%;
+  width: 80%;
   border-collapse: collapse;
   border: 2px solid #ddd;
 }
@@ -297,6 +297,7 @@ thead th {
   padding: 12px;
   border-bottom: 2px solid #e61d25;
   text-transform: uppercase;
+  width: 25%;
 }
 
 tbody tr {
@@ -329,5 +330,27 @@ input[type='date'] {
 .order-header {
     margin-top: 90px;
     text-align: center;
+}
+
+@media screen and (max-width: 820px) {
+  .search-dates-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .dates-header {
+    text-align: center;
+  }
+
+  table {
+    overflow-x: scroll;
+    width: 95%;
+    margin: 0 auto;
+  }
+
+  .table-wrapper {
+    overflow-x: scroll;
+  }
 }
 </style>

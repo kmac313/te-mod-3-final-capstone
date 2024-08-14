@@ -43,8 +43,13 @@ export default {
   methods: {
     getAllOrders() {
       invoiceService.getOrders().then((data) => {
-        console.log(data);
-      })
+        for (let invoice of data.data) {
+          this.$store.commit("ADD_INVOICE", invoice);
+        }
+
+        this.allInvoices = this.$store.state.allInvoices;
+        
+      });
     },
     hideOrderPopUp() {
       this.showOrder = false;
@@ -77,6 +82,8 @@ export default {
     if(user?.authorities[0]?.name == 'ROLE_ADMIN') {
       this.$router.replace('/admin')
     }
+
+    this.getAllOrders();
    
   }
 }

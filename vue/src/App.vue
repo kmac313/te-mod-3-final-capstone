@@ -29,12 +29,12 @@ export default {
   },
   methods: {
     addProducts() {
-      invoiceService.getOrders().then((data) => {
-        for (let invoice of data.data) {
-          this.$store.commit("ADD_INVOICE", invoice);
-        }
+      // invoiceService.getOrders().then((data) => {
+      //   for (let invoice of data.data) {
+      //     this.$store.commit("ADD_INVOICE", invoice);
+      //   }
         
-      });
+      // });
 
       productService.getProducts().then((data) => {
         const categories = {
