@@ -192,6 +192,7 @@ public class InvoiceController {
             customerInvoiceIds.add(i.getInvoiceId());
         }
         if(!customerInvoiceIds.contains(invoiceId)){ //Denies customers from accessing an invoice that isn't theirs.
+
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to update this" +
                     "invoice");
         }

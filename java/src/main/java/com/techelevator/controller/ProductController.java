@@ -102,7 +102,7 @@ public class ProductController {
 
         try {
             String productCategoryDescription = (String)newProduct.get("product_category_description");
-            BigDecimal price = BigDecimal.valueOf((Double) newProduct.get("price"));
+            BigDecimal price = new BigDecimal((String) newProduct.get("price"));
             String description = (String)newProduct.get("description");
             int quantity = (int)newProduct.get("quantity");
 
