@@ -58,7 +58,14 @@ export function createStore(currentToken, currentUser) {
 
         allInvoices: [
 
-        ]
+        ],
+
+        storeAddress: {
+                      street_address: "5867 Mayfield Road",
+                      city: "Mayfield Heights",
+                      state_abbreviation:"OH",
+                      zip_code:"44124"
+                  }
     },
     
     mutations: {

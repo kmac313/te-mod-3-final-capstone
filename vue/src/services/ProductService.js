@@ -93,7 +93,7 @@ export default {
     })
   },
   createProduct(product) {
-    return http.post(`/product`, 
+    return http.post(`/menu/add`, 
       product
     ,
     {

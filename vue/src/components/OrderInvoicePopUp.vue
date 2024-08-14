@@ -111,7 +111,7 @@ export default {
       this.isComplete = "Cancelled";
       console.log(newInvoice);
       invoiceService
-        .updateOrder(newInvoice.invoiceId, newInvoice)
+        .updateOrder(newInvoice.invoice_id, newInvoice)
         .then((data) => {
           this.$emit("update-order", {
             pizza: [...this.order.pizzas],
@@ -131,7 +131,7 @@ export default {
       this.isComplete = "Complete";
       console.log(newInvoice);
       invoiceService
-        .updateOrder(newInvoice.invoiceId, newInvoice)
+        .updateOrder(newInvoice.invoice_id, newInvoice)
         .then((data) => {
           this.$emit("update-order", {
             pizza: [...this.order.pizzas],
@@ -150,7 +150,7 @@ export default {
       this.isComplete = "Ready";
       console.log(newInvoice);
       invoiceService
-        .updateOrder(newInvoice.invoiceId, newInvoice)
+        .updateOrder(newInvoice.invoice_id, newInvoice)
         .then((data) => {
           this.$emit("update-order", {
             pizza: [...this.order.pizzas],

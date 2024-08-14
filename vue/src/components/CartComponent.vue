@@ -154,7 +154,7 @@
             <input
               required
               type="text"
-              placeholder="State"
+              placeholder="State Abbreviation"
               name="state"
               v-model="state"
             />
@@ -169,9 +169,11 @@
 </template>
 
 <script>
+
 import Toast from "../components/Toast.vue";
 import customerService from "../services/CustomerService";
 import invoiceService from "../services/InvoiceService";
+import locationService from "../services/LocationService";
 import productService from "../services/ProductService";
 
 export default {
@@ -204,6 +206,37 @@ export default {
   },
   methods: {
     submitOrder() {
+      if (
+        this.$store.state.isDelivery.orderType == "delivery" &&
+        this.state.length !== 2
+      ) {
+        this.toastMessage = "Incorrect state abbreviation. Please try again";
+        this.showToast = true;
+        setTimeout(() => {
+          this.showToast = false;
+        }, 3500);
+        return;
+      }
+
+      if (this.$store.state.isDelivery.orderType == "delivery") {
+        let customerAddress = {
+          street_address: this.street.replaceAll(' ', '%20'),
+          city: this.city.replaceAll(" ", '%20'),
+          state_abbreviation: this.state.trim(),
+          zip_code: this.zipcode.trim(),
+        };
+
+        let storeAddress = {
+          street_address: this.$store.state.storeAddress.street_address.replaceAll(' ', '%20'),
+          city: this.$store.state.storeAddress.city.replaceAll(" ", '%20'),
+          state_abbreviation: this.$store.state.storeAddress.state_abbreviation.trim(),
+          zip_code: this.$store.state.storeAddress.zip_code.trim()
+
+        };
+        let sendAddress = [customerAddress, storeAddress];
+        locationService.validateAddress(sendAddress).then((data) => console.log(data));
+      }
+
       let pizzaItems = this.$store.state.cart.pizza;
       if (pizzaItems.length > 0) {
         for (let pizza of pizzaItems) {
@@ -222,6 +255,7 @@ export default {
       };
       console.log(newInvoice);
       let responseInvoice = {};
+
       invoiceService.sendOrder(newInvoice).then((data) => {
         responseInvoice = data.data;
         try {
@@ -274,10 +308,10 @@ export default {
       if (responseInvoice) {
         let userInfo = JSON.parse(this.username);
 
-        if(userInfo){
+        if (userInfo) {
           try {
-        console.log(userInfo);
-        let newCustomer = {
+            console.log(userInfo);
+            let newCustomer = {
               firstName: this.firstName,
               lastName: this.lastName,
               streetAddress: this.street,
@@ -286,20 +320,19 @@ export default {
               stateAbbreviation: this.state,
               phoneNumber: this.phoneNumber,
               email: this.email,
-              user_id: userInfo.id
+              user_id: userInfo.id,
             };
 
             customerService.addCustomer(newCustomer).then((data) => {
-              console.log('Added customer')
-              this.$router.replace('/myorders')
+              console.log("Added customer");
+              this.$router.replace("/myorders");
             });
-
-          } catch(error) {
-            console.log('This customer already exists');
+          } catch (error) {
+            console.log("This customer already exists");
           }
         }
-        
-          this.$router.replace('/myorders')
+
+        this.$router.replace("/myorders");
 
         // console.log(newCustomer)
       }

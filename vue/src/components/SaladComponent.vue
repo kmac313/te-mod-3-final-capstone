@@ -82,7 +82,6 @@ export default {
   border-radius: 9px 0px 0px 9px;
   background-image: url('../assets/Hawian.jpg');
   padding: 0px 30px;
-  width: 200px
 }
 
 .salad-card-container .salad-card-details {
@@ -114,5 +113,31 @@ export default {
 .salad-card-text-container {
   width: 70%;
   padding: 0px 10px;
+}
+
+@media screen and (max-width: 680px) {
+  .salad-card-container {
+    grid-template-columns: 1fr;
+    padding: 0px;
+    width: 100%;
+  }
+  .salad-card {
+    border-radius: 9px 9px 0px 0px;
+  }
+  .salad-card-container .salad-card-details {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 20px;
+  }
+  .salad-card-text-container {
+    width: 100%;
+    padding-bottom: 10px;
+  }
+  .add-to-cart-btn,
+  .out-of-stock-btn {
+    width: 100%;
+    padding: 10px;
+    height: auto;
+  }
 }
 </style>

@@ -107,5 +107,23 @@
     font-weight: 700;
     margin-bottom: 20px;
   }
+
+  @media screen and (max-width: 680px) {
+  .salad-view-components {
+    width: 100%;
+  }
+
+  .salad-view-container {
+    margin-bottom: 0px;
+  }
+
+  
+}
+
+@media screen and (max-width: 1080px) and (min-width: 681px) {
+  .salad-view-components {
+    width: 95%;
+  }
+}
   </style>
   

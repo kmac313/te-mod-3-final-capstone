@@ -9,7 +9,7 @@ const token = localStorage.getItem('token')
 export default {
     sendOrder(order) {
       console.log(token)
-        return http.post('/invoices', 
+        return http.post('/invoice', 
           order,
           {
           headers: {
@@ -20,22 +20,22 @@ export default {
 
     getOrders() {
       
-      return http.get('/invoices', {
+      return http.get('/invoice', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       })
     },
     getOrderByInvoiceId(id) {
-      return http.get(`/invoices/${id}`, {
+      return http.get(`/invoice/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       })
     },
     updateOrder(id, invoice) {
-      console.log(token)
-      return http.put(`/invoices`, 
+      console.log(id)
+      return http.put(`/invoice/${id}`, 
         invoice, 
         {
           headers: {

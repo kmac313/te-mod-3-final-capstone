@@ -139,7 +139,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .drink-size-pop-up-container {
   display: flex;
   justify-content: center;
@@ -254,5 +254,14 @@ export default {
   text-align: center;
   font-size: 2em;
   margin: 5px;
+}
+
+@media screen and (max-width: 680px) {
+  .drink-size-option-container {
+    width: 95%;
+  }
+  .drink-size-option-container h2 {
+    text-align: center;
+  }
 }
 </style>
