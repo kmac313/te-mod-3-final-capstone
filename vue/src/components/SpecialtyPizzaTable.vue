@@ -22,7 +22,7 @@
           <tbody>
             <tr v-for="(pizza, index) in pizzas" :key="index">
               <td>{{ pizza?.description }}</td>
-              <td>${{ pizza?.price && pizza?.price.toFixed(2) }}</td>
+              <td>${{ pizza?.price && pizza?.price }}</td>
               <td>{{ pizza?.quantity > 0 ? 'Available' : 'Unavailable'}}</td>
               <td><input v-on:change="addPizzaToUpdatingPizzas(pizza)" type="checkbox"></td>
             </tr>
@@ -120,7 +120,7 @@
             }, 2500)
             return
         } else {
-            let newPrice = parseFloat(parseFloat(this.newPizzaPrice).toFixed(2));
+            let newPrice = parseFloat(this.newPizzaPrice).toFixed(2);
             let newPizza = {
             product_id : null,
             product_category_description : "Specialty Pizza",
