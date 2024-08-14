@@ -194,29 +194,38 @@ public class JdbcInvoiceDao implements InvoiceDao{
     }
 
     @Override
-    public void deleteInvoiceById(int id) {
+    public int deleteInvoiceById(int id) {
         String sql = "DELETE FROM invoice WHERE invoice_id = ?";
+        int numRowsAffected = 0;
         try{
-            db.update(sql, id);
+            numRowsAffected = db.update(sql, id);
+            if (numRowsAffected == 0 ){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invoice Not Found");
+            }
         } catch (DataIntegrityViolationException dive) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
         } catch (CannotGetJdbcConnectionException cgjce) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
+        return numRowsAffected;
 
     }
 
     @Override
-    public void deleteInvoicesByUserId(int id) {
+    public int deleteInvoicesByUserId(int id) {
         String sql = "DELETE FROM invoice WHERE user_id = ?";
+        int numRowsAffected = 0;
         try{
-            db.update(sql, id);
+            numRowsAffected = db.update(sql, id);
+            if (numRowsAffected == 0 ){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invoice Not Found");
+            }
         } catch (DataIntegrityViolationException dive) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
         } catch (CannotGetJdbcConnectionException cgjce) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
-
+        return numRowsAffected;
     }
 
     @Override

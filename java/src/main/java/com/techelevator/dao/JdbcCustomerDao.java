@@ -104,7 +104,7 @@ public class JdbcCustomerDao implements CustomerDao{
         Customer updatedCustomer = null;
         String sql = "UPDATE customer " +
                 "SET first_name = ?, last_name = ?, street_address = ?, city = ?, zip_code = ?, " +
-                "state_abbreviation = ?, phone_number = ?, email = ?, user_id = ? " +
+                "state_abbreviation = ?, phone_number = ?::numeric, email = ?, user_id = ? " +
                 "WHERE customer_id = ?";
         try {
             int rowsAffected = db.update(sql, customer.getFirstName(), customer.getLastName(), customer.getStreetAddress(),
@@ -125,27 +125,37 @@ public class JdbcCustomerDao implements CustomerDao{
     }
 
     @Override
-    public void deleteCustomerById(int id) {
+    public int deleteCustomerById(int id) {
         String sql = "DELETE FROM customer WHERE customer_id = ?";
-        try {
-            db.update(sql, id);
+        int numRowsAffected = 0;
+        try{
+            numRowsAffected = db.update(sql, id);
+            if (numRowsAffected == 0 ){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invoice Not Found");
+            }
         } catch (DataIntegrityViolationException dive) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
         } catch (CannotGetJdbcConnectionException cgjce) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
+        return numRowsAffected;
     }
 
     @Override
-    public void deleteCustomerByUserId(int userId) {
+    public int deleteCustomerByUserId(int userId) {
         String sql = "DELETE FROM customer WHERE user_id = ?";
-        try {
-            db.update(sql, userId);
+        int numRowsAffected = 0;
+        try{
+            numRowsAffected = db.update(sql, userId);
+            if (numRowsAffected == 0 ){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invoice Not Found");
+            }
         } catch (DataIntegrityViolationException dive) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, dive.getMessage());
         } catch (CannotGetJdbcConnectionException cgjce) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, cgjce.getMessage());
         }
+        return numRowsAffected;
     }
 
     @Override

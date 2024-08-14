@@ -16,7 +16,7 @@ public interface InvoiceDao {
 
     List<Invoice> getInvoiceByStatus(String status);
     void createInvoiceProduct(int invoiceId, int productId);
-    void deleteInvoiceById(int id);
-    void deleteInvoicesByUserId(int id);
+    int deleteInvoiceById(int id);
+    int deleteInvoicesByUserId(int id);
     public Invoice mapRowSet(SqlRowSet rowSet);
 }

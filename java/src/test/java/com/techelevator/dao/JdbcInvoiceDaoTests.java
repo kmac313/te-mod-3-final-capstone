@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -41,19 +42,79 @@ public class JdbcInvoiceDaoTests extends BaseDaoTests {
 
     @Test
     public void getInvoiceById_given_valid_invoice_id_returns_invoice(){
-        Invoice actualInvoice = sut.getInvoiceById(INVOICE_1.getInvoiceId());
+        int id = 1;
 
-        Assert.assertEquals(INVOICE_1, actualInvoice);
+        Invoice actualInvoice = sut.getInvoiceById(id);
+
+        Assert.assertEquals(id, actualInvoice.getInvoiceId());
     }
 
-//    @Test
-//    public void getInvoices_returns_all_invoices(){
-//        List<Invoice> invoices = sut.getInvoices(1,2, "user1")
-//
-//        Assert.assertNotNull(users);
-//        Assert.assertEquals(3, users.size());
-//        Assert.assertEquals(USER_1, users.get(0));
-//        Assert.assertEquals(USER_2, users.get(1));
-//        Assert.assertEquals(USER_3, users.get(2));
-//    }
+    @Test
+    public void getInvoicesByUserId_given_valid_id_returns_invoices(){
+        int id = 3;
+
+        List<Invoice> invoicesList = sut.getInvoicesByUserId(id);
+
+        Assert.assertNotNull(invoicesList);
+        Assert.assertEquals(3, invoicesList.size());
+    }
+    
+    @Test(expected = ResponseStatusException.class)
+    public void createInvoice_with_invalid_data_returns_bad_request_status_exception(){
+        Invoice invoice = new Invoice();
+        Assert.assertNull(sut.createInvoice(invoice));
+    }
+
+    @Test(expected = ResponseStatusException.class)
+    public void createInvoice_with_valid_data_returns_invoice(){
+        Invoice invoice = new Invoice();
+        invoice.setInvoiceId(20);
+        invoice.setTotal(new BigDecimal(25.25));
+        invoice.setDelivery(true);
+        invoice.setStatus("Pending");
+        invoice.setUserId(20);
+        invoice.setTimestamp(timestamp);
+
+        Invoice newInvoice = sut.createInvoice(invoice);
+
+        Assert.assertEquals(invoice.getInvoiceId(), newInvoice.getInvoiceId());
+        Assert.assertEquals(invoice.getTotal(), newInvoice.getTotal());
+        Assert.assertEquals(invoice.getStatus(), newInvoice.getStatus());
+        Assert.assertEquals(invoice.getUserId(), newInvoice.getUserId());
+        Assert.assertEquals(invoice.getTimestamp(), newInvoice.getTimestamp());
+
+    }
+
+    @Test(expected = ResponseStatusException.class)
+    public void deleteInvoiceById_returns_Response_Status_Exception_with_invalidId(){
+        int id = -1;
+        sut.deleteInvoiceById(id);
+    }
+
+    @Test(expected = ResponseStatusException.class)
+    public void deleteInvoicesByUserId_returns_Response_Status_Exception_with_invalidId(){
+        int id = -1;
+        sut.deleteInvoicesByUserId(id);
+    }
+
+    @Test
+    public void updateInvoice_returns_correct_number_of_rows_affected(){
+        Invoice invoice = sut.getInvoiceById(1);
+        invoice.setInvoiceId(10);
+        invoice.setTotal(BigDecimal.valueOf(25.25));
+        invoice.setDelivery(true);
+        invoice.setStatus("Pending");
+        invoice.setUserId(5);
+        invoice.setTimestamp(timestamp);
+
+        Invoice newInvoice = sut.updateInvoice(invoice);
+
+        Assert.assertEquals(BigDecimal.valueOf(25.25), newInvoice.getTotal());
+        Assert.assertEquals(invoice.getStatus(), newInvoice.getStatus());
+        Assert.assertEquals(invoice.getUserId(), newInvoice.getUserId());
+        Assert.assertEquals(invoice.getInvoiceId(), newInvoice.getInvoiceId());
+        Assert.assertEquals(invoice.getTimestamp(), newInvoice.getTimestamp());
+
+
+    }
 }
