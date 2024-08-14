@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Map;
 
-@SpringBootTest
+@SpringBootTest (webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class InvoiceControllerTests {
     private RestTemplate http;
     private HttpHeaders header;
