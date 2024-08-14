@@ -14,6 +14,15 @@ export default {
     HeroComponent,
     FeaturedComponent,
   },
-  
 };
 </script>
+<style scoped>
+.home {
+  width: 100vw;
+}
+@media screen and (max-width: 480px) {
+  .home {
+    margin-bottom: 1400px;
+  }
+}
+</style>

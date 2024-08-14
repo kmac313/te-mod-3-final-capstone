@@ -1,5 +1,5 @@
 <template>
-    <div class="toppings-table-container">
+    <div class="toppings-table-container-inventory">
       <div class="table-wrapper">
         <table v-if="toppings.length > 0">
           <thead>
@@ -152,14 +152,15 @@
   </script>
   
   <style>
-  .toppings-table-container {
+  .toppings-table-container-inventory {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
+    height: auto;
   }
   
-  .toppings-table-container h2 {
+  .toppings-table-container-inventory h2 {
     text-transform: uppercase;
     font-size: 2em;
     font-weight: bold;
@@ -172,18 +173,18 @@
     text-align: center;
   }
 
-  .toppings-table-container { 
+  .toppings-table-container-inventory { 
     height: 100%;
   }
   
-  .toppings-table-container table {
+  .toppings-table-container-inventory table {
     width: 100%;
     border-collapse: collapse;
     border: 2px solid #ddd; 
     height: 100%;
   }
   
-  .toppings-table-container thead th {
+  .toppings-table-container-inventory thead th {
     position: sticky;
     top: 0;
     background-color: #f8f8f8; 
@@ -193,16 +194,16 @@
     text-transform: uppercase;
   }
   
-  .toppings-table-container tbody tr {
+  .toppings-table-container-inventory tbody tr {
     cursor: pointer;
     border-bottom: 1px solid #ddd; 
   }
   
-  .toppings-table-container tbody tr:hover {
+  .toppings-table-container-inventory tbody tr:hover {
     background-color: #f0f0f0; 
   }
   
-  .toppings-table-container td {
+  .toppings-table-container-inventory td {
     padding: 12px;
   }
   

@@ -1,85 +1,117 @@
 <template>
   <div class="admin-container">
     <SideBar 
-    @change-table-inventory="changeTableInventory" 
-    @change-table-order="changeTableOrder"
-    @change-table-specialty="changeTableSpecialty"
-    
+      @change-table-inventory="changeTableInventory" 
+      @change-table-order="changeTableOrder"
+      @change-table-specialty="changeTableSpecialty"
+      @change-table-history="changeTableHistory"
     />
     <div class="admin-content-container">
-        <h1 class="admin-table-heading">{{currentMenuOption}}</h1>
+      <h1 class="admin-table-heading">{{ currentMenuOption }}</h1>
 
-        <!-- v-if currentMenuOption == inventory -->
-        <!-- Inventory Table -->
-        <InventoryTable v-if="currentMenuOption == 'Inventory'" />
-        <!-- v-if currentMenuOption == orders -->
-        <!-- orders Table -->
-        <OrdersTable v-if="currentMenuOption == 'Orders'"/>
-        <!-- v-if currentMenuOption == specialty -->
-        <!-- SpecialtyPizza Table -->
-        <SpecialtyPizzaTable v-if="currentMenuOption == 'Specialty'" />
+      <!-- Inventory Table -->
+      <InventoryTable v-if="currentMenuOption === 'Inventory'" />
+      <!-- Orders Table -->
+      <OrdersTable v-if="currentMenuOption === 'Orders'" />
+      <!-- SpecialtyPizza Table -->
+      <SpecialtyPizzaTable v-if="currentMenuOption === 'Specialty'" />
+      <!-- Historical Data -->
+      <HistoricalChart v-if="currentMenuOption === 'History'" />
     </div>
-    
   </div>
 </template>
 
 <script>
+import HistoricalChart from '../components/HistoricalChart.vue';
 import InventoryTable from '../components/InventoryTable.vue';
 import OrdersTable from '../components/OrdersTable.vue';
 import SideBar from "../components/SideBar.vue";
 import SpecialtyPizzaTable from '../components/SpecialtyPizzaTable.vue';
+
 export default {
   data() {
     return {
-      currentMenuOption: 'Inventory'
-    }
+      currentMenuOption: 'Inventory',
+    };
   },
   methods: {
     changeTableInventory() {
-      this.currentMenuOption = 'Inventory'
+      this.currentMenuOption = 'Inventory';
     },
-
     changeTableOrder() {
-      this.currentMenuOption = 'Orders'
+      this.currentMenuOption = 'Orders';
     },
-
     changeTableSpecialty() {
-      this.currentMenuOption = 'Specialty'
-    }
+      this.currentMenuOption = 'Specialty';
+    },
+    changeTableHistory() {
+      this.currentMenuOption = 'History';
+    },
   },
   components: {
     SideBar,
     InventoryTable,
     SpecialtyPizzaTable,
-    OrdersTable
+    OrdersTable,
+    HistoricalChart,
   },
   mounted() {
-    let user = localStorage.getItem('user')
-    user = JSON.parse(user)
-    let role = user?.authorities[0]?.name
+    let user = localStorage.getItem('user');
+    user = JSON.parse(user);
+    let role = user?.authorities[0]?.name;
 
-    if(role !== 'ROLE_ADMIN') {
-      this.$router.replace('/myorders')
+    if (role !== 'ROLE_ADMIN') {
+      this.$router.replace('/myorders');
     }
-  }
+  },
 };
 </script>
 
-<style>
+<style scoped>
 .admin-container {
-    display: flex;
-    height: 90vh;
-    width: 95vw;
-    margin-bottom: 300px;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  width: 100vw;
+  flex-wrap: wrap;
+  justify-content: start;
 }
 
 .admin-content-container {
-    margin-top: 50px;
-    margin-left: 320px;
-    width: 100%;
+  margin-top: 50px;
+  margin-left: 320px;
+  width: calc(100% - 320px); 
+  flex: 1; 
 }
 
 .admin-table-heading {
   text-align: center;
+}
+
+/* Media Queries for responsiveness */
+/* @media (max-width: 1024px) and (min-width: 891px) {
+  .admin-content-container {
+    margin-left: 20px; 
+    width: calc(100% - 20px); 
+  }
+
+  .admin-container {
+    flex-direction: column;
+  }
+} */
+
+@media (max-width: 890px) {
+  .admin-container {
+    flex-direction: column; 
+  }
+  
+  .admin-content-container {
+    margin-left: 0; 
+    width: 100%; 
+  }
+
+  .admin-table-heading {
+    font-size: 1.5em; 
+  }
 }
 </style>

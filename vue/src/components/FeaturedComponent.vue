@@ -3,7 +3,8 @@
         <h1>Featured!</h1>
         <div class="featured-pizzas-list-container">
             <div v-for="(pizza, index) in allPizzas" v-bind:key={index} >
-                <FeaturedPizzaCard v-bind:pizza="pizza" v-if="index < 3" />
+                
+                <FeaturedPizzaCard :index="index" v-bind:pizza="pizza" v-if="index < 3 && pizza.quantity > 0" />
             </div>
         </div>
         
@@ -37,6 +38,8 @@ export default {
     padding: 0px 20px;
     transform: translateX(-100%);
     animation: slideIn 2s ease-in-out forwards;
+    max-height: 200px;
+    margin-bottom: 280px;
 }
 
 .featured-section {
@@ -53,6 +56,12 @@ export default {
     }
     to {
         transform: translateX(0);
+    }
+}
+
+@media screen and (max-width: 680px) {
+    .featured-pizzas-list-container {
+        grid-template-columns: 1fr;
     }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div
     class="drink-size-pop-up-container"
-    v-bind:class="{ 'popup-hidden': showPopUp === false }"
+    v-bind:class="{ 'popup-hidden': !showPopUp }"
   >
     <div class="drink-size-option-container">
       <h2>Pick your drink size</h2>
@@ -37,73 +37,95 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .drink-size-pop-up-container {
-    display:flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: fixed;
-  top: 0px;
-  background-color: #00000058;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.58);
   height: 100vh;
   width: 100vw;
-  z-index: 9999999999999999999999999;
+  z-index: 9999;
 }
 
 .popup-hidden {
   visibility: hidden;
 }
 
-select {
-    width: 40%;
-    padding: 5px 0px;
-    font-size: 1em;
+.drink-size-option-container {
+  background-color: #fff;
+  width: 80%; /* Adjust width for responsiveness */
+  max-width: 400px; /* Set a max width for larger screens */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Add some shadow for better visibility */
 }
 
-.drink-size-option-container {
-    background-color: #fff;
-    width: 60%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 15px;
-    padding: 20px 0px;
+h2 {
+  font-size: 1.5em; /* Responsive font size */
+  margin-bottom: 15px;
+}
+
+select {
+  width: 100%; /* Make the select element responsive */
+  padding: 5px;
+  font-size: 1em;
+  margin-bottom: 20px; /* Add margin for spacing */
 }
 
 .drink-size-btns {
-   width: 60%;
-   display: flex;
-   justify-content: center; 
-   gap: 30px;
-   margin-top: 25px;
+  width: 100%; /* Make button container responsive */
+  display: flex;
+  justify-content: space-around; /* Use space-around for spacing */
+  gap: 10px; /* Add some gap for spacing */
 }
 
 .drink-size-btns button {
-  padding: 15px 30px;
-  font-size: 1em;
+  padding: 10px 20px; /* Adjust padding for smaller screens */
+  font-size: 1em; /* Responsive font size */
   cursor: pointer;
 }
 
 .add-drink-size {
-    color: white;
-    background-color: #e61d25;
-    border: 1px solid #e61d25;
+  color: white;
+  background-color: #e61d25;
+  border: none; /* Remove border for better aesthetics */
 }
 
 .add-drink-size:hover {
-    background-color: #000;
-    border-color: #000;
+  background-color: #000;
 }
 
 .cancel-drink-size {
-    color: #e61d25;
-    border: 1px solid #000;
-    background-color: #fff;
+  color: #e61d25;
+  border: 1px solid #000; /* Add border for consistency */
+  background-color: #fff;
 }
 
 .cancel-drink-size:hover {
-    background-color: #000;
-    color: #fff;
-    border-color: #000;
+  background-color: #000;
+  color: #fff;
+}
+
+/* Media Queries for further responsiveness */
+@media (max-width: 600px) {
+  h2 {
+    font-size: 1.2em; /* Smaller font size on mobile */
+  }
+  
+  .drink-size-btns {
+    flex-direction: column; /* Stack buttons vertically on mobile */
+  }
+
+  .drink-size-btns button {
+    width: 100%; /* Full width buttons on mobile */
+    margin-bottom: 10px; /* Spacing between buttons */
+  }
 }
 </style>

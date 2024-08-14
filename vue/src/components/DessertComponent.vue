@@ -1,16 +1,18 @@
 <template>
-    <div class="dessert-card-container" :id="'dessert-' + dessert.productId">
+  <div class="dessert-card-container" :id="'dessert-' + dessert.productId">
     <div class="dessert-card" :style="dessertStyle"></div>
     <div class="dessert-card-details">
       <div class="dessert-card-text-container">
         <h2 class="dessert-card-text">{{ dessertName }} dessert</h2>
-        <p class="dessert-card-description">
-          ${{ dessert.price.toFixed(2) }} 
-        </p>
+        <p class="dessert-card-description">${{ dessert.price.toFixed(2) }}</p>
       </div>
 
-      <button v-if="dessert?.quantity > 0" class="add-to-cart-btn" v-on:click="$emit('add-to-cart')" >
-          Add to Cart
+      <button
+        v-if="dessert?.quantity > 0"
+        class="add-to-cart-btn"
+        v-on:click="$emit('add-to-cart')"
+      >
+        Add to Cart
       </button>
       <button v-if="dessert?.quantity == 0" disabled class="out-of-stock-btn">
         OUT OF STOCK
@@ -20,25 +22,22 @@
 </template>
 <script>
 export default {
-    data() {
-        return {
-            
-        }
-    },
-    props: {
-        dessert: Object,
-        dessertName: String
-    },
+  data() {
+    return {};
+  },
+  props: {
+    dessert: Object,
+    dessertName: String,
+  },
 
-    computed: {
-        dessertStyle() {
-          return  {
-            backgroundImage: `url('./${this.dessertName}.jpg')`
-        }
-        }
-    }
-}
-    
+  computed: {
+    dessertStyle() {
+      return {
+        backgroundImage: `url('./${this.dessertName}.jpg')`,
+      };
+    },
+  },
+};
 </script>
 <style scoped>
 .dessert-card-container {
@@ -51,68 +50,85 @@ export default {
   width: 100%;
 }
 
-
-
-.dessert-card-container .add-to-cart-btn {
-  justify-self: start;
-  background-color: #e61d25;
-  color: #fff;
-  border-radius: 15px;
-  border: none;
-  padding: 15px 30px;
-  cursor: pointer;
-  margin-right: 30px;
-  height: 50px;
-  width: 150px;
-  
-}
-.dessert-card-container .add-to-cart-btn:hover {
-  background-color: #000;
-  color: #fff;
-}
 .dessert-card {
   position: relative;
   height: 150px;
   background-size: cover;
   background-position: center;
   border-radius: 9px 0px 0px 9px;
-  background-image: url('../assets/Hawian.jpg');
+  background-image: url("../assets/Hawian.jpg");
   padding: 0px 30px;
-  width: 200px
+  min-width: 200px;
 }
 
 .dessert-card-container .dessert-card-details {
   display: flex;
   align-items: center;
-}
-
-.dessert-card-details img {
-    cursor: pointer;
-}
-
-.dessert-card-details .dessert-card-text {
-  font-size: 1.8em;
-  color: #333;
-  font-size: large;
-}
-
-.dessert-card-details .dessert-card-description {
-  font-size: 1em;
-  color: #333;
-  font-size: medium;
-}
-
-.dessert-card-container {
-  border: #d8d8d8 solid 1px;
-  border-radius: 10px;
+  justify-content: space-between;
+  padding: 0 20px;
 }
 
 .dessert-card-text-container {
-  width: 70%;
-  padding: 0px 10px;
+  flex: 1;
+  padding: 0 10px;
+}
+
+.dessert-card-text {
+  font-size: 1.8em;
+  color: #333;
+}
+
+.dessert-card-description {
+  font-size: 1em;
+  color: #333;
+}
+
+.add-to-cart-btn,
+.out-of-stock-btn {
+  background-color: #e61d25;
+  color: #fff;
+  border-radius: 15px;
+  border: none;
+  padding: 15px 30px;
+  cursor: pointer;
+  height: 50px;
+  width: 150px;
+  text-align: center;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #000;
+  color: #fff;
 }
 
 .out-of-stock-btn {
-  margin-right: 40px
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+@media screen and (max-width: 680px) {
+  .dessert-card-container {
+    grid-template-columns: 1fr;
+    padding: 0px;
+    width: 100%;
+  }
+  .dessert-card {
+    border-radius: 9px 9px 0px 0px;
+  }
+  .dessert-card-container .dessert-card-details {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 20px;
+  }
+  .dessert-card-text-container {
+    width: 100%;
+    padding-bottom: 10px;
+  }
+  .add-to-cart-btn,
+  .out-of-stock-btn {
+    width: 100%;
+    padding: 10px;
+    height: auto;
+  }
 }
 </style>

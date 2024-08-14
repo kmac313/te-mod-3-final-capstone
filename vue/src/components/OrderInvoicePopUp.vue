@@ -119,7 +119,7 @@ export default {
             invoice: newInvoice,
           });
           this.$emit("hide-popup");
-          this.$router.replace("/myorders");
+          
         });
     },
 
@@ -139,7 +139,7 @@ export default {
             invoice: newInvoice,
           });
           this.$emit("hide-popup");
-          this.$router.replace("/myorders");
+          
         });
     },
     readyOrder() {
@@ -158,7 +158,7 @@ export default {
             invoice: newInvoice,
           });
           this.$emit("hide-popup");
-          this.$router.replace("/myorders");
+          
         });
     },
   },

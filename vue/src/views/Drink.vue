@@ -121,4 +121,22 @@ export default {
   font-weight: 700;
   margin-bottom: 20px;
 }
+
+@media screen and (max-width: 680px) {
+  .drink-view-components {
+    width: 100%;
+  }
+
+  .drink-view-container {
+    margin-bottom: 0px;
+  }
+
+  
+}
+
+@media screen and (max-width: 1080px) and (min-width: 681px) {
+  .drink-view-components {
+    width: 95%;
+  }
+}
 </style>

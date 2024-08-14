@@ -6,7 +6,7 @@
       <div
         v-for="(dessert, index) in getAllDesserts"
         v-bind:key="{ index }"
-        class="dessert-view-components"
+        class="dessert-view-component"
       >
         <DessertComponent
           v-bind:dessert="dessert"
@@ -109,5 +109,23 @@ export default {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 20px;
+}
+
+@media screen and (max-width: 680px) {
+  .dessert-view-components {
+    width: 100%;
+  }
+
+  .dessert-view-container {
+    margin-bottom: 0px;
+  }
+
+  
+}
+
+@media screen and (max-width: 1080px) and (min-width: 681px) {
+  .dessert-view-components {
+    width: 95%;
+  }
 }
 </style>

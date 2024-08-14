@@ -1,18 +1,18 @@
 <template>
   <div id="capstone-app">
     <!-- Header -->
-    <div id="nav">
+    <header id="nav">
       <HeaderComponent />
-    </div>
+    </header>
     <!-- Body -->
-    <div class="body-container">
+    <main class="body-container">
       <router-view />
-    </div>
+    </main>
     
     <!-- Footer -->
-    <div id="footer">
+    
       <FooterComponent />
-    </div>
+    
   </div>
 </template>
 
@@ -110,6 +110,8 @@ export default {
   font-family: "Nunito", sans-serif;
 }
 
+
+
 body {
   padding: 0px;
   margin: 0px;
@@ -118,6 +120,7 @@ body {
 
 .body-container {
   margin-top: 9vh;
+  min-height: 100vh;
 }
 
 a,
@@ -168,5 +171,15 @@ a,
 .header-nav-links .router-link-active:hover {
   background-color: #e61d25;
   color: #fff;
+}
+
+
+
+
+
+@media screen and (max-width: 680px) and (min-width: 481px) {
+  .body-container {
+    margin-bottom: 1200px;
+  }
 }
 </style>

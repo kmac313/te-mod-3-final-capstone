@@ -109,6 +109,7 @@ export default {
   margin-top: 20px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   width: 100%;
+  padding-right: 20px;
 }
 
 .all-pizza-card-container .add-to-cart-btn {
@@ -164,4 +165,15 @@ export default {
   width: 70%;
   padding: 0px 10px;
 }
+
+@media screen and (max-width: 680px) {
+        .all-pizza-card-container {
+            grid-template-columns: 1fr;
+            
+        }
+        .all-pizza-card-container .featured-pizza-card-details {
+          flex-direction: column;
+          padding-bottom: 20px;
+        }
+    }
 </style>

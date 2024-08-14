@@ -31,7 +31,7 @@ export default {
     background-image: url('../assets/pizzadeal.jpg');
     background-size: cover;
     background-position: center;
-    height: 300px;
+    height: 500px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -45,6 +45,8 @@ export default {
     opacity: 0; /* Start fully transparent */
     animation: fadeIn 2s ease-in-out forwards;
 }
+
+
 
 .hero-container::before {
     content: "";
@@ -126,6 +128,20 @@ h1.hero-header {
     }
     to {
         opacity: 1;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .hero-container {
+        height: 300px;
+    }
+
+    h1.hero-header {
+        font-size: 1.2em;
+    }
+
+    .hero-container h2.hero-subheader {
+        font-size: 0.9em;
     }
 }
 </style>

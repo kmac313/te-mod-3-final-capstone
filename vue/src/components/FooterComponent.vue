@@ -45,6 +45,8 @@
     footer {
         display: grid;
         position: relative;
+        bottom: 0px;
+        height: 100%;
         z-index: 99;
         grid-template-columns: 1fr 1fr 1fr 1fr;
         border-bottom: #e0e0e0 solid 1px;
@@ -102,5 +104,16 @@
     .router-link-active, .router-link-active:visited, .router-link-active:active {
         text-decoration: none;
         color: black;
+    }
+
+    @media screen and (max-width: 480px) {
+      footer {
+        grid-template-columns: 1fr;
+        justify-items: center;
+      }
+
+      .footer-logo {
+        text-align: center;
+      }
     }
 </style>

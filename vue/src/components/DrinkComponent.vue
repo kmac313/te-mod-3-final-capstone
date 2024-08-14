@@ -45,9 +45,7 @@ export default {
 </script>
 
 <style scoped>
-
 @import url('https://fonts.googleapis.com/css2?family=Calistoga&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-
 
 .drink-card-container {
   display: grid;
@@ -59,25 +57,6 @@ export default {
   width: 100%;
 }
 
-
-
-.drink-card-container .add-to-cart-btn {
-  justify-self: start;
-  background-color: #e61d25;
-  color: #fff;
-  border-radius: 15px;
-  border: none;
-  padding: 15px 30px;
-  cursor: pointer;
-  margin-right: 30px;
-  height: 50px;
-  width: 150px;
-  
-}
-.drink-card-container .add-to-cart-btn:hover {
-  background-color: #000;
-  color: #fff;
-}
 .drink-card {
   position: relative;
   height: 150px;
@@ -86,42 +65,81 @@ export default {
   border-radius: 9px 0px 0px 9px;
   background-image: url('../assets/Hawian.jpg');
   padding: 0px 30px;
-  width: 200px
+  min-width: 200px;
 }
 
 .drink-card-container .drink-card-details {
   display: flex;
   align-items: center;
-}
-
-.drink-card-details img {
-    cursor: pointer;
-}
-
-.drink-card-details .drink-card-text {
-  font-size: 1.8em;
-  color: #333;
-  font-size: large;
-}
-
-.drink-card-details .drink-card-description {
-  font-size: 1em;
-  color: #333;
-  font-size: medium;
-}
-
-.drink-card-container {
-  border: #d8d8d8 solid 1px;
-  border-radius: 10px;
+  justify-content: space-between;
+  padding: 0 20px;
 }
 
 .drink-card-text-container {
-  width: 70%;
-  padding: 0px 10px;
+  flex: 1;
+  padding: 0 10px;
+}
+
+.drink-card-text {
+  font-size: 1.8em;
+  color: #333;
+}
+
+.drink-card-description {
+  font-size: 1em;
+  color: #333;
+}
+
+.add-to-cart-btn,
+.out-of-stock-btn {
+  background-color: #e61d25;
+  color: #fff;
+  border-radius: 15px;
+  border: none;
+  padding: 15px 30px;
+  cursor: pointer;
+  height: 50px;
+  width: 150px;
+  text-align: center;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #000;
+  color: #fff;
 }
 
 .out-of-stock-btn {
-  margin-right: 40px
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
+@media screen and (max-width: 680px) {
+  .drink-card-container {
+    grid-template-columns: 1fr;
+    padding: 0px;
+    width: 100%;
+  }
+
+  .drink-card {
+    border-radius: 9px 9px 0px 0px;
+  }
+
+  .drink-card-container .drink-card-details {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 20px;
+  }
+
+  .drink-card-text-container {
+    width: 100%;
+    padding-bottom: 10px;
+  }
+
+  .add-to-cart-btn,
+  .out-of-stock-btn {
+    width: 100%;
+    padding: 10px;
+    height: auto;
+  }
+}
 </style>

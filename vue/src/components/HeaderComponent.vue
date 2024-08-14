@@ -6,6 +6,7 @@
           src="../../public/Super_Pizza_Mascot_Logo-removebg-preview.png"
           alt="Pizza"
         />
+        <img @click="toggleMobileMenu" class="hamburger-icon" src="../../public/hamburger-menu.jpg" alt="menu" />
       </div>
 
       <nav>
@@ -18,12 +19,7 @@
         </div>
       </nav>
       <div class="login-div">
-        <p
-          v-on:click.prevent="logOut"
-          v-if="$store.state.token != ''"
-          class="login-div-btn"
-          >Logout</p
-        >
+        
         <router-link
         class="login-div-btn"
           v-bind:to="{ name: 'login' }"
@@ -39,8 +35,16 @@
         <router-link
         class="login-div-btn"
           v-bind:to="{ name: 'admin' }"
-          v-if="user == 'ROLE_ADMIN'"
-          >Dashboard</router-link
+          v-if="isAdmin"
+          >Admin Dashboard</router-link
+        >
+        
+
+        <p
+          v-on:click.prevent="logOut"
+          v-if="$store.state.token != ''"
+          class="login-div-btn"
+          >Logout</p
         >
        
         <img class="cart" src="../assets/cart.png" alt="cart" @click="openCart" />
@@ -61,6 +65,44 @@
         <li @click.prevent="changePath('/dessert')">DESSERTS</li>
       
     </ul>
+    <!-- Mobile Nav -->
+    <ul class="mobile-nav none" id="mobile-nav">
+      <li><router-link v-bind:to="{ name: 'home' }">Home</router-link></li>
+      <li @click.prevent="changePath('/pizza')">PIZZAS</li>      
+      
+        <!-- Change path to /drink -->
+        <li @click.prevent="changePath('/drink')">DRINKS</li>
+
+        <li @click.prevent="changePath('/sides')">APPETIZERS</li>
+
+        <li @click.prevent="changePath('/salad')">SALADS</li>
+
+        <li @click.prevent="changePath('/dessert')">DESSERTS</li>
+        <li v-if="$store.state.token !== '' && $store.state.user?.authorities[0].name !== 'ROLE_ADMIN'"><router-link
+        class="login-div-btn"
+          v-bind:to="{ name: 'myOrders' }"
+          
+          >My Orders</router-link
+        ></li>
+        <li v-if="isAdmin"><router-link
+        class="login-div-btn"
+          v-bind:to="{ name: 'admin' }"
+          
+          >Admin Dashboard</router-link
+        ></li>
+        <li v-if="$store.state.token == ''"><router-link
+        class="login-div-btn"
+          v-bind:to="{ name: 'login' }"
+          
+          >Login</router-link
+        ></li>
+        <li v-if="$store.state.token != ''"><p
+          v-on:click.prevent="logOut"
+          
+          class="login-div-btn"
+          >Logout</p
+        ></li>
+    </ul>
     <toast v-if="showToast" :message="'You have logged out'" />
     <CartComponent v-if="storeShowCart" @close-cart="closeCart()" @open-cart="openCart()"/>
   </div>
@@ -76,16 +118,32 @@ export default {
     return {
       showToast: false,
       isShrunk: false,
+      isAdmin: localStorage.getItem('user') ? this.$store.state.user?.authorities[0]?.name == 'ROLE_ADMIN' : null
     }
   },
   
   methods: {
+    
     toggleMenu() {
       const menuItems = document.getElementById("header-nav-links");
 
       menuItems.classList.contains("show")
         ? menuItems.classList.remove("show")
         : menuItems.classList.add("show");
+
+      
+    },
+    toggleMobileMenu() {
+      const navMenuItems = document.getElementById("mobile-nav");
+      console.log(navMenuItems)
+      if(navMenuItems.classList.contains("show")) {
+        navMenuItems.classList.remove("show")
+        navMenuItems.classList.add('none')
+      } else {
+        navMenuItems.classList.add("show");
+        navMenuItems.classList.remove('none')
+      }
+
       return;
     },
     logOut() {
@@ -126,6 +184,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.$store.state.user?.authorities[0]?.name)
     window.addEventListener('scroll', this.handleScroll);
   },
 
@@ -256,23 +315,7 @@ nav {
   color: #fff;
 }
 
-.drop {
-  appearance: none;
-  position: relative;
-  display: inline-block;
-}
 
-.dropdown {
-  appearance: none;
-  width: 50%;
-  font-size: 1.15rem;
-  padding: 0.3em 0.1em;
-  background-color: #fff;
-  border: none;
-  border-radius: 0.25rem;
-  color: #000;
-  cursor: pointer;
-}
 
 .home-nav-btn, .menu-btn {
     border-bottom: 3px solid transparent; 
@@ -307,8 +350,72 @@ nav {
   cursor:pointer;
 }
 
+.mobile-nav, .header-logo img.hamburger-icon {
+  display: none;
+}
+
 .login-div-btn:hover {
   border-bottom: 3px solid #e61d25; 
+}
+
+@media screen and (max-width: 680px) {
+  .header-nav-links, .login-div, nav {
+    display: none
+  }
+  .mobile-nav {
+    display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 6.6em;
+  text-align: center;
+  left: 0px;
+  width: 100%;
+  list-style: none;
+  background-color: #e61d25;
+  padding: 0px 10px;
+  border: #e6e6e6 solid 1px;
+  z-index: 99999;
+  transition: opacity 0.8s ease, transform 0.4s ease; 
+  transform: translateY(-100px);
+  }
+
+  .mobile-nav.none {
+    visibility: hidden;
+  }
+  .mobile-nav.show {
+  opacity: 1; 
+  transform: translateY(0);
+  }
+
+  .header-logo img {
+    width: 100px;
+  }
+
+  .header-logo img.hamburger-icon {
+    width: 50px;
+    height: 40px;
+    display: inline;
+  }
+
+  .header-logo {
+    width: 80vw;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .mobile-nav li, .mobile-nav li a {
+    color: #fff;
+    font-weight: bold;
+  border-bottom: #a9a9a9 solid 1px;
+  padding: 10px 8px 10px 8px;
+  width: 100%;
+  cursor: pointer;
+  font-size: 1.2em;
+  
+  }
+
 }
 
 </style>

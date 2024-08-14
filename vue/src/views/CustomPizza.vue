@@ -313,6 +313,7 @@ export default {
   border: 1px solid #000;
   border-radius: 5px;
   height: 100px;
+  z-index: 999999999999999;
 }
 
 .add-to-cart-section button {
@@ -336,4 +337,41 @@ export default {
 .add-to-cart-section p span {
   font-weight: bold;
 }
+
+@media screen and (max-width: 650px) {
+  .custom-pizza-view-container {
+    margin-bottom: 0px;
+  }
+
+  .pizza-size-cards { 
+    flex-direction: column;
+  }
+  .topping-container,
+.crust-container,
+.sauce-container {
+  grid-template-columns: 1fr;
+  width: 100%;
+}
+.add-to-cart-section button {
+  padding: 3px;
+  margin-right: 10px;
+}
+
+.add-to-cart-section {
+  width: 90vw;
+  margin-left: -20px;
+}
+}
+
+@media screen and (max-width: 880px) and (min-width: 480px) {
+  .pizza-size-cards { 
+    width: 100%;
+  }
+
+  .crust-container, .sauce-container, .topping-container {
+    width: 100%;
+  }
+
+}
+
 </style>

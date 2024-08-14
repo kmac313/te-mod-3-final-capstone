@@ -1,7 +1,7 @@
 <template>
   <div class="toppings-table-container">
     <div class="pending-toggle">
-        <button @click="toggleTable" class="">{{ isPending ? 'Show All Orders' : 'Show Pending Orders' }}</button>
+        <button @click="toggleTable" class="show-all-pending-btn">{{ isPending ? 'Show All Orders' : 'Show Pending Orders' }}</button>
     </div>
     <div class="table-wrapper">
       <table v-if="orders?.length > 0">
@@ -83,7 +83,12 @@ export default {
 
     updateOrder(newInvoice) {
       this.$store.commit("UPDATE_ORDER", newInvoice, true);
-      window.location.reload();
+      this.orders = this.orders.filter((item) => 
+          item.invoice_id !== newInvoice.invoice.invoice_id
+      )
+      this.orders.push(newInvoice.invoice)
+      this.showOrder = false;
+      console.log(this.orders)
     },
     toggleTable() {
         this.isPending = !this.isPending
@@ -101,7 +106,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
 }
 
 .toppings-table-container h2 {
@@ -154,6 +159,7 @@ export default {
 
 .toppings-table-container button {
   margin-bottom: 20px;
+  margin-top: 0px;
   padding: 10px 20px;
   font-size: 1em;
   cursor: pointer;

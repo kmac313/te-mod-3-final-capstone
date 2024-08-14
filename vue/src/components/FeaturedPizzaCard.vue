@@ -3,7 +3,7 @@
     <div class="pizza-card" :style="pizzaStyle"></div>
     <div class="featured-pizza-card-details">
       <div class="featured-pizza-card-text-container">
-        <h2 class="featured-pizza-card-text">{{ pizzaName }} Pizza</h2>
+        <h2 class="featured-pizza-card-text">{{ pizzaName }}</h2>
         <p class="featured-pizza-card-description">
           {{ pizza.description }}
         </p>
@@ -31,13 +31,14 @@ export default {
   },
   props: {
     pizza: Object,
+    index: Number
   },
   methods: {},
   computed: {
     pizzaStyle() {
         return {
             // Images must be placed inside of public folder
-            backgroundImage: `url('./${this.pizzaName}.jpg')`
+            backgroundImage: `url('./featured-pizza-${this.index}.jpg')`
         };
     }
 }
@@ -54,6 +55,7 @@ export default {
   border-radius: 9px 9px 0px 0px;
   background-image: url('../assets/Hawian.jpg');
   padding: 0px 30px;
+  height: 300px;
 }
 
 .featured-pizza-card-details {

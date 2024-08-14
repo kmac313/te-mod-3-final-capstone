@@ -69,6 +69,15 @@ export default {
     allInvoices() {
       return this.$store.state.allInvoices;
     }
+  },
+  mounted() {
+    console.log(this.$store.state.token)
+    console.log(localStorage.getItem('token'))
+    let user = this.$store.state.user;
+    if(user?.authorities[0]?.name == 'ROLE_ADMIN') {
+      this.$router.replace('/admin')
+    }
+   
   }
 }
 </script>

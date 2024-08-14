@@ -46,4 +46,19 @@ export default {
     .pizza-view-components {
         width: 75%;
     }
+
+    @media screen and (max-width: 680px) {
+        .pizza-view-container {
+            margin-top: 100px;
+        }
+        .pizza-view-components {
+            width: 100%;
+            align-items: center;
+        }
+    }
+    @media screen and (max-width: 1080px) and (min-width: 681px) {
+  .pizza-view-components {
+    width: 95%;
+  }
+}
 </style>
