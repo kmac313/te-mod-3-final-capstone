@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :class="['header', { shrink: isShrunk }]">
+    <div class="header">
       <div class="header-logo">
         <img
           src="../../public/Super_Pizza_Mascot_Logo-removebg-preview.png"
@@ -60,7 +60,7 @@
       </div>
     </div>
     <ul
-      :class="['header-nav-links', 'hidden', { shrink: isShrunk }]"
+      class="header-nav-links hidden"
       id="header-nav-links"
     >
       <li @click.prevent="changePath('/pizza')">PIZZAS</li>
@@ -75,8 +75,8 @@
       <li @click.prevent="changePath('/dessert')">DESSERTS</li>
     </ul>
     <!-- Mobile Nav -->
-    <ul :class="['mobile-nav', 'none', { shrink: isShrunk }]" id="mobile-nav">
-      <li><router-link v-bind:to="{ name: 'home' }">Home</router-link></li>
+    <ul class="mobile-nav none" id="mobile-nav">
+      <li @click.prevent="changePath('/')">Home</li>
       <li @click.prevent="changePath('/pizza')">PIZZAS</li>
 
       <!-- Change path to /drink -->
@@ -207,7 +207,7 @@ export default {
     window.removeEventListener("scroll", this.handleScroll);
   },
 
-  updated() {
+  beforeUpdate() {
     if(localStorage.getItem("user")) {
       this.role = JSON.parse(localStorage.getItem("user")).authorities[0].name
     } else {
@@ -228,11 +228,11 @@ export default {
   font-size: 1.2em;
   border-bottom: #e0e0e0 solid 1px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-  padding: 10px 0px;
   margin: 0px;
   width: 100%;
   z-index: 99999999;
   transition: padding 0.3s, font-size 0.3s;
+  max-height: 100px;
 }
 
 .header-logo {
@@ -252,7 +252,7 @@ export default {
 }
 
 .header-logo img {
-  width: 20%;
+  width: 70px;
   transition: width 0.3s;
 }
 
@@ -297,12 +297,12 @@ nav {
   justify-content: center;
   align-items: center;
   position: fixed;
-  top: 4.75em;
-  left: 30em;
+  top: 3.1em;
+  left: calc(50% - 8em);
   list-style: none;
   background-color: white;
   padding: 0px 10px;
-  border: #e6e6e6 solid 1px;
+  border: #e61d25 solid 3px;
   z-index: 5;
   visibility: hidden;
   transition: opacity 0.8s ease, transform 0.4s ease;
@@ -341,6 +341,8 @@ nav {
 .menu-btn {
   border-bottom: 3px solid transparent;
   transition: border-color 0.8s ease-in-out;
+  position: relative;
+  left: calc(50% - 10em);
 }
 
 .home-nav-btn:hover,
@@ -380,7 +382,16 @@ nav {
   border-bottom: 3px solid #e61d25;
 }
 
+
+
+
+
+
+
 @media screen and (max-width: 680px) {
+  .header-logo img {
+    width: 60px;
+  }
   .header-nav-links,
   .login-div,
   nav {
@@ -392,7 +403,7 @@ nav {
     justify-content: center;
     align-items: center;
     position: fixed;
-    top: 6.6em;
+    top: 2.9em;
     text-align: center;
     left: 0px;
     width: 100%;
@@ -413,10 +424,6 @@ nav {
     transform: translateY(0);
   }
 
-  .header-logo img {
-    width: 100px;
-  }
-
   .header-logo img.hamburger-icon {
     width: 50px;
     height: 40px;
@@ -424,7 +431,7 @@ nav {
   }
 
   .header-logo {
-    width: 80vw;
+    width: 100%;
     align-items: center;
     justify-content: space-between;
   }

@@ -90,7 +90,7 @@ public class ApiController {
                         "city": "Mayfield Heights",
                         "state_abbreviation":"OH",
                         "zip_code":"44124"
-                },
+                },1349 SOM Center Road
                 {
                     "street_address": "5867 Mayfield Road",
                         "city": "Mayfield Heights",

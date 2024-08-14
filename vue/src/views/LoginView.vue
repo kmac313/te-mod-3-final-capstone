@@ -73,6 +73,7 @@ form {
   padding: 20px 30px;
   width: 400px;
   margin: 30px 0px;
+  max-height: 600px;
 }
 
 form button {

@@ -82,7 +82,7 @@
     }
   }
 
-  @media screen and (max-width: 820px) {
+  @media screen and (max-width: 900px) {
     .sidebar-container {
         margin-top: 52px;
     }

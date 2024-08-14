@@ -93,7 +93,7 @@ export default {
 
 
 
-@media (max-width: 890px) {
+@media (max-width: 900px) {
   .admin-container {
     flex-direction: column; 
     width: 100vw;

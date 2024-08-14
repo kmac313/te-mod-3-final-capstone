@@ -40,7 +40,7 @@ export default {
     font-size: 2rem;
     text-align: center;
     width : 100vw;
-    margin-top: 88px;
+    margin-top: 65px;
     font-family: "PT Serif", serif;
     opacity: 0; /* Start fully transparent */
     animation: fadeIn 2s ease-in-out forwards;

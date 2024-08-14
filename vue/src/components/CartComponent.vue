@@ -251,6 +251,7 @@ export default {
             .then((data) => {
               if(data.status !== 200) {
                 isValid = false
+                console.log(isValid)
               }
             })
             .finally(() => {

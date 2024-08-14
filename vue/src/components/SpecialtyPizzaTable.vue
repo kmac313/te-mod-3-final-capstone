@@ -37,7 +37,7 @@
             <div class="form-close-btn">
                 <button @click="toggleSpecialtyPizzaForm">Close</button>
             </div>
-            <p v-if="errorMessage">Incorrect Price format</p>
+            <p v-if="errorMessage">Incorrect Price format. Pizza price must be $99.00 or less</p>
             <h3>Add Specialty Pizza</h3>
             <label>Pizza Name</label>
             <input type="text" :value="newPizzaName" @input="event => newPizzaName = event.target.value" />
@@ -112,7 +112,7 @@
         console.log(this.newPizzaName)
       },
       submitNewPizza() {
-        const pattern = /^-?\d{1,3}(,\d{3})*(\.\d{2})?$/
+        const pattern = /^-?\d{1,2}(,\d{2})*(\.\d{2})?$/
         if(!pattern.test(this.newPizzaPrice)) {
             this.errorMessage = true
             setTimeout(() => {
