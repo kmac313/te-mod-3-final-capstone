@@ -46,17 +46,23 @@ public class ApiController {
         Map<String, Object> mapBoxObject = new HashMap<>();
         for (Map<String, String> address : addresses){
             String[] streetAddressComponents = address.get("street_address").split(" ");
+            String[] cityComponents = address.get("city").split(" ");
             String joinedAddress = "";
+            String addressLine1 = "";
+            String city = "";
+            String stateAbbreviation = "";
+            String zipcode = "";
             for(String component : streetAddressComponents){
-                joinedAddress += component + "%20";
+                addressLine1 += component + "%20";
             }
-            joinedAddress += address.get("state_abbreviation");
-            joinedAddress += address.get("zip_code");
+            for(String component: cityComponents){
+                city += component + "%20";
+            }
+            stateAbbreviation += address.get("state_abbreviation");
+            zipcode += address.get("zip_code");
 
             String convertAddressUrl = String.format("https://api.mapbox.com/search/geocode/v6/forward?address_line1=%1$s&place=%2$s&region=%3$s&postcode=%4$s&limit=%5$s&access_token=%6$s",
-                    address.get("street_address"),address.get("city"),address.get("state_abbreviation"),address.get("zip_code"),
-                    1,MAPBOX_TOKEN
-                    );
+                    addressLine1,city,stateAbbreviation,zipcode,1,MAPBOX_TOKEN);
 
             System.out.println("Convert Address URL: "+convertAddressUrl);
             mapBoxObject = http.getForEntity(
@@ -71,6 +77,7 @@ public class ApiController {
             thisCoordinates.put("latitude", coordinates.get(1).toString());
             convertedCoordinates.add(thisCoordinates);
         }
+        System.out.println(convertedCoordinates);
         return convertedCoordinates;
     }
 
@@ -99,8 +106,8 @@ public class ApiController {
         System.out.println("Converted Address to coordinates");
         Map<String, String> from = convertedCoordinates.get(0);
         Map<String, String> to = convertedCoordinates.get(1);
-        System.out.println(String.format("%s,%s;%s,%s",
-                from.get("longitude"), from.get("latitude"), to.get("longitude"), to.get("latitude")));
+//        System.out.println(String.format("%s,%s;%s,%s",
+//                from.get("longitude"), from.get("latitude"), to.get("longitude"), to.get("latitude")));
 
         /*Durations as an array of arrays that represent the matrix in row-major order. durations[i][j] gives the
          travel time from the ith source to the jth destination. All values are in seconds. The duration between the
@@ -115,14 +122,16 @@ public class ApiController {
         boolean inRange;
         try {
             System.out.println("Check Duration Url: "+checkDurationUrl);
-            mapBoxObject = http.getForEntity(
+            mapBoxObject = http.getForObject(
                     checkDurationUrl,
-                    Map.class).getBody();
-
+                    Map.class);
+            System.out.println(mapBoxObject);
             List<List<Double>> durations = (List<List<Double>>)mapBoxObject.get("durations");
             duration = durations.get(0).get(1);
+            System.out.println(duration);
             inRange = duration < MAX_DURATION_SECONDS;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "INVALID ADDRESSES");
         }
 
