@@ -306,5 +306,17 @@
     background-color: #232323;
     cursor: pointer;
   }
+
+  @media screen and (max-width: 820px) {
+    .availability-btns {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .update-availability-btns {
+      width: 100%;
+      justify-content: center;
+    }
+  }
   </style>
   

@@ -82,6 +82,9 @@ export default {
   margin-left: 320px;
   width: calc(100% - 320px); 
   flex: 1; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .admin-table-heading {
@@ -98,7 +101,7 @@ export default {
   
   .admin-content-container {
     margin-left: 0; 
-    width: 100%; 
+    width: 100%;
   }
 
   .admin-table-heading {

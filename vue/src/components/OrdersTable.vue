@@ -58,7 +58,8 @@ export default {
   },
   methods: {
     allOrders() {
-      invoiceService.getOrders().then((data) => {
+      const userToken = localStorage.getItem('token')
+      invoiceService.getOrders(userToken).then((data) => {
         let getOrders = [...data.data];
         if(this.isPending) {
             getOrders = getOrders.filter((item) => item.status == 'Pending')
@@ -107,6 +108,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: start;
+  width: 80%;
 }
 
 .toppings-table-container h2 {
@@ -191,6 +193,10 @@ export default {
 @media screen and (max-width: 890px) {
   .toppings-table-container table {
     overflow-x: scroll;
+    width: 95%;
+  }
+  .toppings-table-container {
+    width: 100%;
   }
 }
 </style>

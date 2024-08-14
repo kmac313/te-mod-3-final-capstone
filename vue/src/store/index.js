@@ -92,6 +92,8 @@ export function createStore(currentToken, currentUser) {
         state.cart.pizza = [];
         state.token = '';
         state.user = {};
+        state.allInvoices = [];
+        console.log(state.allInvoices)
         console.log(localStorage.removeItem('token'))
         console.log(state.token)
         axios.defaults.headers.common = {};

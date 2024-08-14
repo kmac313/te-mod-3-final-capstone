@@ -42,9 +42,11 @@ export default {
 
   methods: {
     getAllOrders() {
-      invoiceService.getOrders().then((data) => {
+      const userToken = localStorage.getItem('token')
+      invoiceService.getOrders(userToken).then((data) => {
         for (let invoice of data.data) {
           this.$store.commit("ADD_INVOICE", invoice);
+          console.log('Added to store')
         }
 
         this.allInvoices = this.$store.state.allInvoices;
@@ -76,8 +78,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$store.state.token)
-    console.log(localStorage.getItem('token'))
     let user = this.$store.state.user;
     if(user?.authorities[0]?.name == 'ROLE_ADMIN') {
       this.$router.replace('/admin')

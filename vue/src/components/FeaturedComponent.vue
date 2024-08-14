@@ -4,7 +4,7 @@
         <div class="featured-pizzas-list-container">
             <div v-for="(pizza, index) in allPizzas" v-bind:key={index} >
                 
-                <FeaturedPizzaCard :index="index" v-bind:pizza="pizza" v-if="index < 3 && pizza.quantity > 0" />
+                <FeaturedPizzaCard :index="index" v-bind:pizza="pizza" />
             </div>
         </div>
         
@@ -19,7 +19,30 @@ export default {
     name: 'FeaturedComponent',
     data() {
         return {
-            allPizzas: this.$store.state.inventory.specialtyPizza,
+            allPizzas: [{
+            "productId": 59,
+            "price": 16.99,
+            "description": "Hawaiian Pizza - Ham, pineapple, and mozzarella cheese.",
+            "quantity": 8,
+            "product_category_id": 10,
+            "product_category_description": "Specialty Pizza"
+        },
+        {
+            "productId": 60,
+            "price": 29.99,
+            "description": "Taco Pizza - Ground beef, cheddar cheese, shredded lettuce, diced tomatoes, sliced black olives, jalapeños",
+            "quantity": 10,
+            "product_category_id": 10,
+            "product_category_description": "Specialty Pizza"
+        },
+        {
+            "productId": 56,
+            "price": 14.99,
+            "description": "Pepperoni Pizza - Loaded with pepperoni and mozzarella cheese.",
+            "quantity": 0,
+            "product_category_id": 10,
+            "product_category_description": "Specialty Pizza"
+        },]
         }
     },    
     components: {

@@ -158,7 +158,13 @@
               name="state"
               v-model="state"
             />
-            <input required type="text" placeholder="Zip code" name="zipcode" />
+            <input
+              required
+              type="text"
+              placeholder="Zip code"
+              name="zipcode"
+              v-model="formZip"
+            />
           </div>
           <button type="submit" @click.prevent="submitOrder">Checkout</button>
         </form>
@@ -169,7 +175,6 @@
 </template>
 
 <script>
-
 import Toast from "../components/Toast.vue";
 import customerService from "../services/CustomerService";
 import invoiceService from "../services/InvoiceService";
@@ -196,6 +201,7 @@ export default {
         ? localStorage.getItem("zipcode")
         : this.$store.state.isDelivery.zipcode,
       paymentmethod: "",
+      formZip: "",
       eta: "",
       showToast: false,
       address: "123 Main St, Cleveland, Ohio 44108",
@@ -205,7 +211,7 @@ export default {
     Toast,
   },
   methods: {
-    submitOrder() {
+    async submitOrder() {
       if (
         this.$store.state.isDelivery.orderType == "delivery" &&
         this.state.length !== 2
@@ -217,25 +223,53 @@ export default {
         }, 3500);
         return;
       }
-
+      let isValid = true;
       if (this.$store.state.isDelivery.orderType == "delivery") {
-        let customerAddress = {
-          street_address: this.street.replaceAll(' ', '%20'),
-          city: this.city.replaceAll(" ", '%20'),
-          state_abbreviation: this.state.trim(),
-          zip_code: this.zipcode.trim(),
-        };
+        try {
+          let customerAddress = {
+            street_address: this.street.replaceAll(" ", "%20"),
+            city: this.city.replaceAll(" ", "%20"),
+            state_abbreviation: this.state.trim(),
+            zip_code: this.formZip.trim(),
+          };
 
-        let storeAddress = {
-          street_address: this.$store.state.storeAddress.street_address.replaceAll(' ', '%20'),
-          city: this.$store.state.storeAddress.city.replaceAll(" ", '%20'),
-          state_abbreviation: this.$store.state.storeAddress.state_abbreviation.trim(),
-          zip_code: this.$store.state.storeAddress.zip_code.trim()
-
-        };
-        let sendAddress = [customerAddress, storeAddress];
-        locationService.validateAddress(sendAddress).then((data) => console.log(data));
+          let storeAddress = {
+            street_address:
+              this.$store.state.storeAddress.street_address.replaceAll(
+                " ",
+                "%20"
+              ),
+            city: this.$store.state.storeAddress.city.replaceAll(" ", "%20"),
+            state_abbreviation:
+              this.$store.state.storeAddress.state_abbreviation.trim(),
+            zip_code: this.$store.state.storeAddress.zip_code.trim(),
+          };
+          let sendAddress = [customerAddress, storeAddress];
+          
+          await locationService
+            .validateAddress(sendAddress)
+            .then((data) => {
+              if(data.status !== 200) {
+                isValid = false
+              }
+            })
+            .finally(() => {
+              if(!isValid) {
+                return;
+              }
+            });
+        } catch (err) {
+          console.log(err.message)
+          this.toastMessage = "This address is not in our service area";
+          this.showToast = true;
+          setTimeout(() => {
+            this.showToast = false;
+          }, 3500);
+          return;
+        }
       }
+
+
 
       let pizzaItems = this.$store.state.cart.pizza;
       if (pizzaItems.length > 0) {

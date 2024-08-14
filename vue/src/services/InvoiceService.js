@@ -18,11 +18,11 @@ export default {
     })
       },
 
-    getOrders() {
+    getOrders(userToken) {
       
       return http.get('/invoice', {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${userToken ? userToken : token}`
         }
       })
     },
