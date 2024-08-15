@@ -107,6 +107,7 @@
             placeholder="First name"
             name="firstname"
             v-model="firstName"
+            @change="updateUserFirstName()"
           />
           <input
             required
@@ -114,6 +115,7 @@
             placeholder="Last name"
             name="lastname"
             v-model="lastName"
+            @change="updateUserLastName()"
           />
           <input
             required
@@ -121,6 +123,7 @@
             placeholder="Email"
             name="email"
             v-model="email"
+            @change="updateUserEmail()"
           />
           <input
             required
@@ -128,6 +131,7 @@
             placeholder="Phone number"
             name="phone"
             v-model="phoneNumber"
+            @change="updateUserPhoneNumber()"
           />
           <input
             required
@@ -144,6 +148,7 @@
               placeholder="Street name"
               name="street"
               v-model="street"
+              @change="updateUserStreet()"
             />
             <input
               required
@@ -151,6 +156,7 @@
               placeholder="City name"
               name="city"
               v-model="city"
+              @change="updateUserCity()"
             />
             <input
               required
@@ -158,6 +164,7 @@
               placeholder="State Abbreviation"
               name="state"
               v-model="state"
+              @change="updateUserState()"
             />
             <input
               required
@@ -165,6 +172,7 @@
               placeholder="Zip code"
               name="zipcode"
               v-model="formZip"
+              @change="updateUserFormZip()"
             />
           </div>
           <button type="submit" @click.prevent="submitOrder">
@@ -193,19 +201,19 @@ export default {
         : (localStorage.getItem("orderType")
         ? localStorage.getItem("orderType")
         : ""),
-      street: "",
-      city: "",
-      state: "",
-      firstName: "",
-      lastName: "",
-      email: "",
-      phoneNumber: "",
+      street: localStorage.getItem('street') ? localStorage.getItem('street') : "",
+      city: localStorage.getItem('city') ? localStorage.getItem('city') : "",
+      state: localStorage.getItem('state') ? localStorage.getItem('state') : "",
+      firstName: localStorage.getItem('firstName') ? localStorage.getItem('firstName') : "",
+      lastName: localStorage.getItem('lastName') ? localStorage.getItem('lastName') : "",
+      email: localStorage.getItem('email') ? localStorage.getItem('email') : "",
+      phoneNumber: localStorage.getItem('phoneNumber') ? localStorage.getItem('phoneNumber') : "",
       username: localStorage.getItem("user"),
       zipcode: localStorage.getItem("zipcode")
         ? localStorage.getItem("zipcode")
         : this.$store.state.isDelivery.zipcode,
       paymentmethod: "",
-      formZip: "",
+      formZip: localStorage.getItem('formZip') ? localStorage.getItem('formZip') : "",
       eta: "",
       showToast: false,
       address: "123 Main St, Cleveland, Ohio 44108",
@@ -384,6 +392,7 @@ export default {
             console.log("This customer already exists");
           }
           this.loading = false;
+          
         }
 
         
@@ -391,13 +400,37 @@ export default {
         // console.log(newCustomer)
       }
     },
+    updateUserFirstName() {
+      localStorage.setItem('firstName', this.firstName)
+    },
+    updateUserLastName() {
+      localStorage.setItem('lastName', this.lastName)
+    },
+    updateUserEmail() {
+      localStorage.setItem('email', this.email)
+    },
+    updateUserPhoneNumber() {
+      localStorage.setItem('phoneNumber', this.phoneNumber)
+    },
+    updateUserStreet() {
+      localStorage.setItem('street', this.street)
+    },
+    updateUserCity() {
+      localStorage.setItem('city', this.city)
+    },
+    updateUserState() {
+      localStorage.setItem('state', this.state)
+    },
+    updateUserFormZip() {
+      localStorage.setItem('formZip', this.formZip)
+    },
     updateOrder() {
       
       localStorage.setItem("orderType", this.selectedOption);
       this.$store.commit("UPDATE_ORDER_TYPE", this.selectedOption);
       console.log(this.$store.state.isDelivery.orderType);
     },
-
+    
     setOrderToNull() {
       this.selectedOption = '';
       localStorage.removeItem("orderType");

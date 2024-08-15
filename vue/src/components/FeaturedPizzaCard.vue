@@ -5,7 +5,7 @@
       <div class="featured-pizza-card-text-container">
         <h2 class="featured-pizza-card-text">{{ pizzaName }}</h2>
         <p class="featured-pizza-card-description">
-          {{ pizza.description }}
+          {{ pizzaDescription }}
         </p>
       </div>
 

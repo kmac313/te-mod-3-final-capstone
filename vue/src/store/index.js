@@ -87,6 +87,14 @@ export function createStore(currentToken, currentUser) {
         localStorage.removeItem('drink');
         localStorage.removeItem('pizza');
         localStorage.removeItem('specialtypizza');
+        localStorage.removeItem('firstName')
+        localStorage.removeItem('lastName')
+        localStorage.removeItem('phoneNumber')
+        localStorage.removeItem('email')
+        localStorage.removeItem('street')
+        localStorage.removeItem('city')
+        localStorage.removeItem('state')
+        localStorage.removeItem('formZip')
         state.currentOrder = [];
         state.cart.other = [];
         state.cart.pizza = [];

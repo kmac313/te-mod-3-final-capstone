@@ -30,7 +30,7 @@ export default {
         {
             "productId": 60,
             "price": 29.99,
-            "description": "Taco Pizza - Ground beef, cheddar cheese, shredded lettuce, diced tomatoes, sliced black olives, jalapeños",
+            "description": "BBQ Chicken Pizza - Grilled chicken, BBQ sauce, red onions, and cilantro.",
             "quantity": 10,
             "product_category_id": 10,
             "product_category_description": "Specialty Pizza"
