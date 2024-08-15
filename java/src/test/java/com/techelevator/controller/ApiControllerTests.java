@@ -1,4 +1,4 @@
-package com.techelevator.dao;
+package com.techelevator.controller;
 
 import com.techelevator.controller.ApiController;
 import com.techelevator.controller.ProductController;
@@ -22,11 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class ApiControllerTests {
-
-    private ApiController ac;
-
+    
     private RestTemplate http;
     private HttpHeaders header;
     private List<Map<String, String>> addresses;

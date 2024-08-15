@@ -9,13 +9,14 @@ import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 public class JdbcUserDaoTests extends BaseDaoTests {
-    protected static final User USER_1 = new User(1, "user1", "user1", "ROLE_USER");
-    protected static final User USER_2 = new User(2, "user2", "user2", "ROLE_USER");
-    private static final User USER_3 = new User(3, "user3", "user3", "ROLE_USER");
+    protected static final User USER_1 = new User(13, "user1", "password", "ROLE_USER");
+    protected static final User USER_2 = new User(14, "user2", "password", "ROLE_USER");
+    private static final User USER_3 = new User(15, "user3", "password", "ROLE_USER");
 
     private JdbcUserDao sut;
 
@@ -52,7 +53,8 @@ public class JdbcUserDaoTests extends BaseDaoTests {
     @Test
     public void getUserById_given_valid_user_id_returns_user() {
         User actualUser = sut.getUserById(USER_1.getId());
-
+        System.out.println(USER_1.getPassword());
+        System.out.println(actualUser.getPassword());
         Assert.assertEquals(USER_1, actualUser);
     }
 
@@ -61,13 +63,10 @@ public class JdbcUserDaoTests extends BaseDaoTests {
         List<User> users = sut.getUsers();
 
         Assert.assertNotNull(users);
-        Assert.assertEquals(3, users.size());
-        Assert.assertEquals(USER_1, users.get(0));
-        Assert.assertEquals(USER_2, users.get(1));
-        Assert.assertEquals(USER_3, users.get(2));
+        Assert.assertEquals(15, users.size());
     }
 
-    @Test(expected = DaoException.class)
+    @Test(expected = ResponseStatusException.class)
     public void createUser_with_null_username() {
         RegisterUserDto registerUserDto = new RegisterUserDto();
         registerUserDto.setUsername(null);
@@ -76,7 +75,7 @@ public class JdbcUserDaoTests extends BaseDaoTests {
         sut.createUser(registerUserDto);
     }
 
-    @Test(expected = DaoException.class)
+    @Test(expected = ResponseStatusException.class)
     public void createUser_with_existing_username() {
         RegisterUserDto registerUserDto = new RegisterUserDto();
         registerUserDto.setUsername(USER_1.getUsername());

@@ -1,8 +1,12 @@
-package com.techelevator.dao;
+package com.techelevator.controller;
 
 import com.techelevator.controller.ProductController;
+import com.techelevator.dao.BaseDaoTests;
+import com.techelevator.dao.JdbcProductDao;
+import com.techelevator.dao.ProductDao;
 import com.techelevator.model.LoginDto;
 import com.techelevator.model.Product;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,30 +20,23 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-public class ProductControllerTests extends BaseDaoTests{
-    private ProductController pc;
-    private ProductDao dao;
-    private JdbcTemplate jdbc;
-    private NamedParameterJdbcTemplate namedJdbc;
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+public class ProductControllerTests{
+
     private RestTemplate http;
-    private TestRestTemplate testHttp;
     private HttpHeaders header;
     private final String BASE_URL = "http://localhost:9000";
 
     @Before
     public void setup(){
 
-        jdbc = new JdbcTemplate(dataSource);
-        namedJdbc = new NamedParameterJdbcTemplate(dataSource);
-        dao = new JdbcProductDao(jdbc, namedJdbc);
-        pc = new ProductController(dao);
         http = new RestTemplate();
-        testHttp = new TestRestTemplate();
         header = new HttpHeaders();
     }
+
     public void login(String username){
         // Create a request object
         LoginDto loginRequest = new LoginDto();
@@ -117,14 +114,14 @@ public class ProductControllerTests extends BaseDaoTests{
     @Test
     public void t04_API_returns_single_product_correctly(){
         List<Integer> productIds = new ArrayList<>();
-        productIds.add(1);
         productIds.add(10);
+        productIds.add(11);
         productIds.add(20);
-        productIds.add(30);
+        productIds.add(22);
         for (int id : productIds) {
-            String url = BASE_URL + "/menu/";
-            url += id;
+            String url = BASE_URL + "/menu/" + id;
             HttpEntity entity = new HttpEntity(header);
+            System.out.println(url);
             ResponseEntity<Product> response = http.exchange(url, HttpMethod.GET, entity, Product.class);
             Product product = response.getBody();
             Assert.assertNotNull(product);
@@ -161,21 +158,25 @@ public class ProductControllerTests extends BaseDaoTests{
     @Test
     public void t07_admin_can_create_products_but_not_users(){
         login("admin");
-        Product newProduct =new Product();
-        newProduct.setDescription("Test Product");
-        newProduct.setPrice(new BigDecimal("1.50"));
-        newProduct.setProductCategoryDescription("Drink");
-        newProduct.setQuantity(20);
+        Map<String, String> newProduct = new HashMap<>();
+        newProduct.put("price", "1.50");
+        newProduct.put("description", "test product");
+        newProduct.put("product_category_description", "Drink");
+        newProduct.put("quantity","20");
+
+
 
         String url = BASE_URL + "/menu/add";
         HttpEntity entity = new HttpEntity(newProduct, header);
         Product createdProduct = http.exchange(url, HttpMethod.POST, entity, Product.class).getBody();
 
         Assert.assertTrue( createdProduct.getClass() == Product.class);
-        Assert.assertTrue(createdProduct.getPrice().compareTo(newProduct.getPrice())==0);
-        Assert.assertTrue(createdProduct.getDescription().equals(newProduct.getDescription()));
-        Assert.assertTrue(createdProduct.getProductCategoryDescription().equals(newProduct.getProductCategoryDescription()));
-        Assert.assertTrue(createdProduct.getQuantity() == newProduct.getQuantity());
+        Assert.assertTrue(createdProduct.getPrice().compareTo(
+                new BigDecimal(newProduct.get("price")))==0);
+        Assert.assertTrue(createdProduct.getDescription().equals(newProduct.get("description")));
+        Assert.assertTrue(createdProduct.getProductCategoryDescription().equals(
+                newProduct.get("product_category_description")));
+        Assert.assertTrue(createdProduct.getQuantity() == Integer.parseInt(newProduct.get("quantity")));
 
     }
     @Test (expected = HttpClientErrorException.BadRequest.class)
@@ -205,7 +206,7 @@ public class ProductControllerTests extends BaseDaoTests{
     @Test
     public void t10_admin_can_delete_product(){
         login("admin");
-        int testProductId = 1;
+        int testProductId = 10;
         String url = BASE_URL +  "/menu/" + testProductId;
         HttpEntity entity = new HttpEntity(header);
 
@@ -215,7 +216,7 @@ public class ProductControllerTests extends BaseDaoTests{
     @Test(expected = HttpClientErrorException.Forbidden.class)
     public void t11_non_admin_deleting_product_throws_exception(){
         login("user");
-        int testProductId = 1;
+        int testProductId = 10;
         String url = BASE_URL +  "/menu/" + testProductId;
         HttpEntity entity = new HttpEntity(header);
 
@@ -225,8 +226,9 @@ public class ProductControllerTests extends BaseDaoTests{
     @Test
     public void t12_admin_can_update_product(){
         login("admin");
-        int testProductId = 1;
-        Product modifiedProduct = dao.getProductById(testProductId);
+        int testProductId = 10;
+        HttpEntity getEntity = new HttpEntity(header);
+        Product modifiedProduct = http.exchange(BASE_URL+"/menu/"+testProductId, HttpMethod.GET, getEntity, Product.class).getBody();
         modifiedProduct.setQuantity(0);
         modifiedProduct.setProductCategoryDescription("Drink");
         modifiedProduct.setPrice(BigDecimal.TEN);
@@ -240,8 +242,9 @@ public class ProductControllerTests extends BaseDaoTests{
     @Test(expected = HttpClientErrorException.Forbidden.class)
     public void t13_non_admin_update_product_throws_exception(){
         login("user");
-        int testProductId = 1;
-        Product modifiedProduct = dao.getProductById(testProductId);
+        int testProductId = 10;
+        HttpEntity getEntity = new HttpEntity(header);
+        Product modifiedProduct = http.exchange(BASE_URL+"/menu/"+testProductId, HttpMethod.GET, getEntity, Product.class).getBody();
         modifiedProduct.setQuantity(0);
         modifiedProduct.setProductCategoryDescription("Drink");
         modifiedProduct.setPrice(BigDecimal.TEN);

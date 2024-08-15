@@ -12,6 +12,9 @@ INSERT INTO users (username, password_hash, role) VALUES ('7','$2a$08$UkVvwpULis
 INSERT INTO users (username, password_hash, role) VALUES ('8','$2a$08$UkVvwpULis18S19S5pZFn.YHPZt3oaqHZnDwqbCW9pft6uFtkXKDC','ROLE_USER');
 INSERT INTO users (username, password_hash, role) VALUES ('9','$2a$08$UkVvwpULis18S19S5pZFn.YHPZt3oaqHZnDwqbCW9pft6uFtkXKDC','ROLE_USER');
 INSERT INTO users (username, password_hash, role) VALUES ('10','$2a$08$UkVvwpULis18S19S5pZFn.YHPZt3oaqHZnDwqbCW9pft6uFtkXKDC','ROLE_USER');
+INSERT INTO users (username, password_hash, role) VALUES('user1', 'password','ROLE_USER');
+INSERT INTO users (username, password_hash, role) VALUES('user2', 'password','ROLE_USER');
+INSERT INTO users (username, password_hash, role) VALUES('user3', 'password','ROLE_USER');
 
 INSERT INTO product_category (product_category_description) --PRODUCT CATEGORIES
 	VALUES

@@ -104,16 +104,21 @@ public class ProductController {
             String productCategoryDescription = (String)newProduct.get("product_category_description");
             BigDecimal price = new BigDecimal((String) newProduct.get("price"));
             String description = (String)newProduct.get("description");
-            int quantity = (int)newProduct.get("quantity");
+            String quantity = (String)newProduct.get("quantity");
 
             Product product = new Product();
             product.setProductCategoryDescription(productCategoryDescription);
             product.setPrice(price);
             product.setDescription(description);
-            product.setQuantity(quantity);
+            product.setQuantity(Integer.parseInt(quantity));
             createdProduct = productDao.createProduct(product);
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Product");
+            String reason = "";
+            for (StackTraceElement s: e.getStackTrace()){
+                reason += e.getMessage() + "\n";
+                System.out.println(e.getMessage());
+            }
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, reason);
         }
         return new ResponseEntity<Product>(createdProduct, HttpStatus.CREATED);
     }
@@ -129,7 +134,8 @@ public class ProductController {
         try {
             updatedProduct = productDao.updateProduct(product);
         } catch(DaoException doe) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found /n" + doe.getMessage());
         }
         return new ResponseEntity<Product>(updatedProduct, HttpStatus.OK);
     }

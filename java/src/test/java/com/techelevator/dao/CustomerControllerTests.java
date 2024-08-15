@@ -25,7 +25,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class CustomerControllerTests extends BaseDaoTests{
 
     private CustomerController cc;

@@ -1,6 +1,7 @@
-package com.techelevator.dao;
+package com.techelevator.controller;
 
 import com.techelevator.controller.InvoiceController;
+import com.techelevator.dao.BaseDaoTests;
 import com.techelevator.model.Invoice;
 import com.techelevator.model.LoginDto;
 import com.techelevator.model.Pizza;
@@ -11,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.*;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,7 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@SpringBootTest (webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest (webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@ActiveProfiles("test")
 public class InvoiceControllerTests {
     private RestTemplate http;
     private HttpHeaders header;
