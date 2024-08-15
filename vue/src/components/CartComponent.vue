@@ -43,6 +43,7 @@
           </div>
 
           <p class="eta">{{ eta }}</p>
+          <p>Store location:</p>
           <p class="address">{{ address }}</p>
         </div>
 
@@ -216,7 +217,7 @@ export default {
       formZip: localStorage.getItem('formZip') ? localStorage.getItem('formZip') : "",
       eta: "",
       showToast: false,
-      address: "123 Main St, Cleveland, Ohio 44108",
+      address: "5867 Mayfield Road, Mayfield Heights, OH 44124",
       loading: false,
     };
   },
