@@ -52,6 +52,7 @@
           @change="updateOrder"
           v-if="orderType.length === 0"
         >
+          <option value=""></option>
           <option value="carryout">Carryout</option>
           <option value="delivery">Delivery</option>
         </select>
@@ -189,9 +190,9 @@ export default {
     return {
       selectedOption: this.$store.state.isDelivery.orderType
         ? this.$store.state.isDelivery.orderType
-        : localStorage.getItem("orderType")
+        : (localStorage.getItem("orderType")
         ? localStorage.getItem("orderType")
-        : "",
+        : ""),
       street: "",
       city: "",
       state: "",
@@ -216,7 +217,18 @@ export default {
   },
   methods: {
     async submitOrder() {
-      console.log(this.$store.stae);
+      if(!this.username) {
+        this.toastMessage = "Please log in to place an order";
+        this.showToast = true;
+        setTimeout(() => {
+          this.$emit("close-cart");
+          this.showToast = false;
+          this.loading = false;
+          this.$router.replace('/login');
+        }, 2500);
+        
+        return;
+      }
       this.loading = true;
       let creditCardPattern = /^(?:\d[ -]*?){13,16}$/
       if(!creditCardPattern.test(this.paymentmethod)) {
@@ -374,19 +386,21 @@ export default {
           this.loading = false;
         }
 
-        this.$router.replace("/myorders");
+        
 
         // console.log(newCustomer)
       }
     },
     updateOrder() {
+      
       localStorage.setItem("orderType", this.selectedOption);
       this.$store.commit("UPDATE_ORDER_TYPE", this.selectedOption);
       console.log(this.$store.state.isDelivery.orderType);
     },
 
     setOrderToNull() {
-      localStorage.setItem("orderType", "");
+      this.selectedOption = '';
+      localStorage.removeItem("orderType");
       this.$store.commit("UPDATE_ORDER_TYPE", "");
     },
 
@@ -424,7 +438,7 @@ export default {
 
       // remove from cart
       const isPizza = this.$store.state.cart.pizza.find(
-        (pizza) => pizza[0].id == item.id
+        (pizza) => pizza.id == item.id
       );
       console.log(isPizza);
       const isOther = this.$store.state.cart.other.find(
@@ -507,6 +521,7 @@ export default {
           let newStoredPizza = storedPizza.filter(
             (pizza) => pizza.id !== item.id
           );
+          console.log(newStoredPizza)
           if (newStoredPizza.length > 0) {
             localStorage.setItem("pizza", JSON.stringify(newStoredPizza));
           } else {
@@ -529,23 +544,24 @@ export default {
     },
     loadStoredCustomPizza(storageKey, mutation) {
       let storedPizza = localStorage.getItem(storageKey);
-      
+      console.log(storedPizza)
       if (storedPizza && storedPizza !== 'undefined') {
         storedPizza = JSON.parse(storedPizza);
+        console.log(storedPizza)
         if (Array.isArray(storedPizza) && storedPizza.length > 0) {
           for(let pizza of storedPizza) {
             let currPizzaArray = []
-            currPizzaArray.push({id: this.$store.state.cart.pizza.length + 1})
+            currPizzaArray.push({id: pizza.id})
             currPizzaArray.push(pizza.crust.productId)
             currPizzaArray.push(pizza.size.productId)
             currPizzaArray.push(pizza.sauce.productId)
-            
+            console.log(currPizzaArray)
             for(let topp of pizza.topping) {
               currPizzaArray.push(topp.productId)
             }
-            
+            console.log(currPizzaArray)
             this.$store.commit(mutation, currPizzaArray);
-            
+            console.log(this.$store.state.cart)
           }
           
         }
@@ -583,7 +599,7 @@ export default {
     this.loadStoredItems("salads", "ADD_TO_OTHER_CART");
     this.loadStoredItems("specialtypizza", "ADD_TO_OTHER_CART");
 
-    this.loadStoredItems('pizza', 'ADD_TO_PIZZA_CART');
+    this.loadStoredCustomPizza('pizza', 'ADD_TO_PIZZA_CART');
   },
 };
 </script>

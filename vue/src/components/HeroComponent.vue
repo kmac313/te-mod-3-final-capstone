@@ -2,8 +2,8 @@
     <div class="hero-container">
         <div class="hero-header">
             <!-- Hero title -->
-            <h1 class="hero-header">Tasty Pizza!</h1>
-            <h2 class="hero-subheader">Get 2 pizzas for the price of 1.</h2>
+            <h1 class="hero-header">Super Pizza!</h1>
+            <h2 class="hero-subheader">Stop in for a tasty byte.</h2>
         </div>
 
         <!-- Hero btns -->

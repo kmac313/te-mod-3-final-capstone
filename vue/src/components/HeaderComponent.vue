@@ -7,6 +7,12 @@
           alt="Pizza"
         />
         <img
+          class="cart mobile-cart"
+          src="../assets/cart.png"
+          alt="cart"
+          @click="openCart"
+        />
+        <img
           @click="toggleMobileMenu"
           class="hamburger-icon"
           src="../../public/hamburger-menu.jpg"
@@ -296,6 +302,10 @@ nav {
   width: 20px;
 }
 
+.mobile-cart {
+  display: none;
+}
+
 .header-nav-links {
   display: flex;
   flex-direction: column;
@@ -394,6 +404,9 @@ nav {
 
 
 @media screen and (max-width: 680px) {
+  .mobile-cart {
+    display: inline;
+  }
   .header-logo img {
     width: 60px;
   }

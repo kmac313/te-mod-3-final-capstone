@@ -37,7 +37,6 @@ export default {
     border-radius: 10px;
     padding: 10px;
     text-align: center;
-    cursor: pointer;
     margin-top: 20px;
     margin-right: 5px;
 }
@@ -52,6 +51,7 @@ export default {
 input[type="checkbox"] {
   width: 25px;
   height: 25px;
+  cursor: pointer;
 }
 
 input[type="checkbox"]:checked {
