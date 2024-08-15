@@ -54,8 +54,11 @@
                 <label>Quantity:</label>
                 <input type="text" :value="currItem.quantity" @input="event => currItem.quantity = event.target.value" />
             </div>
+            <div class="inventory-change-btns">
+              <button @click.prevent="updateInventoryItem">Save Changes</button>
+              <button @click.prevent="isUpdatingInventory = false">Cancel</button>
+            </div>
             
-            <button @click.prevent="updateInventoryItem">Save Changes</button>
         </div>
     </div>
   </template>
@@ -239,6 +242,32 @@
 
   .inventory-change-container button {
     margin-top: 30px
+  }
+
+  .inventory-change-btns {
+    display: flex;
+    justify-content: start;
+    gap: 10px;
+    min-width: 80%;
+  }
+
+  .inventory-change-btns button:nth-child(1) {
+    background-color: #000;
+  }
+  .inventory-change-btns button:nth-child(1):hover {
+    background-color: #252525;
+  }
+
+  .inventory-change-btns button:nth-child(2):hover {
+    background-color: #a52226;
+  }
+
+  .inventory-change-btns button {
+    color: #fff;
+    background-color: #e61d25;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
   }
 
   @media screen and (max-width: 820px) {
