@@ -166,7 +166,10 @@
               v-model="formZip"
             />
           </div>
-          <button type="submit" @click.prevent="submitOrder">Checkout</button>
+          <button type="submit" @click.prevent="submitOrder">
+            <p v-if="!loading">Checkout</p>
+            <div class="loader" v-if="loading"></div>
+          </button>
         </form>
       </div>
     </div>
@@ -205,6 +208,7 @@ export default {
       eta: "",
       showToast: false,
       address: "123 Main St, Cleveland, Ohio 44108",
+      loading: false,
     };
   },
   components: {
@@ -212,10 +216,23 @@ export default {
   },
   methods: {
     async submitOrder() {
+      console.log(this.$store.stae);
+      this.loading = true;
+      let creditCardPattern = /^(?:\d[ -]*?){13,16}$/
+      if(!creditCardPattern.test(this.paymentmethod)) {
+        this.toastMessage = "Credit card must be valid";
+        this.showToast = true;
+        setTimeout(() => {
+          this.showToast = false;
+        }, 3500);
+        this.loading = false;
+        return;
+      }
       if (
         this.$store.state.isDelivery.orderType == "delivery" &&
         this.state.length !== 2
       ) {
+        this.loading = false;
         this.toastMessage = "Incorrect state abbreviation. Please try again";
         this.showToast = true;
         setTimeout(() => {
@@ -245,22 +262,24 @@ export default {
             zip_code: this.$store.state.storeAddress.zip_code.trim(),
           };
           let sendAddress = [customerAddress, storeAddress];
-          
+
           await locationService
             .validateAddress(sendAddress)
             .then((data) => {
-              if(data.status !== 200) {
-                isValid = false
-                console.log(isValid)
+              if (data.status !== 200) {
+                isValid = false;
+                console.log(isValid);
+                return;
               }
             })
             .finally(() => {
-              if(!isValid) {
+              if (!isValid) {
                 return;
               }
             });
         } catch (err) {
-          console.log(err.message)
+          this.loading = false;
+          console.log(err.message);
           this.toastMessage = "This address is not in our service area";
           this.showToast = true;
           setTimeout(() => {
@@ -269,9 +288,7 @@ export default {
           return;
         }
       }
-
-
-
+      console.log("Still going");
       let pizzaItems = this.$store.state.cart.pizza;
       if (pizzaItems.length > 0) {
         for (let pizza of pizzaItems) {
@@ -290,26 +307,15 @@ export default {
       };
       console.log(newInvoice);
       let responseInvoice = {};
+      console.log("sending order");
 
-      invoiceService.sendOrder(newInvoice).then((data) => {
+      await invoiceService.sendOrder(newInvoice).then((data) => {
         responseInvoice = data.data;
+        console.log(data);
         try {
-          this.$store.commit("ADD_INVOICE", data.data);
-          // let otherItems = this.$store.state?.cart?.other;
-          // let pizza = this.$store.state?.cart?.pizza;
-          // if (otherItems.length > 0) {
-          //   for (let item of otherItems) {
-          //     let newItem = {};
-          //     productService.getProductById(item).then((data) => {
-          //       newItem = data.data;
-          //       console.log(data);
-          //       newItem.quantity = newItem.quantity-1;
-          //       newItem.product_id = newItem.productId;
-          //       console.log(newItem);
-          //       productService.updateProduct(newItem).then((data) => console.log(data));
-          //     });
-          //   }
-          // }
+          let localInvoice = JSON.stringify(data.data)
+          localStorage.setItem('invoice', localInvoice)
+          console.log("clearing cart");
           this.$store.commit("EMPTY_CART");
           if (this.$store.state.token.length > 0) {
             this.toastMessage =
@@ -342,7 +348,7 @@ export default {
       });
       if (responseInvoice) {
         let userInfo = JSON.parse(this.username);
-
+        console.log("sending user info");
         if (userInfo) {
           try {
             console.log(userInfo);
@@ -358,13 +364,14 @@ export default {
               user_id: userInfo.id,
             };
 
-            customerService.addCustomer(newCustomer).then((data) => {
+            await customerService.addCustomer(newCustomer).then((data) => {
               console.log("Added customer");
               this.$router.replace("/myorders");
             });
           } catch (error) {
             console.log("This customer already exists");
           }
+          this.loading = false;
         }
 
         this.$router.replace("/myorders");
@@ -429,67 +436,67 @@ export default {
 
       // remove from localStorage
       // Check if appetizer
-      if (item.productCategoryId == 7) {
+      if (item.product_category_id == 7) {
         let storedSide = localStorage.getItem("sides");
         let objectSide = JSON.parse(storedSide);
         let newObjectSide = objectSide.filter(
           (side) => side.productId !== item.productId
         );
         if (newObjectSide.length > 0) {
-          localStorage.setItem("sides", newObjectSide);
+          localStorage.setItem("sides", JSON.stringify(newObjectSide));
         } else {
           localStorage.removeItem("sides");
         }
       }
       // Check if specialty pizza
-      else if (item.productCategoryId == 10) {
+      else if (item.product_category_id == 10) {
         let storedSpecialtyPizza = localStorage.getItem("specialtypizza");
         let objectSpecialtyPizza = JSON.parse(storedSpecialtyPizza);
         let newObjectSpecialtyPizza = objectSpecialtyPizza.filter(
           (pizza) => pizza.productId !== item.productId
         );
         if (newObjectSpecialtyPizza.length > 0) {
-          localStorage.setItem("specialtypizza", newObjectSpecialtyPizza);
+          localStorage.setItem("specialtypizza", JSON.stringify(newObjectSpecialtyPizza));
         } else {
           localStorage.removeItem("specialtypizza");
         }
       }
       // Check if drink
-      else if (item.productCategoryId == 8) {
+      else if (item.product_category_id == 8) {
         let storedDrink = localStorage.getItem("drink");
         let objectDrink = JSON.parse(storedDrink);
         let newObjectDrink = objectDrink.filter(
           (drink) => drink.productId !== item.productId
         );
         if (newObjectDrink.length > 0) {
-          localStorage.setItem("drink", newObjectDrink);
+          localStorage.setItem("drink", JSON.stringify(newObjectDrink));
         } else {
           localStorage.removeItem("drink");
         }
       }
 
       //  Check if dessert
-      else if (item.productCategoryId == 9) {
+      else if (item.product_category_id == 9) {
         let storedDessert = localStorage.getItem("dessert");
         let objectDessert = JSON.parse(storedDessert);
         let newObjectDessert = objectDessert.filter(
           (dessert) => dessert.productId !== item.productId
         );
         if (newObjectDessert.length > 0) {
-          localStorage.setItem("dessert", newObjectDessert);
+          localStorage.setItem("dessert", JSON.stringify(newObjectDessert));
         } else {
           localStorage.removeItem("dessert");
         }
       }
       // Check if salad
-      else if (item.productCategoryId == 6) {
+      else if (item.product_category_id == 6) {
         let storedSalad = localStorage.getItem("salads");
         let objectSalad = JSON.parse(storedSalad);
         let newObjectSalad = objectSalad.filter(
           (salad) => salad.productId !== item.productId
         );
         if (newObjectSalad.length > 0) {
-          localStorage.setItem("salads", newObjectSalad);
+          localStorage.setItem("salads", JSON.stringify(newObjectSalad));
         } else {
           localStorage.removeItem("salads");
         }
@@ -501,10 +508,42 @@ export default {
             (pizza) => pizza.id !== item.id
           );
           if (newStoredPizza.length > 0) {
-            localStorage.setItem("pizza", newStoredPizza);
+            localStorage.setItem("pizza", JSON.stringify(newStoredPizza));
           } else {
             localStorage.removeItem("pizza");
           }
+        }
+      }
+    },
+    loadStoredItems(storageKey, mutation) {
+      let storedItems = localStorage.getItem(storageKey);
+      
+      if (storedItems && storedItems !== 'undefined') {
+        storedItems = JSON.parse(storedItems);
+        if (Array.isArray(storedItems) && storedItems.length > 0) {
+          storedItems.forEach(item => {
+            this.$store.commit(mutation, item.productId);
+          });
+        }
+      }
+    },
+    loadStoredCustomPizza(storageKey, mutation) {
+      let storedPizza = localStorage.getItem(storageKey);
+      
+      if (storedPizza && storedPizza !== 'undefined') {
+        storedPizza = JSON.parse(storedPizza);
+        if (Array.isArray(storedPizza) && storedPizza.length > 0) {
+          for(let pizza of storedPizza) {
+            let currPizzaArray = []
+            currPizzaArray.push(pizza.crust.productId)
+            currPizzaArray.push(pizza.size.productId)
+            currPizzaArray.push(pizza.sauce.productId)
+            for(let topp of pizza.topping) {
+              currPizzaArray.push(topp.productId)
+            }
+            this.$store.commit(mutation, currPizzaArray);
+          }
+          
         }
       }
     },
@@ -528,6 +567,19 @@ export default {
 
       return total.toFixed(2);
     },
+  },
+  beforeCreate() {
+    this.$store.commit('EMPTY_OTHER_CART')
+  },
+  mounted() {
+    // load stored items
+    this.loadStoredItems("drink", "ADD_TO_OTHER_CART");
+    this.loadStoredItems("sides", "ADD_TO_OTHER_CART");
+    this.loadStoredItems("dessert", "ADD_TO_OTHER_CART");
+    this.loadStoredItems("salads", "ADD_TO_OTHER_CART");
+    this.loadStoredItems("specialtypizza", "ADD_TO_OTHER_CART");
+
+    this.loadStoredItems('pizza', 'ADD_TO_PIZZA_CART');
   },
 };
 </script>
@@ -761,6 +813,22 @@ form {
 
 .remove-from-cart-btn button:hover {
   background-color: #740004;
+}
+
+.loader {
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(farthest-side, #e5e5e5 94%, #0000) top/8px 8px
+      no-repeat,
+    conic-gradient(#0000 30%, #fff);
+  -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 8px), #000 0);
+  animation: l13 1s infinite linear;
+}
+@keyframes l13 {
+  100% {
+    transform: rotate(1turn);
+  }
 }
 
 @media screen and (max-width: 720px) {

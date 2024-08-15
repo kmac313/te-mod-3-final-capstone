@@ -4,10 +4,11 @@ const http = axios.create({
   baseURL: import.meta.env.VITE_REMOTE_API
 });
 
-let token = localStorage.getItem('token')
+
 
 export default {
     getCustomer(id) {
+      let token = localStorage.getItem('token')
         console.log(id)
         return http.get(`/customer/${id}`,
         {
@@ -17,6 +18,7 @@ export default {
           })
     },
     addCustomer(customer) {
+      let token = localStorage.getItem('token')
         return http.post('/customer', 
         customer, 
         {

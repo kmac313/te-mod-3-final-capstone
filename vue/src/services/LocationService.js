@@ -4,11 +4,12 @@ const http = axios.create({
   baseURL: import.meta.env.VITE_REMOTE_API
 });
 
-let token = localStorage.getItem('token')
+
 
 export default {
 
     validateAddress(address) {
+      let token = localStorage.getItem('token')
       return http.post(`/validate`, 
         address
       ,

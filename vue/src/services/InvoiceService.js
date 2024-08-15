@@ -4,10 +4,11 @@ const http = axios.create({
   baseURL: import.meta.env.VITE_REMOTE_API
 });
 
-let token = localStorage.getItem('token')
+
 
 export default {
     sendOrder(order) {
+      let token = localStorage.getItem('token')
       console.log(token)
         return http.post('/invoice', 
           order,
@@ -19,7 +20,7 @@ export default {
       },
 
     getOrders(userToken) {
-      
+      let token = localStorage.getItem('token')
       return http.get('/invoice', {
         headers: {
           'Authorization': `Bearer ${userToken ? userToken : token}`
@@ -27,6 +28,7 @@ export default {
       })
     },
     getOrderByInvoiceId(id) {
+      let token = localStorage.getItem('token')
       return http.get(`/invoice/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -34,6 +36,7 @@ export default {
       })
     },
     updateOrder(id, invoice) {
+      let token = localStorage.getItem('token')
       console.log(id)
       return http.put(`/invoice/${id}`, 
         invoice, 

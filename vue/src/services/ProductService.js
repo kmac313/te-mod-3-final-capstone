@@ -3,10 +3,11 @@ import axios from 'axios';
 const http = axios.create({
   baseURL: import.meta.env.VITE_REMOTE_API
 });
-let token = localStorage.getItem('token')
+
 
 export default {
   getProducts() {
+    let token = localStorage.getItem('token')
     return http.post('/menu', 
       {
         categories: []
@@ -20,6 +21,7 @@ export default {
   },
 
   getAllToppings() {
+    let token = localStorage.getItem('token')
     return http.post('/menu', {
       categories: ["Regular Topping", "Premium Topping"]
     },
@@ -31,6 +33,7 @@ export default {
   },
 
   getAllDrinks() {
+    let token = localStorage.getItem('token')
     return http.post('/menu', {
       categories: ["Drink"]
     },
@@ -42,6 +45,7 @@ export default {
   },
 
   getAllDesserts() {
+    let token = localStorage.getItem('token')
     return http.post('/menu', {
       categories: ["Dessert"]
     },
@@ -52,6 +56,7 @@ export default {
     })
   },
   getAllAppetizers() {
+    let token = localStorage.getItem('token')
     return http.post('/menu', {
       categories: ["Appetizer"]
     },
@@ -62,6 +67,7 @@ export default {
     })
   },
   getAllSalads() {
+    let token = localStorage.getItem('token')
     return http.post('/menu', {
       categories: ["Salad"]
     },
@@ -72,6 +78,7 @@ export default {
     })
   },
   getAllSpecialtyPizzas() {
+    let token = localStorage.getItem('token')
     return http.post('/menu', {
       categories: ["Specialty Pizza"]
     },
@@ -82,6 +89,7 @@ export default {
     })
   },
   updateProduct(product) {
+    let token = localStorage.getItem('token')
     console.log(product)
     return http.put(`/menu/${product.product_id}`, 
       product
@@ -93,6 +101,7 @@ export default {
     })
   },
   createProduct(product) {
+    let token = localStorage.getItem('token')
     return http.post(`/menu/add`, 
       product
     ,
@@ -103,6 +112,7 @@ export default {
     })
   },
   getProductById(id) {
+    let token = localStorage.getItem('token')
     console.log(id)
     return http.get(`/menu/${id}`,
     {

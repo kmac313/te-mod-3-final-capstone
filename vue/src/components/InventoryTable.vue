@@ -240,5 +240,11 @@
   .inventory-change-container button {
     margin-top: 30px
   }
+
+  @media screen and (max-width: 820px) {
+    .inventory-change-container {
+      width: auto;
+    }
+  }
   </style>
   

@@ -8,7 +8,7 @@
         <div v-if="order.invoice?.status == 'Pending'" class="cancel-order">
           <button @click="cancelOrder">Cancel Order</button>
         </div>
-        <div v-if="order.invoice?.status == 'Pending'" class="cancel-order">
+        <div v-if="order.invoice?.status == 'Pending' || order.invoice?.status == 'Ready'" class="cancel-order">
           <button @click="completeOrder">Complete Order</button>
         </div>
         <div v-if="order.invoice?.status == 'Pending'" class="cancel-order">
@@ -301,5 +301,31 @@ export default {
 .modify-order-btns {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+}
+@media screen and (max-width: 820px) {
+  .modify-order-btns {
+    grid-template-columns: 1fr;
+    gap: 5px;
+    width: 100%;
+  }
+
+  .order-info-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .order-items-container {
+    overflow-y: visible;
+  }
+
+  .drink-size-option-container {
+    width: 95%
+  }
+
+  .order-item {
+    width: 80%;
+    margin: 0px 0px 0px 15px;
+    padding: 0px 0px 0px 15px;
+  }
 }
 </style>

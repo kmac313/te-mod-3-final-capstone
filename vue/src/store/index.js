@@ -166,17 +166,23 @@ export function createStore(currentToken, currentUser) {
       ADD_INVOICE(state, invoice) {
         state.allInvoices.push(invoice)
       },
+      EMPTY_OTHER_CART(state) {
+        state.cart = {
+          pizza: [],
+          other: []
+        }
+      },
       EMPTY_CART(state) {
         state.cart = {
           pizza: [],
           other: []
-        },
+        }
         state.currentOrder = [];
         localStorage.removeItem('pizza')
         localStorage.removeItem('drink')
-        localStorage.removeItem('size')
+        localStorage.removeItem('sides')
         localStorage.removeItem('salads')
-        localStorage.removeItem('desserts')
+        localStorage.removeItem('dessert')
         localStorage.removeItem('specialtypizza')
 
       },

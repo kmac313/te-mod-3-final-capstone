@@ -13,80 +13,94 @@
           <th class="order-type-header">Order type</th>
         </tr>
       </thead>
-      
-      <tr v-for="(invoice, index) in allInvoices" :key="index" @click="showOrderPopUp(invoice)">
+
+      <tr
+        v-for="(invoice, index) in allInvoices"
+        :key="index"
+        @click="showOrderPopUp(invoice)"
+      >
         <td>${{ invoice.total.toFixed(2) }}</td>
         <td>{{ invoice.status }}</td>
-        <td>{{ invoice.delivery ? 'Delivery' : 'Carryout' }}</td>
+        <td>{{ invoice.delivery ? "Delivery" : "Carryout" }}</td>
       </tr>
     </table>
     <!-- Order PopUp -->
-    <MyOrderPopUp :showPopUp="showOrder" :order="currOrder" @hide-popup="hideOrderPopUp()" @update-order="updateOrder" />
+    <MyOrderPopUp
+      :showPopUp="showOrder"
+      :order="currOrder"
+      @hide-popup="hideOrderPopUp()"
+      @update-order="updateOrder"
+    />
   </div>
 </template>
 
 <script>
-import MyOrderPopUp from '../components/MyOrderPopUp.vue';
-import invoiceService from '../services/InvoiceService';
+import MyOrderPopUp from "../components/MyOrderPopUp.vue";
+import invoiceService from "../services/InvoiceService";
 
 export default {
   data() {
     return {
       showOrder: false,
-      currOrder: {}
-    }
+      currOrder: {},
+    };
   },
   components: {
-    MyOrderPopUp
+    MyOrderPopUp,
   },
 
   methods: {
     getAllOrders() {
-      const userToken = localStorage.getItem('token')
-      invoiceService.getOrders(userToken).then((data) => {
-        for (let invoice of data.data) {
-          this.$store.commit("ADD_INVOICE", invoice);
-          console.log('Added to store')
-        }
+      const userToken = localStorage.getItem("token");
 
-        this.allInvoices = this.$store.state.allInvoices;
+      if (this.$store.state.allInvoices.length == 0) {
+        invoiceService.getOrders(userToken).then((data) => {
+          for (let invoice of data.data) {
+            this.$store.commit("ADD_INVOICE", invoice);
+            console.log("Added to store");
+          }
+          
+        });
         
-      });
+      }
+
+      this.allInvoices = this.$store.state.allInvoices;
     },
     hideOrderPopUp() {
       this.showOrder = false;
     },
     showOrderPopUp(invoice) {
-      const fullInvoice = invoiceService.getOrderByInvoiceId(invoice.invoice_id).then((data) => {
-        console.log(data.data)
-        this.currOrder = data.data;
-        this.showOrder = true;
-      }) 
-      
-      
+      const fullInvoice = invoiceService
+        .getOrderByInvoiceId(invoice.invoice_id)
+        .then((data) => {
+          console.log(data.data);
+          this.currOrder = data.data;
+          this.showOrder = true;
+        });
     },
 
     updateOrder(newInvoice) {
-      this.$store.commit('UPDATE_ORDER', newInvoice, true)
+      this.$store.commit("UPDATE_ORDER", newInvoice, true);
       window.location.reload();
-    }
+    },
   },
 
   computed: {
     allInvoices() {
       return this.$store.state.allInvoices;
-    }
+    },
   },
   mounted() {
+    
     let user = this.$store.state.user;
-    if(user?.authorities[0]?.name == 'ROLE_ADMIN') {
-      this.$router.replace('/admin')
+    if (user?.authorities[0]?.name == "ROLE_ADMIN") {
+      this.$router.replace("/admin");
     }
 
     this.getAllOrders();
-   
-  }
-}
+    
+  },
+};
 </script>
 
 <style>
@@ -129,8 +143,7 @@ export default {
 
 .my-orders-container tr {
   cursor: pointer;
-  border-bottom: 1px solid #cfcfcf ;
-  
+  border-bottom: 1px solid #cfcfcf;
 }
 
 .my-orders-container tr:hover {

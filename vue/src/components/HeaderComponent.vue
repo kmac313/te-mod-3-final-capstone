@@ -201,6 +201,11 @@ export default {
   },
   mounted() {
     window.addEventListener("scroll", this.handleScroll);
+    if(localStorage.getItem("user")) {
+      this.role = JSON.parse(localStorage.getItem("user")).authorities[0].name
+    } else {
+      this.role = null
+    }
   },
 
   beforeUnmount() {
