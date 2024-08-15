@@ -77,7 +77,7 @@ export default {
       // Add to local storage
       if(storedDrink) {
         storedDrink = JSON.parse(storedDrink)
-        storedDrink.push(this.customPizza)
+        storedDrink.push(this.currDrink)
         localStorage.removeItem('drink')
         localStorage.setItem('drink', JSON.stringify(storedDrink))
         

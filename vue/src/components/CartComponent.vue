@@ -238,7 +238,7 @@ export default {
         return;
       }
       this.loading = true;
-      let creditCardPattern = /^(?:\d[ -]*?){13,16}$/
+      let creditCardPattern = /^(\d{4}[ -]?){3}\d{4}$/
       if(!creditCardPattern.test(this.paymentmethod)) {
         this.toastMessage = "Credit card must be valid";
         this.showToast = true;
@@ -612,9 +612,10 @@ export default {
     finalPrice() {
       let allItems = this.$store.state.currentOrder;
       let total = 0.0;
+      console.log(allItems)
       if (allItems.length > 0) {
         for (let item of allItems) {
-          total += parseFloat(item.price);
+          total += parseFloat(item?.price);
         }
       }
 
