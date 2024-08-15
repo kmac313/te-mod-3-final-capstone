@@ -25,7 +25,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.math.BigDecimal;
 import java.util.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class CustomerControllerTests extends BaseDaoTests {
 
     private CustomerController cc;
@@ -85,7 +85,7 @@ public class CustomerControllerTests extends BaseDaoTests {
 
     @Test
     public void t01_API_returns_all_customers_with_no_email() {
-        loginAdmin();
+        login("admin");
         String url = BASE_URL + "/customer";
 
         Customer customer = new Customer();
@@ -115,7 +115,7 @@ public class CustomerControllerTests extends BaseDaoTests {
 
     @Test
     public void t02_API_returns_customer_with_an_email() {
-        loginAdmin();
+        login("admin");
         String url = BASE_URL + "/customer";
 
         String requestParameter = "/sed.pharetra@hotmail.ca";
@@ -132,7 +132,7 @@ public class CustomerControllerTests extends BaseDaoTests {
 
     @Test
     public void t03_API_returns_single_customer_by_id_correctly(){
-        loginAdmin();
+        login("admin");
 
         List<Integer> customerIds = new ArrayList<>();
         customerIds.add(3);
@@ -143,15 +143,16 @@ public class CustomerControllerTests extends BaseDaoTests {
             String url = BASE_URL + "/customer/";
             url += id;
             HttpEntity entity = new HttpEntity(header);
-            ResponseEntity<Customer> response = http.exchange(url, HttpMethod.GET, entity, Customer.class);
-            Customer customer = response.getBody();
+            ResponseEntity<Map> response = http.exchange(url, HttpMethod.GET, entity, Map.class);
+            Map customer = response.getBody();
+            System.out.println(customer);
             Assert.assertNotNull(customer);
         }
     }
 
     @Test(expected =  Exception.class)
     public void t04_API_throws_exception_with_non_integer_customer_id(){
-        loginAdmin();
+        login("admin");
 
         List<String> customerIds = new ArrayList<>();
         customerIds.add("A");
@@ -167,7 +168,7 @@ public class CustomerControllerTests extends BaseDaoTests {
 
     @Test
     public void t05_API_can_delete_customer(){
-        loginAdmin();
+        login("admin");
 
         int testCustomerId = 2;
         String url = BASE_URL +  "/customer/" + testCustomerId;
@@ -188,7 +189,7 @@ public class CustomerControllerTests extends BaseDaoTests {
 
     @Test
     public void t07_API_can_update_customer(){
-        loginAdmin();
+        login("admin");
         int testCustomerId = 3;
         Customer modifiedCustomer = dao.getCustomerById(testCustomerId);
         modifiedCustomer.setFirstName("John");
@@ -220,7 +221,7 @@ public class CustomerControllerTests extends BaseDaoTests {
 
     @Test
     public void t09_API_can_create_a_customer(){
-        loginAdmin();
+        login("admin");
 
         Customer newCustomer = new Customer();
         newCustomer.setFirstName("John");

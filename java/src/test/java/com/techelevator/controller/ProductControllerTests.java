@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,7 +24,7 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class ProductControllerTests{
 
     private RestTemplate http;
@@ -206,9 +207,18 @@ public class ProductControllerTests{
     @Test
     public void t10_admin_can_delete_product(){
         login("admin");
-        int testProductId = 10;
-        String url = BASE_URL +  "/menu/" + testProductId;
-        HttpEntity entity = new HttpEntity(header);
+        Map<String, String> newProduct = new HashMap<>();
+        newProduct.put("price", "1.50");
+        newProduct.put("description", "test product");
+        newProduct.put("product_category_description", "Drink");
+        newProduct.put("quantity","20");
+        String url = BASE_URL + "/menu/add";
+        HttpEntity entity = new HttpEntity(newProduct, header);
+        Product createdProduct = http.exchange(url, HttpMethod.POST, entity, Product.class).getBody();
+
+        int testProductId = createdProduct.getProductId();
+        url = BASE_URL +  "/menu/" + testProductId;
+        entity = new HttpEntity(header);
 
         http.exchange(url, HttpMethod.DELETE, entity, Void.class);
     }
