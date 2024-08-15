@@ -50,10 +50,10 @@
             <p>Category: {{ currItem?.product_category_description }}</p>
             <p>Price: ${{ currItem?.price.toFixed(2) }}</p>
             <p>Description: {{ currItem?.description }}</p>
-            <div>
+            <form>
                 <label>Quantity:</label>
-                <input type="text" :value="currItem.quantity" @input="event => currItem.quantity = event.target.value" />
-            </div>
+                <input type="number" :value="currItem.quantity" @input="event => currItem.quantity = event.target.value" />
+            </form>
             <div class="inventory-change-btns">
               <button @click.prevent="updateInventoryItem">Save Changes</button>
               <button @click.prevent="isUpdatingInventory = false">Cancel</button>

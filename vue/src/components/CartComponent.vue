@@ -387,10 +387,13 @@ export default {
 
             await customerService.addCustomer(newCustomer).then((data) => {
               console.log("Added customer");
-              this.$router.replace("/myorders");
+            
             });
           } catch (error) {
             console.log("This customer already exists");
+          } finally {
+            this.$router.replace("/myorders");
+              this.$emit("refresh-page");
           }
           this.loading = false;
           

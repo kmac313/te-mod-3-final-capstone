@@ -90,7 +90,7 @@ export default {
   },
   computed: {
     pizzaStyle() {
-      return {
+      return {  
         // Images must be placed inside of public folder
         backgroundImage: `url('./${this.pizzaName}.jpg')`,
       };

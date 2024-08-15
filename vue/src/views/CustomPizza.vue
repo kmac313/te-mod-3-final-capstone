@@ -245,7 +245,6 @@ export default {
       setTimeout(() => {
         this.showToast = false;
         // Push to pizzas
-        this.$router.replace("/pizza");
       }, 1500);
     },
   },

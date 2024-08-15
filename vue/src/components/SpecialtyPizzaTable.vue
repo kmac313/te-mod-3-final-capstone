@@ -124,9 +124,9 @@
             let newPizza = {
             product_id : null,
             product_category_description : "Specialty Pizza",
-            price : newPrice,
+            price : newPrice.toString(),
             description : this.newPizzaName + " - " + this.newPizzaDescription,
-            quantity : 10
+            quantity : "10"
             }
             try {
                 productService.createProduct(newPizza).then((data) => {

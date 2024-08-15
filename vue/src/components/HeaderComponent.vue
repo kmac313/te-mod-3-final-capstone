@@ -123,6 +123,7 @@
       v-if="storeShowCart"
       @close-cart="closeCart()"
       @open-cart="openCart()"
+      @refresh-page="refresh()"
     />
   </div>
 </template>
@@ -161,6 +162,10 @@ export default {
       }
 
       return;
+    },
+
+    refresh() {
+      window.location.reload();
     },
     logOut() {
       this.showToast = true;

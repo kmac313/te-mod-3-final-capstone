@@ -2,10 +2,10 @@
   <div class="my-orders-container">
     <h2>My Orders</h2>
     <!-- Add order table -->
-    <div v-if="allInvoices.length == 0">
+    <div v-if="this.$store.state.allInvoices.length == 0">
       <p>You do not have any orders</p>
     </div>
-    <table v-if="allInvoices.length > 0">
+    <table v-if="this.$store.state.allInvoices.length > 0">
       <thead>
         <tr class="table-header">
           <th class="total-header">Total</th>
@@ -15,7 +15,7 @@
       </thead>
 
       <tr
-        v-for="(invoice, index) in allInvoices"
+        v-for="(invoice, index) in this.$store.state.allInvoices"
         :key="index"
         @click="showOrderPopUp(invoice)"
       >
@@ -42,7 +42,7 @@ export default {
   data() {
     return {
       showOrder: false,
-      currOrder: {},
+      currOrder: {}
     };
   },
   components: {
@@ -64,7 +64,6 @@ export default {
         
       }
 
-      this.allInvoices = this.$store.state.allInvoices;
     },
     hideOrderPopUp() {
       this.showOrder = false;
@@ -86,10 +85,9 @@ export default {
   },
 
   computed: {
-    allInvoices() {
-      return this.$store.state.allInvoices;
-    },
+
   },
+  
   mounted() {
     
     let user = this.$store.state.user;
