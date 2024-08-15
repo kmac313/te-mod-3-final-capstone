@@ -1,8 +1,12 @@
-package com.techelevator.dao;
+package com.techelevator.controller;
 
 import com.techelevator.Application;
 import com.techelevator.controller.CustomerController;
 import com.techelevator.controller.ProductController;
+import com.techelevator.dao.BaseDaoTests;
+import com.techelevator.dao.CustomerDao;
+import com.techelevator.dao.JdbcCustomerDao;
+import com.techelevator.dao.UserDao;
 import com.techelevator.model.*;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,7 +26,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class CustomerControllerTests extends BaseDaoTests{
+public class CustomerControllerTests extends BaseDaoTests {
 
     private CustomerController cc;
     private CustomerDao dao;
