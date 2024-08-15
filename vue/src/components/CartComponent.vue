@@ -288,7 +288,7 @@ export default {
           return;
         }
       }
-      console.log("Still going");
+      console.log(this.$store.state.cart.pizza);
       let pizzaItems = this.$store.state.cart.pizza;
       if (pizzaItems.length > 0) {
         for (let pizza of pizzaItems) {
@@ -535,13 +535,17 @@ export default {
         if (Array.isArray(storedPizza) && storedPizza.length > 0) {
           for(let pizza of storedPizza) {
             let currPizzaArray = []
+            currPizzaArray.push({id: this.$store.state.cart.pizza.length + 1})
             currPizzaArray.push(pizza.crust.productId)
             currPizzaArray.push(pizza.size.productId)
             currPizzaArray.push(pizza.sauce.productId)
+            
             for(let topp of pizza.topping) {
               currPizzaArray.push(topp.productId)
             }
+            
             this.$store.commit(mutation, currPizzaArray);
+            
           }
           
         }
